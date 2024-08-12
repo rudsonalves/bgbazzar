@@ -1,0 +1,16 @@
+{
+  "apps": [
+    {
+      "serverURL": "http://localhost:1337/parse",
+      "appId": "xIlTzM1zXBa9pwgltnURbNMX2CPXBFQEDRtc0Cxp",
+      "masterKey": "1EizsYuqYCuEjNE6sxjbaJSzSivnFtCr75o4dM54",
+      "appName": "MyApp"
+    }
+  ],
+  "users": [
+    {
+      "user": "admin",
+      "pass": "admin"
+    }
+  ]
+}

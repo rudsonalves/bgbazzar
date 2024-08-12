@@ -1,0 +1,34 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  parse-server:
+    image: parseplatform/parse-server:latest
+    container_name: parse-server
+    env_file:
+      - .env
+    ports:
+      - "${PARSE_PORT}:${PARSE_PORT}"
+    depends_on:
+      - mongo
+
+  parse-dashboard:
+    image: parseplatform/parse-dashboard:latest
+    container_name: parse-dashboard
+    environment:
+      - PARSE_DASHBOARD_ALLOW_INSECURE_HTTP=true
+    volumes:
+      - ./parse-dashboard-config.json:/parse-dashboard-config.json
+    command: parse-dashboard --config /parse-dashboard-config.json
+    ports:
+      - "4040:4040"
+    depends_on:
+      - parse-server
+
+volumes:
+  mongo_data:
