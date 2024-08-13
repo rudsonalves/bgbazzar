@@ -19,6 +19,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+import '../../common/models/mechanic.dart';
 import '../../manager/bg_names_manager.dart';
 import '../../manager/mechanics_manager.dart';
 import '../../common/models/boardgame.dart';
@@ -32,17 +33,30 @@ class BoardgameController extends ChangeNotifier {
 
   final bgNamesManager = getIt<BgNamesManager>();
   final mechManager = getIt<MechanicsManager>();
+  final mechanicsManager = getIt<MechanicsManager>();
 
   final nameController = TextEditingController();
-  final minPlayersController = TextEditingController();
-  final maxPlayersController = TextEditingController();
-  final minTimeController = TextEditingController();
-  final maxTimeController = TextEditingController();
-  final ageController = TextEditingController();
+  final yearController = NumericEditController<int>(initialValue: 2010);
+  final imageController = TextEditingController();
+  final minPlayersController = NumericEditController<int>();
+  final maxPlayersController = NumericEditController<int>();
+  final minTimeController = NumericEditController<int>();
+  final maxTimeController = NumericEditController<int>();
+  final ageController = NumericEditController<int>();
+  final designerController = TextEditingController();
+  final artistController = TextEditingController();
   final descriptionController = TextEditingController();
-  final weightController = NumericEditController();
-  final averageController = NumericEditController();
   final mechsController = TextEditingController();
+
+  final List<int> _selectedMechIds = [];
+
+  List<MechanicModel> get mechanics => mechanicsManager.mechanics;
+
+  List<int> get selectedMechIds => _selectedMechIds;
+  List<String> get selectedMachNames => mechanics
+      .where((c) => _selectedMechIds.contains(c.id!))
+      .map((c) => c.name)
+      .toList();
 
   BoardgameState get state => _state;
   List<String> get bgNames => bgNamesManager.bgNames;
@@ -54,14 +68,16 @@ class BoardgameController extends ChangeNotifier {
   @override
   void dispose() {
     nameController.dispose();
+    yearController.dispose();
+    imageController.dispose();
     minPlayersController.dispose();
     maxPlayersController.dispose();
     minTimeController.dispose();
     maxTimeController.dispose();
     ageController.dispose();
+    designerController.dispose();
+    artistController.dispose();
     descriptionController.dispose();
-    weightController.dispose();
-    averageController.dispose();
     mechsController.dispose();
     super.dispose();
   }
@@ -81,31 +97,68 @@ class BoardgameController extends ChangeNotifier {
     }
   }
 
-  Future<void> getBggInfo() async {
+  Future<void> getBgInfo() async {
+    if (nameController.text.isEmpty) return;
     try {
       _changeState(BoardgameStateLoading());
-      if (nameController.text.isEmpty) return;
       final id = bgNamesManager.gameId(nameController.text);
-      if (id == null) return;
-      final bggInfo = await BoardgameRepository.getById(id);
-      if (bggInfo != null) loadBoardInfo(bggInfo);
-      log(bggInfo.toString());
+      if (id == null) {
+        _changeState(BoardgameStateSuccess());
+        return;
+      }
+      final bgInfo = await BoardgameRepository.getById(id);
+      if (bgInfo != null) loadBoardInfo(bgInfo);
+      log(bgInfo.toString());
       _changeState(BoardgameStateSuccess());
     } catch (err) {
       _changeState(BoardgameStateError());
     }
   }
 
-  loadBoardInfo(BoardgameModel bggInfo) {
-    minPlayersController.text = bggInfo.minPlayers.toString();
-    maxPlayersController.text = bggInfo.maxPlayers.toString();
-    minTimeController.text = bggInfo.minTime.toString();
-    maxTimeController.text = bggInfo.maxTime.toString();
-    ageController.text = bggInfo.minAge.toString();
-    descriptionController.text = bggInfo.description ?? '';
-    weightController.numericValue = bggInfo.weight ?? 0;
-    averageController.numericValue = bggInfo.scoring ?? 0;
-    mechsController.text = mechManager.namesFromIdListString(bggInfo.mechanics);
+  loadBoardInfo(BoardgameModel bg) {
+    yearController.numericValue = bg.publishYear.toInt();
+    imageController.text = bg.image;
+    minPlayersController.text = bg.minPlayers.toString();
+    maxPlayersController.text = bg.maxPlayers.toString();
+    minTimeController.text = bg.minTime.toString();
+    maxTimeController.text = bg.maxTime.toString();
+    ageController.text = bg.minAge.toString();
+    designerController.text = bg.designer ?? '';
+    artistController.text = bg.designer ?? '';
+    descriptionController.text = bg.description ?? '';
+    mechsController.text = mechManager.namesFromIdListString(bg.mechanics);
+  }
+
+  Future<void> saveBoardgame() async {
+    try {
+      _changeState(BoardgameStateLoading());
+      final bg = BoardgameModel(
+        name: nameController.text,
+        image: imageController.text,
+        publishYear: yearController.numericValue,
+        minPlayers: minPlayersController.numericValue,
+        maxPlayers: maxPlayersController.numericValue,
+        minTime: minTimeController.numericValue,
+        maxTime: maxTimeController.numericValue,
+        minAge: ageController.numericValue,
+        mechanics: _selectedMechIds,
+        designer: designerController.text,
+        artist: artistController.text,
+        description: descriptionController.text,
+      );
+
+      await bgNamesManager.saveNewBoardgame(bg);
+      _changeState(BoardgameStateSuccess());
+    } catch (err) {
+      _changeState(BoardgameStateError());
+      log(err.toString());
+    }
+  }
+
+  void setMechanicsIds(List<int> mechIds) {
+    _selectedMechIds.clear();
+    _selectedMechIds.addAll(mechIds);
+    mechsController.text = selectedMachNames.join(', ');
   }
 
   void closeErroMessage() {

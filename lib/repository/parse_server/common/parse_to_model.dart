@@ -134,7 +134,7 @@ class ParseToModel {
       artist: parse.get<String?>(keyBgArtist)!,
       description: parse.get<String?>(keyBgDescription)!,
       scoring: parse.get<double?>(keyBgScoring)!,
-      weight: parse.get<double?>(keyBgWeight)!,
+      views: parse.get<int>(keyBgViews)!,
       mechanics: parse.get<List<int>>(keyBgMechanics)!,
     );
   }
@@ -144,7 +144,7 @@ class ParseToModel {
     int year = parse.get<int>(keyBgPublishYear)!;
 
     return BGNameModel(
-      id: parse.objectId!,
+      bgId: parse.objectId!,
       name: '$name ($year)',
     );
   }

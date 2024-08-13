@@ -16,11 +16,13 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 class BGNameModel {
-  final String? id;
+  final int? id;
+  final String? bgId;
   final String? name;
 
   BGNameModel({
     this.id,
+    this.bgId,
     this.name,
   });
 }

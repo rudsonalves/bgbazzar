@@ -15,15 +15,18 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
-import '../../components/buttons/big_button.dart';
-import '../../components/customs_text/read_more_text.dart';
+import '../../common/theme/app_text_style.dart';
+import '../../components/form_fields/custom_form_field.dart';
+import '../../components/form_fields/custom_long_form_field.dart';
 import '../../components/form_fields/custom_names_form_field.dart';
 import '../../components/others_widgets/spin_box_field.dart';
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
-import '../bg_search/bg_search_screen.dart';
+import '../mechanics/mechanics_screen.dart';
 import '../product/widgets/sub_title_product.dart';
 import 'boardgame_controller.dart';
 import 'boardgame_state.dart';
@@ -57,13 +60,74 @@ class _BoardgamesScreenState extends State<BoardgamesScreen> {
     Navigator.pop(context);
   }
 
+  Future<void> _backPageWithSave() async {
+    await ctrl.saveBoardgame();
+    // if (mounted) Navigator.pop(context);
+  }
+
+  void _setImage() async {
+    final controller = TextEditingController();
+
+    final result = await showDialog<bool>(
+          context: context,
+          builder: (context) => SimpleDialog(
+            title: const Text('Image'),
+            contentPadding: const EdgeInsets.all(8),
+            children: [
+              const Text('Entre com o path da imagem:'),
+              TextField(
+                controller: controller,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12, bottom: 12),
+                child: OverflowBar(
+                  alignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FilledButton.tonalIcon(
+                      onPressed: () => Navigator.pop(context, true),
+                      icon: const Icon(Icons.check),
+                      label: const Text('Aplicar'),
+                    ),
+                    FilledButton.tonalIcon(
+                      onPressed: () => Navigator.pop(context, false),
+                      icon: const Icon(Icons.cancel),
+                      label: const Text('Cancelar'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+    if (result && controller.text.isNotEmpty) {
+      ctrl.imageController.text = controller.text;
+    }
+    await Future.delayed(const Duration(milliseconds: 50));
+    controller.dispose();
+  }
+
+  Future<void> _addMecanics() async {
+    final mechIds = await Navigator.pushNamed(
+      context,
+      MechanicsScreen.routeName,
+      arguments: ctrl.selectedMechIds,
+    ) as List<int>?;
+
+    if (mechIds != null) {
+      ctrl.setMechanicsIds(mechIds);
+      if (mounted) FocusScope.of(context).nextFocus();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final width = MediaQuery.of(context).size.width * .8;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dados do Jogo'),
+        title: const Text('Dados do Board'),
         centerTitle: true,
         leading: IconButton(
           onPressed: Navigator.of(context).pop,
@@ -72,7 +136,7 @@ class _BoardgamesScreenState extends State<BoardgamesScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: ListenableBuilder(
             listenable: ctrl,
             builder: (context, _) {
@@ -81,196 +145,217 @@ class _BoardgamesScreenState extends State<BoardgamesScreen> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SubTitleProduct(
-                        subtile: 'Nome do Jogo',
-                        color: colorScheme.primary,
-                        padding: const EdgeInsets.only(top: 8, bottom: 0),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustomNamesFormField(
-                              controller: ctrl.nameController,
-                              names: ctrl.bgNames,
-                              fullBorder: false,
-                              floatingLabelBehavior: null,
-                              textCapitalization: TextCapitalization.sentences,
-                              onSubmitted: () {
-                                ctrl.getBggInfo();
-                              },
-                            ),
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                  context, BggSearchScreen.routeName);
-                            },
-                            label: const Text('BGG'),
-                            icon: const Icon(Icons.search),
-                          ),
-                        ],
+                      CustomNamesFormField(
+                        labelText: 'Nome do Jogo:',
+                        labelStyle: AppTextStyle.font18Bold.copyWith(
+                          color: colorScheme.primary,
+                        ),
+                        hintText: 'Entre o nome do jogo aqui',
+                        controller: ctrl.nameController,
+                        names: ctrl.bgNames,
+                        fullBorder: false,
+                        textCapitalization: TextCapitalization.sentences,
+                        onSubmitted: () {
+                          ctrl.getBgInfo();
+                        },
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4, bottom: 12),
-                        child: Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SubTitleProduct(
-                              subtile: 'Número de Jogadores',
+                              subtile: 'Publicado em: ',
                               color: colorScheme.primary,
                               padding: const EdgeInsets.only(top: 8, bottom: 0),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(
-                                  child: SpinBoxField(
-                                    value: 2,
-                                    controller: ctrl.minPlayersController,
-                                  ),
-                                ),
-                                const Text('a'),
-                                Expanded(
-                                  child: SpinBoxField(
-                                    value: 4,
-                                    controller: ctrl.maxPlayersController,
-                                  ),
-                                ),
-                              ],
+                            SpinBoxField(
+                              value: 2020,
+                              minValue: 1978,
+                              maxValue: DateTime.now().year,
+                              controller: ctrl.yearController,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Ink(
+                        width: width,
+                        height: width,
+                        child: ListenableBuilder(
+                          listenable: ctrl.imageController,
+                          builder: (context, _) {
+                            return InkWell(
+                              onTap: _setImage,
+                              child: (ctrl.imageController.text.isNotEmpty)
+                                  ? (ctrl.imageController.text.contains('http'))
+                                      ? Image.network(ctrl.imageController.text)
+                                      : Image.file(
+                                          File(ctrl.imageController.text))
+                                  : Icon(
+                                      Icons.image_not_supported_rounded,
+                                      size: width,
+                                      color: colorScheme.tertiaryContainer,
+                                    ),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4, bottom: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SubTitleProduct(
+                              subtile: '# de Jogadores:',
+                              color: colorScheme.primary,
+                              padding: const EdgeInsets.only(top: 8, bottom: 0),
+                            ),
+                            SpinBoxField(
+                              value: 2,
+                              controller: ctrl.minPlayersController,
+                            ),
+                            const Text('-'),
+                            SpinBoxField(
+                              value: 4,
+                              controller: ctrl.maxPlayersController,
                             ),
                           ],
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4, bottom: 12),
-                        child: Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SubTitleProduct(
-                              subtile: 'Duração (min)',
+                              subtile: 'Tempo (min):',
                               color: colorScheme.primary,
                               padding: const EdgeInsets.only(top: 8, bottom: 0),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(
-                                  child: SpinBoxField(
-                                    value: 25,
-                                    minValue: 12,
-                                    maxValue: 360,
-                                    controller: ctrl.minTimeController,
-                                  ),
-                                ),
-                                const Text('a'),
-                                Expanded(
-                                  child: SpinBoxField(
-                                    value: 50,
-                                    minValue: 12,
-                                    maxValue: 720,
-                                    controller: ctrl.maxTimeController,
-                                  ),
-                                ),
-                              ],
+                            SpinBoxField(
+                              value: 25,
+                              minValue: 12,
+                              maxValue: 360,
+                              controller: ctrl.minTimeController,
+                            ),
+                            const Text('-'),
+                            SpinBoxField(
+                              value: 50,
+                              minValue: 12,
+                              maxValue: 720,
+                              controller: ctrl.maxTimeController,
                             ),
                           ],
                         ),
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SubTitleProduct(
-                            subtile: 'Idade recomendada',
+                            subtile: 'Idade mínima: ',
                             color: colorScheme.primary,
                             padding: const EdgeInsets.only(top: 8, bottom: 0),
                           ),
-                          Expanded(
-                            child: SpinBoxField(
-                              value: 10,
-                              minValue: 3,
-                              maxValue: 25,
-                              controller: ctrl.ageController,
-                            ),
+                          SpinBoxField(
+                            value: 10,
+                            minValue: 3,
+                            maxValue: 25,
+                            controller: ctrl.ageController,
                           ),
+                          const Text('+'),
                         ],
                       ),
-                      Column(
+                      Card(
+                        color: colorScheme.surfaceContainerHigh,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: CustomFormField(
+                            labelText: 'Designer(s):',
+                            labelStyle: AppTextStyle.font18Bold.copyWith(
+                              color: colorScheme.primary,
+                            ),
+                            fullBorder: false,
+                            controller: ctrl.designerController,
+                          ),
+                        ),
+                      ),
+                      Card(
+                        color: colorScheme.surfaceContainerHigh,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: CustomFormField(
+                            labelText: 'Artista(s):',
+                            labelStyle: AppTextStyle.font18Bold.copyWith(
+                              color: colorScheme.primary,
+                            ),
+                            fullBorder: false,
+                            controller: ctrl.artistController,
+                          ),
+                        ),
+                      ),
+                      Card(
+                        color: colorScheme.surfaceContainerHigh,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: CustomLongFormField(
+                            labelText: 'Descrição:',
+                            labelStyle: AppTextStyle.font18Bold.copyWith(
+                              color: colorScheme.primary,
+                            ),
+                            controller: ctrl.descriptionController,
+                            fullBorder: false,
+                            maxLines: null,
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: _addMecanics,
+                        child: AbsorbPointer(
+                          child: Card(
+                            color: colorScheme.surfaceContainerHigh,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: CustomFormField(
+                                labelText: 'Mecânicas *',
+                                labelStyle: AppTextStyle.font18Bold.copyWith(
+                                  color: colorScheme.primary,
+                                ),
+                                controller: ctrl.mechsController,
+                                fullBorder: false,
+                                maxLines: null,
+                                floatingLabelBehavior: null,
+                                readOnly: true,
+                                suffixIcon: const Icon(Icons.ads_click),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      OverflowBar(
+                        alignment: MainAxisAlignment.spaceAround,
                         children: [
-                          SubTitleProduct(
-                            subtile: 'Descrição',
-                            color: colorScheme.primary,
-                            padding: const EdgeInsets.only(top: 8, bottom: 0),
+                          FilledButton.tonalIcon(
+                            onPressed: _backPageWithSave,
+                            icon: const Icon(Icons.save),
+                            label: const Text('Salvar'),
                           ),
-                          ReadMoreText(
-                            ctrl.descriptionController.text,
-                            trimMode: TrimMode.line,
-                            trimLines: 3,
-                            trimExpandedText: '  [ver menos]',
-                            trimCollapsedText: '  [ver mais]',
-                            colorClickableText: colorScheme.primary,
+                          FilledButton.tonalIcon(
+                            onPressed: _backPage,
+                            icon: const Icon(Icons.cancel),
+                            label: const Text('Cancelar'),
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12, bottom: 12),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SubTitleProduct(
-                              subtile: 'Complexidade (0-5): ',
-                              color: colorScheme.primary,
-                              padding: const EdgeInsets.only(top: 8, bottom: 0),
-                            ),
-                            Expanded(
-                              child: SpinBoxField(
-                                controller: ctrl.weightController,
-                                minValue: 0,
-                                maxValue: 5,
-                                increment: 0.1,
-                                fractionDigits: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4, bottom: 12),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SubTitleProduct(
-                              subtile: 'Pontuação (0-10): ',
-                              color: colorScheme.primary,
-                              padding: const EdgeInsets.only(top: 8, bottom: 0),
-                            ),
-                            Expanded(
-                              child: SpinBoxField(
-                                controller: ctrl.averageController,
-                                minValue: 0,
-                                maxValue: 10,
-                                increment: 0.1,
-                                fractionDigits: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4, bottom: 12),
-                        child: Column(
-                          children: [
-                            SubTitleProduct(
-                              subtile: 'Mecânicas',
-                              color: colorScheme.primary,
-                              padding: const EdgeInsets.only(top: 8, bottom: 0),
-                            ),
-                            Text(ctrl.mechsController.text),
-                          ],
-                        ),
-                      ),
-                      BigButton(
-                        color: Colors.yellow.withOpacity(0.45),
-                        label: 'Voltar',
-                        onPressed: _backPage,
-                      ),
+                      // BigButton(
+                      //   color: Colors.yellow.withOpacity(0.45),
+                      //   label: 'Voltar',
+                      //   onPressed: _backPage,
+                      // ),
                     ],
                   ),
                   if (ctrl.state is BoardgameStateLoading)

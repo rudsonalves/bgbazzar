@@ -84,6 +84,6 @@ const keyBgMinAge = 'minAge';
 const keyBgDesigner = 'designer';
 const keyBgArtist = 'artist';
 const keyBgDescription = 'description';
-const keyBgWeight = 'weight';
+const keyBgViews = 'views';
 const keyBgScoring = 'scoring';
 const keyBgMechanics = 'mechanics';

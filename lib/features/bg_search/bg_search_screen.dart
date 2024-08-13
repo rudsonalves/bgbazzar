@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
+import '../boardgames/boardgame_screen.dart';
 import 'bg_search_controller.dart';
 import 'bg_search_state.dart';
 import 'widgets/bg_info_card.dart';
@@ -52,24 +53,38 @@ class _BggSearchScreenState extends State<BggSearchScreen> {
 
   void _backPageWithGame() => Navigator.pop(context, ctrl.selectedGame);
 
+  void _addBoardgame() {
+    Navigator.pushNamed(context, BoardgamesScreen.routeName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BGG Search'),
+        title: const Text('Boardgame Info'),
         centerTitle: true,
         leading: IconButton(
           onPressed: _backPageWithGame,
           icon: const Icon(Icons.arrow_back_ios_rounded),
         ),
       ),
+      floatingActionButton: ctrl.isAdmin
+          ? FloatingActionButton.extended(
+              onPressed: _addBoardgame,
+              icon: const Icon(Icons.add),
+              label: const Text('Boardgame'),
+            )
+          : null,
       body: ListenableBuilder(
           listenable: ctrl,
           builder: (context, _) {
             return Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 12,
+                  ),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,

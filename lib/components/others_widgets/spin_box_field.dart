@@ -172,43 +172,35 @@ class _SpinBoxFieldState extends State<SpinBoxField> {
       child: Row(
         children: [
           if (widget.label != null) widget.label!,
-          SizedBox(
-            width: 60,
-            child: GestureDetector(
-              onLongPress: _onLongPressDecrement,
-              onLongPressEnd: _onLongPressEndDecrement,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(50),
-                onTap: _onTapDecrement,
-                customBorder: const CircleBorder(),
-                child: const Padding(
-                  padding: EdgeInsets.all(4),
-                  child: Icon(Icons.arrow_back_ios_rounded),
-                ),
+          GestureDetector(
+            onLongPress: _onLongPressDecrement,
+            onLongPressEnd: _onLongPressEndDecrement,
+            child: InkWell(
+              onTap: _onTapDecrement,
+              customBorder: const CircleBorder(),
+              child: const Padding(
+                padding: EdgeInsets.all(4),
+                child: Icon(Icons.arrow_back_ios_rounded),
               ),
             ),
           ),
-          Expanded(
-            child: TextField(
-              readOnly: true,
-              textAlign: TextAlign.center,
-              style: widget.style,
-              controller: widget.controller,
-              decoration: widget.decoration,
-            ),
-          ),
-          SizedBox(
-            width: 60,
-            child: GestureDetector(
-              onLongPress: _onLongPressIncrement,
-              onLongPressEnd: _onLongPressEndIncrement,
-              child: InkWell(
-                onTap: _onTapIncrement,
-                customBorder: const CircleBorder(),
-                child: const Padding(
-                  padding: EdgeInsets.all(4),
-                  child: Icon(Icons.arrow_forward_ios_rounded),
-                ),
+          ListenableBuilder(
+              listenable: widget.controller,
+              builder: (context, _) {
+                return Text(
+                  widget.controller.text.trim(),
+                  textAlign: TextAlign.center,
+                );
+              }),
+          GestureDetector(
+            onLongPress: _onLongPressIncrement,
+            onLongPressEnd: _onLongPressEndIncrement,
+            child: InkWell(
+              onTap: _onTapIncrement,
+              customBorder: const CircleBorder(),
+              child: const Padding(
+                padding: EdgeInsets.all(4),
+                child: Icon(Icons.arrow_forward_ios_rounded),
               ),
             ),
           ),

@@ -9,6 +9,116 @@
 
 # ChangeLog
 
+## 2024/08/13 - version: 0.6.13+36
+
+Update database file name and refactor project components for better organization and functionality.
+
+
+1. assets/data/bgg.db
+   - Renamed to `assets/data/bgBazzar.db`.
+   - Binary content of the file has changed.
+
+2. lib/common/models/bg_name.dart
+   - Updated `BGNameModel`:
+     - Changed `id` type from `String?` to `int?`.
+     - Added `bgId` field of type `String?`.
+
+3. lib/common/models/boardgame.dart
+   - Updated `BoardgameModel`:
+     - Replaced `weight` field with `views` of type `int` and set default value to `0`.
+     - Adjusted `toString` method to reflect these changes.
+
+4. lib/common/singletons/current_user.dart
+   - Added `isAdmin` getter to return whether the current user is an admin.
+
+5. lib/components/custon_field_controllers/numeric_edit_controller.dart
+   - Modified `NumericEditController`:
+     - Made it generic to support both `int` and `double` types.
+     - Improved validation and handling of numeric input based on the type.
+     - Refactored `_validateNumber` method for better clarity.
+
+6. lib/components/form_fields/custom_form_field.dart
+   - Added `labelStyle` parameter for customizing the text style of the label.
+
+7. lib/components/form_fields/custom_long_form_field.dart
+   - Introduced a new `CustomLongFormField` widget to handle multi-line text input with various customization options.
+
+8. lib/components/form_fields/custom_names_form_field.dart
+   - Added `labelStyle` parameter for text style customization of the label.
+
+9. lib/components/others_widgets/spin_box_field.dart
+   - Refactored the widget:
+     - Removed redundant `SizedBox` wrappers.
+     - Replaced `TextField` with `ListenableBuilder` to dynamically display numeric values.
+
+10. lib/features/bg_search/bg_search_controller.dart
+    - Updated to include `CurrentUser` for checking admin rights.
+    - Adjusted methods to match updated data models.
+
+11. lib/features/bg_search/bg_search_screen.dart
+    - Updated UI to support admin functionality:
+      - Added FAB to add a new board game if the user is an admin.
+      - Refactored padding and UI components for better spacing.
+
+12. lib/features/bg_search/widgets/bg_info_card.dart
+    - Commented out the display of `views` and `scoring` for further adjustments.
+
+13. lib/features/bg_search/widgets/search_card.dart
+    - Replaced `getBoardInfo` parameter from `id` to `bgId` to reflect updated data model.
+
+14. lib/features/boardgames/boardgame_controller.dart
+    - Refactored to use updated `NumericEditController` for various integer-based inputs.
+    - Added methods to save board games and handle mechanics more effectively.
+
+15. lib/features/boardgames/boardgame_screen.dart
+    - Updated UI components:
+      - Added fields for image upload and mechanic selection.
+      - Implemented save functionality with data validation.
+
+16. lib/manager/bg_names_manager.dart
+    - Refactored to handle image conversion and saving of new board games.
+    - Adjusted methods to support new data model changes.
+
+17. lib/repository/parse_server/boardgame_repository.dart
+    - Replaced `weight` field with `views` in Parse Server operations.
+
+18. lib/repository/parse_server/common/constants.dart
+    - Updated database constants to reflect the change from `weight` to `views`.
+
+19. lib/repository/parse_server/common/parse_to_model.dart
+    - Adjusted model parsing to reflect changes in the data model.
+
+20. lib/repository/sqlite/mechanic_repository.dart
+    - Updated to use `MechanicsStore` for querying mechanics.
+
+21. lib/store/mech_store.dart
+    - Renamed to `bg_names.dart` and refactored to better align with its purpose.
+
+22. lib/store/constants/constants.dart
+    - Updated database configuration:
+      - Renamed `dbName` to `bgBazzar.db`.
+      - Updated constants related to database structure and schema.
+
+23. lib/store/database_manager.dart
+    - Enhanced initialization process to support different platforms and configurations.
+    - Included the setup for a new directory structure on desktop platforms.
+
+24. lib/store/mechanics.dart
+    - Added new store class `MechanicsStore` to handle mechanic-related database operations.
+
+25. pubspec.yaml & pubspec.lock
+    - Added dependencies:
+      - `sqflite_common_ffi`
+      - `sqflite_common_ffi_web`
+      - `image`
+    - Updated assets path to reflect the renamed database file.
+
+26. web/index.html
+    - Included cropper.js library for handling image cropping functionality.
+
+This commit reorganizes and enhances the project by renaming and refactoring several components. It includes updates to the database file and structure, introduces new dependencies, and enhances user interface elements to better support functionality, particularly for board game management and image handling.
+
+
 ## 2024/08/12 - version: 0.6.12+35
 
 Refactor project structure by organizing repositories into more descriptive directories
