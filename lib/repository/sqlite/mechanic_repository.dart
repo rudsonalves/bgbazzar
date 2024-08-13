@@ -18,7 +18,7 @@
 import 'dart:developer';
 
 import '../../common/models/mechanic.dart';
-import '../../store/mech_store.dart';
+import '../../store/mechanics.dart';
 
 /// This class provides methods to interact with the Parse Server
 /// to retrieve a list of mechanics.
@@ -29,7 +29,7 @@ class MechanicRepository {
   /// otherwise create an error.
   static Future<List<MechanicModel>> getList() async {
     try {
-      final result = await MechStore.queryMechs();
+      final result = await MechanicsStore.queryMechs();
 
       final mechanics =
           result.map((item) => MechanicModel.fromMap(item)).toList();

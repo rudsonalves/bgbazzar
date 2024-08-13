@@ -60,7 +60,7 @@ class BoardgameRepository {
         ..set<String?>(keyBgArtist, bg.artist)
         ..set<String?>(keyBgDescription, bg.description)
         ..set<double?>(keyBgScoring, bg.scoring)
-        ..set<double?>(keyBgWeight, bg.weight)
+        ..set<int?>(keyBgViews, bg.views)
         ..set<List<int>>(keyBgMechanics, bg.mechanics);
 
       final response = await parse.save();

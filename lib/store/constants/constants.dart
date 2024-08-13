@@ -15,28 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-const dbName = 'bgg.db';
+const dbName = 'bgBazzar.db';
 const dbVersion = 1;
-const dbAssertPath = 'assets/data/bgg.db';
-
-const rankTable = "bggRank";
-const rankIndex = "rankGameNameIndex";
-const rankId = "id";
-const rankGameName = "gameName";
-const rankYearPublished = "yearPublished";
-const rankBggRank = "rank";
-const rankBayesAverage = "bayesAverage";
-const rankAverage = "average";
-const rankUsersRated = "usersRated";
-const rankIsExpansion = "isExpansion";
-const rankAbstractsRank = "abstractsRank";
-const rankCgsRank = "cgsRank";
-const rankChildrensgamesRank = "childrensGamesrank";
-const rankConstFamilyGamesRank = "familyGamesRank";
-const rankPartyGamesRank = "partyGamesRank";
-const rankStrategyGamesRank = "strategyGamesRank";
-const rankThematicRank = "thematicRank";
-const rankWarGamesRank = "warGamesRank";
+const dbAssertPath = 'assets/data/bgBazzar.db';
 
 const mechTable = "mechanics";
 const mechIndexName = "mechNameIndex";
@@ -49,5 +30,14 @@ const mechDescricao = "descricao";
 
 const dbVersionTable = "dbVersion";
 const dbVersionId = "id";
-const dbVersionNumber = "version";
-const dbCurrentVersion = 1002;
+const dbAppVersion = "version";
+const dbBGVersion = 'bg_version';
+const dbBGList = 'bg_list';
+
+const bgNamesTable = 'bgNames';
+const bgId = 'id';
+const bgBgId = 'bgId';
+const bgName = 'name';
+
+const dbAppVersionValue = 1002;
+const dbBGVersionValue = 1;

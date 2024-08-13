@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 
 class CustomNamesFormField extends StatefulWidget {
   final String? labelText;
+  final TextStyle? labelStyle;
   final String? hintText;
   final TextEditingController controller;
   final List<String> names;
@@ -38,6 +39,7 @@ class CustomNamesFormField extends StatefulWidget {
   const CustomNamesFormField({
     super.key,
     this.labelText,
+    this.labelStyle,
     this.hintText,
     required this.controller,
     required this.names,
@@ -188,6 +190,7 @@ class _CustomNamesFormFieldState extends State<CustomNamesFormField> {
               widget.textCapitalization ?? TextCapitalization.none,
           decoration: InputDecoration(
             labelText: widget.labelText,
+            labelStyle: widget.labelStyle,
             hintText: widget.hintText,
             errorText: widget.errorText,
             suffixIcon: widget.suffixIcon,

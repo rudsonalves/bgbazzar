@@ -30,7 +30,7 @@ class BoardgameModel {
   String? artist;
   String? description;
   double? scoring;
-  double? weight;
+  int views;
   List<int> mechanics;
 
   BoardgameModel({
@@ -47,7 +47,7 @@ class BoardgameModel {
     this.artist,
     this.description,
     this.scoring,
-    this.weight,
+    this.views = 0,
     required this.mechanics,
   });
 
@@ -76,8 +76,8 @@ class BoardgameModel {
         ' designer: $designer,\n'
         ' artist: $artist,\n'
         ' description: $description,\n'
-        ' average: $scoring,\n'
-        ' averageweight: $weight,\n'
+        ' scoring: $scoring,\n'
+        ' views: $views,\n'
         ' boardgamemechanic: $mechanics)';
   }
 }

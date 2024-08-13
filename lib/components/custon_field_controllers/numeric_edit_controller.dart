@@ -17,25 +17,49 @@
 
 import 'package:flutter/material.dart';
 
-class NumericEditController extends TextEditingController {
-  final RegExp reInitZeroNumber = RegExp(r'^0[\d][\.\d]*$');
+class NumericEditController<T extends num> extends TextEditingController {
+  late final RegExp reInitZeroNumber;
   String oldValue = '';
 
-  double get numericValue => double.tryParse(text) ?? 0;
-  set numericValue(double value) => text = value.toString();
+  T get numericValue {
+    if (T == int) return int.tryParse(text) as T? ?? 0 as T;
+    if (T == double) return double.tryParse(text) as T? ?? 0 as T;
+    throw UnsupportedError('Unsupported type: $T');
+  }
 
-  NumericEditController({double? initialValue}) {
+  set numericValue(T value) => text = value.toString();
+
+  bool _isValidateValue = false;
+
+  NumericEditController({T? initialValue}) {
     oldValue = initialValue != null ? initialValue.toString() : '0';
     text = oldValue;
+    if (T == int) {
+      reInitZeroNumber = RegExp(r'^0[\d]*$');
+    } else {
+      reInitZeroNumber = RegExp(r'^0[\d][\.\d]*$');
+    }
     addListener(_validateNumber);
   }
 
   void _validateNumber() {
+    if (_isValidateValue) return;
+    _isValidateValue = true;
+
     String newValue = text;
+
+    // Remove point if T is int
+    if (T == int && newValue.contains('.')) {
+      oldValue = newValue.replaceAll('.', '');
+      _setControllerText();
+      _isValidateValue = false;
+      return;
+    }
 
     // Remove spaces
     if (newValue != newValue.trim()) {
       _setControllerText();
+      _isValidateValue = false;
       return;
     }
 
@@ -43,6 +67,7 @@ class NumericEditController extends TextEditingController {
     if (newValue.isEmpty) {
       oldValue = '0';
       _setControllerText();
+      _isValidateValue = false;
       return;
     }
 
@@ -50,20 +75,25 @@ class NumericEditController extends TextEditingController {
     if (reInitZeroNumber.hasMatch(newValue)) {
       oldValue = newValue.substring(1);
       _setControllerText();
+      _isValidateValue = false;
       return;
     }
 
     // Check if it is a valid number
-    final result = double.tryParse(newValue);
+    final result =
+        T == int ? int.tryParse(newValue) : double.tryParse(newValue);
     if (result == null) {
       _setControllerText();
+      _isValidateValue = false;
       return;
     }
 
     oldValue = newValue;
+    _isValidateValue = false;
   }
 
   void _setControllerText() {
+    oldValue = oldValue.trim().isEmpty ? '0' : oldValue.trim();
     text = oldValue;
     selection = TextSelection.fromPosition(
       TextPosition(offset: oldValue.length),

@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 
 class CustomFormField extends StatelessWidget {
   final String? labelText;
+  final TextStyle? labelStyle;
   final String? hintText;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -39,6 +40,7 @@ class CustomFormField extends StatelessWidget {
   CustomFormField({
     super.key,
     this.labelText,
+    this.labelStyle,
     this.hintText,
     this.controller,
     this.validator,
@@ -74,6 +76,7 @@ class CustomFormField extends StatelessWidget {
         textCapitalization: textCapitalization ?? TextCapitalization.none,
         decoration: InputDecoration(
           labelText: labelText,
+          labelStyle: labelStyle,
           hintText: hintText,
           errorText: errorText,
           suffixIcon: suffixIcon,

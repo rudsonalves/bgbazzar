@@ -40,6 +40,7 @@ class CurrentUser {
   final _isLoged = ValueNotifier<bool>(false);
 
   String get userId => _user!.id!;
+  bool get isAdmin => _user!.userType == UserType.admin;
   ValueListenable<bool> get isLogedListernable => _isLoged;
   bool get isLogged => _isLoged.value;
 
