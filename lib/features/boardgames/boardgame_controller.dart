@@ -25,7 +25,7 @@ import '../../manager/mechanics_manager.dart';
 import '../../common/models/boardgame.dart';
 import '../../components/custon_field_controllers/numeric_edit_controller.dart';
 import '../../get_it.dart';
-import '../../repository/parse_server/boardgame_repository.dart';
+import '../../repository/parse_server/ps_boardgame_repository.dart';
 import 'boardgame_state.dart';
 
 class BoardgameController extends ChangeNotifier {
@@ -106,7 +106,7 @@ class BoardgameController extends ChangeNotifier {
         _changeState(BoardgameStateSuccess());
         return;
       }
-      final bgInfo = await BoardgameRepository.getById(id);
+      final bgInfo = await PSBoardgameRepository.getById(id);
       if (bgInfo != null) loadBoardInfo(bgInfo);
       log(bgInfo.toString());
       _changeState(BoardgameStateSuccess());

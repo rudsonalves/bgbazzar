@@ -26,7 +26,7 @@ import 'package:path_provider/path_provider.dart';
 import '../common/models/bg_name.dart';
 import '../common/models/boardgame.dart';
 import '../common/settings/local_server.dart';
-import '../repository/parse_server/boardgame_repository.dart';
+import '../repository/parse_server/ps_boardgame_repository.dart';
 
 class BgNamesManager {
   final List<BGNameModel> _bgs = [];
@@ -41,7 +41,7 @@ class BgNamesManager {
   Future<void> getBGNames() async {
     // FIXME: esta lista deve ser baixada do parse server apenas se houver novas
     //        informações, e somente as novas informações.
-    final bgNames = await BoardgameRepository.getNames();
+    final bgNames = await PSBoardgameRepository.getNames();
     _bgs.clear();
     if (bgNames.isNotEmpty) {
       _bgs.addAll(bgNames);
@@ -80,7 +80,7 @@ class BgNamesManager {
         bg.image = convertedImagePath;
       }
 
-      final newBg = await BoardgameRepository.save(bg);
+      final newBg = await PSBoardgameRepository.save(bg);
       if (newBg == null) {
         throw Exception('new bg creating error');
       }

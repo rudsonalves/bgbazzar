@@ -22,7 +22,7 @@ import '../../common/models/boardgame.dart';
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
 import '../../manager/bg_names_manager.dart';
-import '../../repository/parse_server/boardgame_repository.dart';
+import '../../repository/parse_server/ps_boardgame_repository.dart';
 import 'bg_search_state.dart';
 
 class BgController extends ChangeNotifier {
@@ -70,7 +70,7 @@ class BgController extends ChangeNotifier {
   Future<void> getBoardInfo(String id) async {
     try {
       _changeState(BggSearchStateLoading());
-      selectedGame = await BoardgameRepository.getById(id);
+      selectedGame = await PSBoardgameRepository.getById(id);
       _changeState(BggSearchStateSuccess());
     } catch (err) {
       _changeState(BggSearchStateError());

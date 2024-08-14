@@ -26,7 +26,7 @@ import '../../common/singletons/current_user.dart';
 import '../../components/custon_field_controllers/masked_text_controller.dart';
 import '../../get_it.dart';
 import '../../manager/address_manager.dart';
-import '../../repository/parse_server/user_repository.dart';
+import '../../repository/parse_server/ps_user_repository.dart';
 
 class MyDataController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -91,7 +91,7 @@ class MyDataController extends ChangeNotifier {
             : null;
         newUser.password = newPass.isNotEmpty ? newPass : null;
 
-        await UserRepository.update(newUser);
+        await PSUserRepository.update(newUser);
 
         user.name = newUser.name ?? user.name;
         user.phone = newUser.phone ?? user.phone;

@@ -21,7 +21,7 @@ import '../../common/models/user.dart';
 import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
-import '../../repository/parse_server/user_repository.dart';
+import '../../repository/parse_server/ps_user_repository.dart';
 import 'login_state.dart';
 
 class LoginController extends ChangeNotifier {
@@ -52,7 +52,7 @@ class LoginController extends ChangeNotifier {
   Future<UserModel?> login(UserModel user) async {
     try {
       _changeState(LoginStateLoading());
-      final newUser = await UserRepository.loginWithEmail(user);
+      final newUser = await PSUserRepository.loginWithEmail(user);
       currentUser.init(newUser);
       _changeState(LoginStateSuccess());
       return newUser;

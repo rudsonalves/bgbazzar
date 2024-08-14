@@ -19,7 +19,7 @@
 import '../common/models/address.dart';
 import '../common/singletons/current_user.dart';
 import '../get_it.dart';
-import '../repository/parse_server/address_repository.dart';
+import '../repository/parse_server/ps_address_repository.dart';
 
 /// Custom exception to handle duplicate address names.
 class DuplicateNameException implements Exception {
@@ -58,7 +58,7 @@ class AddressManager {
   /// [userId] - The ID of the user.
   Future<void> getFromUserId(String userId) async {
     _addresses.clear();
-    final addrs = await AddressRepository.getUserAddresses(userId);
+    final addrs = await PSAddressRepository.getUserAddresses(userId);
     if (addrs != null && addrs.isNotEmpty) {
       _addresses.addAll(addrs);
     }
@@ -71,7 +71,7 @@ class AddressManager {
     final index = _indexWhereName(name);
     if (index != -1) {
       final address = _addresses[index];
-      await AddressRepository.delete(address.id!);
+      await PSAddressRepository.delete(address.id!);
       _addresses.removeAt(index);
     }
   }
@@ -79,7 +79,7 @@ class AddressManager {
   Future<void> deleteById(String addressId) async {
     final index = _indexWhereId(addressId);
     if (index != -1) {
-      await AddressRepository.delete(addressId);
+      await PSAddressRepository.delete(addressId);
       _addresses.removeAt(index);
     }
   }
@@ -106,7 +106,7 @@ class AddressManager {
       }
     }
 
-    final savedAddress = await AddressRepository.save(address);
+    final savedAddress = await PSAddressRepository.save(address);
     if (address.id == null) {
       _addresses.add(savedAddress!);
     }

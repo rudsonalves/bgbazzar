@@ -29,7 +29,7 @@ import '../../components/custon_field_controllers/currency_text_controller.dart'
 import '../../get_it.dart';
 import '../../manager/bg_names_manager.dart';
 import '../../manager/mechanics_manager.dart';
-import '../../repository/parse_server/ad_repository.dart';
+import '../../repository/parse_server/ps_ad_repository.dart';
 import 'edit_ad_state.dart';
 
 class EditAdController extends ChangeNotifier {
@@ -190,7 +190,7 @@ class EditAdController extends ChangeNotifier {
       ad.condition = _condition;
       ad.status = _adStatus;
 
-      await AdRepository.update(ad);
+      await PSAdRepository.update(ad);
       _changeState(EditAdStateSuccess());
       return ad;
     } catch (err) {
@@ -217,7 +217,7 @@ class EditAdController extends ChangeNotifier {
       ad.condition = _condition;
       ad.status = _adStatus;
 
-      await AdRepository.save(ad);
+      await PSAdRepository.save(ad);
       _changeState(EditAdStateSuccess());
       return ad;
     } catch (err) {

@@ -30,14 +30,63 @@ class MechanicsStore {
     try {
       List<Map<String, dynamic>> result = await database.query(
         mechTable,
-        columns: [mechId, mechNome, mechDescricao],
-        orderBy: mechNome,
+        columns: [mechId, mechName, mechDescription],
+        orderBy: mechName,
       );
 
       return result;
     } catch (err) {
-      log('Error: $err');
+      log('MechanicsStore.queryMechs: $err');
       return [];
+    }
+  }
+
+  static Future<int> add(Map<String, dynamic> map) async {
+    final database = await _databaseManager.database;
+
+    try {
+      final result = await database.insert(
+        mechTable,
+        map,
+      );
+
+      return result;
+    } catch (err) {
+      log('MechanicsStore.add: $err');
+      return -1;
+    }
+  }
+
+  static Future<int> update(Map<String, dynamic> map) async {
+    final database = await _databaseManager.database;
+
+    try {
+      final result = await database.update(
+        mechTable,
+        map,
+      );
+
+      return result;
+    } catch (err) {
+      log('MechanicsStore.add: $err');
+      return -1;
+    }
+  }
+
+  static Future<int> delete(int id) async {
+    final database = await _databaseManager.database;
+
+    try {
+      final result = await database.delete(
+        mechTable,
+        where: '$mechId: ?',
+        whereArgs: [id],
+      );
+
+      return result;
+    } catch (err) {
+      log('MechanicsStore.add: $err');
+      return -1;
     }
   }
 }

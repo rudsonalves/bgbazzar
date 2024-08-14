@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
-import '../../repository/parse_server/ad_repository.dart';
+import '../../repository/parse_server/ps_ad_repository.dart';
 import '../new_address/new_address_screen.dart';
 import 'address_controller.dart';
 import 'address_state.dart';
@@ -55,7 +55,7 @@ class _AddressScreenState extends State<AddressScreen> {
   Future<void> _removeAddress() async {
     final addressId = ctrl.selectesAddresId;
     if (addressId != null) {
-      final adsList = await AdRepository.adsInAddress(addressId);
+      final adsList = await PSAdRepository.adsInAddress(addressId);
 
       if (adsList.isNotEmpty) {
         if (mounted) {

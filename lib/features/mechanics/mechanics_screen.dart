@@ -15,8 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
+import '../../common/singletons/current_user.dart';
+import '../../components/form_fields/custom_form_field.dart';
+import '../../get_it.dart';
 import 'mechanics_controller.dart';
 
 class MechanicsScreen extends StatefulWidget {
@@ -53,6 +58,60 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
     Navigator.pop(context, ctrl.selectedIds);
   }
 
+  Future<void> _addMechanic() async {
+    final nameController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final result = await showDialog<bool?>(
+          context: context,
+          builder: (context) => SimpleDialog(
+            backgroundColor: colorScheme.surfaceContainerHigh,
+            contentPadding: const EdgeInsets.fromLTRB(12, 12.0, 12, 16.0),
+            title: const Text('Nova Mecânica'),
+            children: [
+              CustomFormField(
+                controller: nameController,
+                labelText: 'Mecânica',
+                hintText: 'Adicione um nome para a mecânica',
+                fullBorder: false,
+              ),
+              CustomFormField(
+                controller: descriptionController,
+                labelText: 'Descrição',
+                hintText: 'Adicione uma descrição',
+                fullBorder: false,
+              ),
+              OverflowBar(
+                alignment: MainAxisAlignment.spaceAround,
+                children: [
+                  FilledButton.tonalIcon(
+                    onPressed: () => Navigator.pop(context, true),
+                    label: const Text('Adicionar'),
+                    icon: const Icon(Icons.add),
+                  ),
+                  FilledButton.tonalIcon(
+                    onPressed: () => Navigator.pop(context, false),
+                    label: const Text('Cancelar'),
+                    icon: const Icon(Icons.cancel),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (result) {
+      log(nameController.text);
+      log(descriptionController.text);
+    }
+
+    await Future.delayed(const Duration(milliseconds: 50));
+    nameController.dispose();
+    descriptionController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -80,6 +139,34 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                   selectedIcon: const Icon(Icons.ballot_rounded),
                 );
               }),
+        ],
+      ),
+      floatingActionButton: OverflowBar(
+        alignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          getIt<CurrentUser>().isAdmin
+              ? FloatingActionButton.extended(
+                  heroTag: 'hero-1',
+                  backgroundColor:
+                      colorScheme.primaryContainer.withOpacity(0.60),
+                  onPressed: _addMechanic,
+                  label: const Text('Adicionar'),
+                  icon: const Icon(Icons.add),
+                )
+              : FloatingActionButton.extended(
+                  heroTag: 'hero-2',
+                  backgroundColor:
+                      colorScheme.primaryContainer.withOpacity(0.60),
+                  onPressed: _closeMechanicsPage,
+                  label: const Text('Voltar'),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                ),
+          FloatingActionButton.extended(
+            backgroundColor: colorScheme.primaryContainer.withOpacity(0.60),
+            onPressed: ctrl.deselectAll,
+            icon: const Icon(Icons.deselect),
+            label: const Text('Deselecionar'),
+          ),
         ],
       ),
       body: Card(
@@ -137,21 +224,6 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                     }
                   },
                 ),
-              ),
-              OverflowBar(
-                alignment: MainAxisAlignment.spaceAround,
-                children: [
-                  FilledButton.tonalIcon(
-                    onPressed: _closeMechanicsPage,
-                    label: const Text('Voltar'),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                  ),
-                  FilledButton.tonalIcon(
-                    onPressed: ctrl.deselectAll,
-                    icon: const Icon(Icons.deselect),
-                    label: const Text('Deselecionar'),
-                  ),
-                ],
               ),
             ],
           ),
