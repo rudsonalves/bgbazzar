@@ -15,13 +15,28 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../../common/models/mechanic.dart';
 import '../../get_it.dart';
 import '../../manager/mechanics_manager.dart';
 
-class MechanicsController {
+import 'package:flutter/foundation.dart';
+
+import 'mechanics_state.dart';
+
+class MechanicsController extends ChangeNotifier {
+  MechanicsState _state = MechanicsStateInitial();
+
+  MechanicsState get state => _state;
+
+  void _changeState(MechanicsState newState) {
+    _state = newState;
+    notifyListeners();
+  }
+
   final mechanicManager = getIt<MechanicsManager>();
 
   List<MechanicModel> get mechanics => mechanicManager.mechanics;
@@ -41,9 +56,12 @@ class MechanicsController {
     _selectedIds.addAll(ids);
   }
 
+  @override
   void dispose() {
     _redraw.dispose();
-    _showSelected;
+    _showSelected.dispose();
+
+    super.dispose();
   }
 
   void toogleShowSelection() {
@@ -91,5 +109,20 @@ class MechanicsController {
     } else {
       redrawList();
     }
+  }
+
+  Future<void> add(MechanicModel mech) async {
+    try {
+      _changeState(MechanicsStateLoading());
+      await getIt<MechanicsManager>().add(mech);
+      _changeState(MechanicsStateSuccess());
+    } catch (err) {
+      log(err.toString());
+      _changeState(MechanicsStateError());
+    }
+  }
+
+  void closeDialog() {
+    _changeState(MechanicsStateSuccess());
   }
 }

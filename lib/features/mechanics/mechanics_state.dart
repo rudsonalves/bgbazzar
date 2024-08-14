@@ -15,26 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-const dbName = 'bgBazzar.db';
-const dbVersion = 1;
-const dbAssertPath = 'assets/data/bgBazzar.db';
+abstract class MechanicsState {}
 
-const mechTable = 'Mechanics';
-const mechIndexName = 'mechNameIndex';
-const mechId = 'id';
-const mechName = 'name';
-const mechDescription = 'description';
+class MechanicsStateInitial extends MechanicsState {}
 
-const dbVersionTable = 'dbVersion';
-const dbVersionId = 'id';
-const dbAppVersion = 'version';
-const dbBGVersion = 'bg_version';
-const dbBGList = 'bg_list';
+class MechanicsStateLoading extends MechanicsState {}
 
-const bgNamesTable = 'bgNames';
-const bgId = 'id';
-const bgBgId = 'bgId';
-const bgName = 'name';
+class MechanicsStateSuccess extends MechanicsState {}
 
-const dbAppVersionValue = 1002;
-const dbBGVersionValue = 1;
+class MechanicsStateError extends MechanicsState {}

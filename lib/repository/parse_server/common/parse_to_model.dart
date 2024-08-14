@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:bgbazzar/common/models/mechanic.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import '../../../common/models/address.dart';
@@ -119,7 +120,7 @@ class ParseToModel {
     );
   }
 
-  static boardgameModel(ParseObject parse) {
+  static BoardgameModel boardgameModel(ParseObject parse) {
     return BoardgameModel(
       id: parse.objectId,
       name: parse.get<String>(keyBgName)!,
@@ -139,13 +140,21 @@ class ParseToModel {
     );
   }
 
-  static bgNameModel(ParseObject parse) {
+  static BGNameModel bgNameModel(ParseObject parse) {
     String name = parse.get<String>(keyBgName)!;
     int year = parse.get<int>(keyBgPublishYear)!;
 
     return BGNameModel(
       bgId: parse.objectId!,
       name: '$name ($year)',
+    );
+  }
+
+  static MechanicModel mechanic(ParseObject parse) {
+    return MechanicModel(
+      id: parse.get<int>(keyMechId)!,
+      name: parse.get<String>(keyMechName)!,
+      description: parse.get<String>(keyMechDescription)!,
     );
   }
 }

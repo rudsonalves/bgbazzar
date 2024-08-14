@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import '../../../store/constants/constants.dart';
+
 const maxAdsPerList = 20;
 
 const keyUserId = 'objectId';
@@ -87,3 +89,9 @@ const keyBgDescription = 'description';
 const keyBgViews = 'views';
 const keyBgScoring = 'scoring';
 const keyBgMechanics = 'mechanics';
+
+const keyMechTable = mechTable;
+const keyMechObjectId = 'objectId';
+const keyMechId = 'mechId'; // id is an invalid field name for parse server
+const keyMechName = mechName;
+const keyMechDescription = mechDescription;

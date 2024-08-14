@@ -18,6 +18,7 @@
 import 'dart:developer';
 
 import '../common/models/mechanic.dart';
+import '../repository/parse_server/ps_mechanics_repository.dart';
 import '../repository/sqlite/mechanic_repository.dart';
 
 enum ManagerStatus { ok, error, duplicated }
@@ -33,7 +34,24 @@ class MechanicsManager {
       _mechanics.map((item) => item.name).toList();
 
   Future<void> init() async {
-    _mechanics.addAll(await MechanicRepository.getList());
+    await getAllMechanics();
+  }
+
+  Future<void> getAllMechanics() async {
+    final mechs = await MechanicRepository.get();
+    _mechanics.clear();
+    if (mechs.isNotEmpty) {
+      _mechanics.addAll(mechs);
+    }
+
+    final ids = await PSMechanicsRepository.getIds();
+    final localIds = _mechanics.map((m) => m.id).toList();
+
+    for (int id in ids) {
+      if (!localIds.contains(id)) {
+        log('need get id$id');
+      }
+    }
   }
 
   /// Returns the name of the mechanic given its ID.
@@ -80,13 +98,23 @@ class MechanicsManager {
   }
 
   Future<ManagerStatus> add(MechanicModel mech) async {
-    if (mechanicsNames.contains(mech.name)) return ManagerStatus.duplicated;
-    if (mech.id != null) return ManagerStatus.error;
+    final newMech = await _localAdd(mech);
+    if (newMech == null || newMech.id == null) return ManagerStatus.error;
+    await _psAdd(newMech);
+    _mechanics.add(newMech);
+    return ManagerStatus.ok;
+  }
+
+  Future<MechanicModel?> _localAdd(MechanicModel mech) async {
+    if (mechanicsNames.contains(mech.name)) return null;
+    if (mech.id != null) return null;
 
     final newMech = await MechanicRepository.add(mech);
 
-    _mechanics.add(newMech);
+    return newMech;
+  }
 
-    return ManagerStatus.ok;
+  Future<void> _psAdd(MechanicModel mech) async {
+    await PSMechanicsRepository.add(mech);
   }
 }

@@ -15,14 +15,17 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:developer';
-
+import 'package:bgbazzar/components/others_widgets/state_error_message.dart';
+import 'package:bgbazzar/components/others_widgets/state_loading_message.dart';
+import 'package:bgbazzar/features/mechanics/mechanics_state.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/singletons/current_user.dart';
-import '../../components/form_fields/custom_form_field.dart';
 import '../../get_it.dart';
 import 'mechanics_controller.dart';
+import 'widgets/mechanic_dialog.dart';
+import 'widgets/show_all_mechs.dart';
+import 'widgets/show_selected_mechs.dart';
 
 class MechanicsScreen extends StatefulWidget {
   final List<int> selectedIds;
@@ -59,57 +62,8 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
   }
 
   Future<void> _addMechanic() async {
-    final nameController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final colorScheme = Theme.of(context).colorScheme;
-
-    final result = await showDialog<bool?>(
-          context: context,
-          builder: (context) => SimpleDialog(
-            backgroundColor: colorScheme.surfaceContainerHigh,
-            contentPadding: const EdgeInsets.fromLTRB(12, 12.0, 12, 16.0),
-            title: const Text('Nova Mecânica'),
-            children: [
-              CustomFormField(
-                controller: nameController,
-                labelText: 'Mecânica',
-                hintText: 'Adicione um nome para a mecânica',
-                fullBorder: false,
-              ),
-              CustomFormField(
-                controller: descriptionController,
-                labelText: 'Descrição',
-                hintText: 'Adicione uma descrição',
-                fullBorder: false,
-              ),
-              OverflowBar(
-                alignment: MainAxisAlignment.spaceAround,
-                children: [
-                  FilledButton.tonalIcon(
-                    onPressed: () => Navigator.pop(context, true),
-                    label: const Text('Adicionar'),
-                    icon: const Icon(Icons.add),
-                  ),
-                  FilledButton.tonalIcon(
-                    onPressed: () => Navigator.pop(context, false),
-                    label: const Text('Cancelar'),
-                    icon: const Icon(Icons.cancel),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ) ??
-        false;
-
-    if (result) {
-      log(nameController.text);
-      log(descriptionController.text);
-    }
-
-    await Future.delayed(const Duration(milliseconds: 50));
-    nameController.dispose();
-    descriptionController.dispose();
+    final mech = await MechanicDialog.open(context);
+    if (mech != null) ctrl.add(mech);
   }
 
   @override
@@ -169,65 +123,37 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
           ),
         ],
       ),
-      body: Card(
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListenableBuilder(
-                  listenable:
-                      Listenable.merge([ctrl.redraw, ctrl.showSelected]),
-                  builder: (context, _) {
-                    if (!ctrl.showSelected.value) {
-                      return ListView.separated(
-                        itemCount: ctrl.mechanics.length,
-                        separatorBuilder: (context, index) =>
-                            const Divider(indent: 24, endIndent: 24),
-                        itemBuilder: (context, index) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: ctrl.isSelectedIndex(index)
-                                ? colorScheme.tertiary.withOpacity(0.15)
-                                : null,
-                          ),
-                          child: ListTile(
-                            title: Text(ctrl.mechanics[index].name),
-                            subtitle:
-                                Text(ctrl.mechanics[index].description ?? ''),
-                            onTap: () => ctrl.toogleSelectionIndex(index),
-                          ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: ListenableBuilder(
+            listenable:
+                Listenable.merge([ctrl.redraw, ctrl.showSelected, ctrl]),
+            builder: (context, _) {
+              return Stack(
+                children: [
+                  (!ctrl.showSelected.value)
+                      ? ShowSelectedMechs(
+                          mechanics: ctrl.mechanics,
+                          isSelectedIndex: ctrl.isSelectedIndex,
+                          toogleSelectionIndex: ctrl.toogleSelectionIndex)
+                      : ShowAllMechs(
+                          selectedIds: ctrl.selectedIds,
+                          mechanicOfId: ctrl.mechanicOfId,
+                          toogleSelectedInIndex: ctrl.toogleSelectedInIndex,
                         ),
-                      );
-                    } else {
-                      return ListView.separated(
-                        itemCount: ctrl.selectedIds.length,
-                        separatorBuilder: (context, index) =>
-                            const Divider(indent: 24, endIndent: 24),
-                        itemBuilder: (context, index) {
-                          final mech =
-                              ctrl.mechanicOfId(ctrl.selectedIds[index]);
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: colorScheme.tertiary.withOpacity(0.15),
-                            ),
-                            child: ListTile(
-                              title: Text(mech.name),
-                              subtitle: Text(mech.description ?? ''),
-                              onTap: () => ctrl.toogleSelectedInIndex(index),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+                  if (ctrl.state is MechanicsStateLoading)
+                    const Positioned.fill(
+                      child: StateLoadingMessage(),
+                    ),
+                  if (ctrl.state is MechanicsStateError)
+                    Positioned(
+                      child: StateErrorMessage(
+                        closeDialog: ctrl.closeDialog,
+                      ),
+                    ),
+                ],
+              );
+            }),
       ),
     );
   }

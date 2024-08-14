@@ -9,6 +9,191 @@
 
 # ChangeLog
 
+## 2024/08/14 - version: 0.6.15+38
+
+Documentation and Code Refactor: Update README and Mechanics Features. Files and Changes:
+
+1. `README.md`
+   - Updated the changelog with the latest version `0.6.13+37`, detailing refactoring changes and new features.
+
+2. `lib/common/models/mechanic.dart`
+   - Refactored the `MechanicModel` constructor to make the `id` field optional.
+   - Simplified the `fromMap` method to remove backward compatibility checks for older field names (`nome` and `descricao`).
+
+3. `lib/features/mechanics/mechanics_controller.dart`
+   - Converted `MechanicsController` into a `ChangeNotifier` to manage UI states.
+   - Added methods for handling mechanics state (`MechanicsStateLoading`, `MechanicsStateSuccess`, etc.).
+   - Improved resource disposal management within the `dispose()` method.
+
+4. `lib/features/mechanics/mechanics_screen.dart`
+   - Refactored the mechanics screen to use the new `MechanicDialog` for adding mechanics.
+   - Modularized the UI components into separate widgets (`ShowSelectedMechs`, `ShowAllMechs`).
+   - Integrated state management for loading and error states.
+
+5. `lib/features/mechanics/mechanics_state.dart`
+   - Created a new state management file to handle different states within the mechanics screen (`MechanicsStateInitial`, `MechanicsStateLoading`, etc.).
+
+6. `lib/features/mechanics/widgets/mechanic_dialog.dart`
+   - Added a new widget for the mechanics dialog, allowing users to add new mechanics with name and description fields.
+
+7. `lib/features/mechanics/widgets/show_all_mechs.dart`
+   - Created a widget to display all mechanics with selection capability.
+
+8. `lib/features/mechanics/widgets/show_selected_mechs.dart`
+   - Created a widget to display selected mechanics.
+
+9. `lib/manager/mechanics_manager.dart`
+   - Added new methods to fetch mechanics from both local storage and Parse Server.
+   - Enhanced mechanics addition logic by integrating local and server-side additions.
+   - Implemented `_localAdd` and `_psAdd` methods for better separation of concerns.
+
+10. `lib/repository/parse_server/common/constants.dart`
+    - Added constants for mechanics table in the Parse Server (`keyMechTable`, `keyMechObjectId`, `keyMechId`, etc.).
+
+11. `lib/repository/parse_server/common/parse_to_model.dart`
+    - Added a new method `mechanic` to parse `ParseObject` into `MechanicModel`.
+
+12. `lib/repository/parse_server/ps_ad_repository.dart`
+    - Introduced a private constructor to prevent instantiation of `PSAdRepository`.
+
+13. `lib/repository/parse_server/ps_boardgame_repository.dart`
+    - Refined the method to fetch board game names by removing unnecessary null checks.
+
+14. `lib/repository/parse_server/ps_mechanics_repository.dart`
+    - Added methods to add and retrieve mechanics from the Parse Server.
+    - Implemented error handling and logging for database operations.
+
+15. `lib/repository/sqlite/mechanic_repository.dart`
+    - Renamed `getList` to `get` for consistency.
+    - Improved error handling and logging within the `get` method.
+
+16. `lib/store/constants/constants.dart`
+    - Standardized table names and column names to use consistent casing (`Mechanics`, `mechName`, `mechDescription`).
+
+17. `lib/store/database_manager.dart`
+    - Removed obsolete code related to database versioning.
+    - Simplified the database initialization logic.
+
+18. `lib/store/mechanics.dart`
+    - Renamed `queryMechs` to `get` for better clarity.
+    - Improved error logging in the database operations.
+
+19. `pubspec.yaml`
+    - Updated the project version to `0.6.15+38` to reflect the latest changes.
+
+This commit includes updates to the documentation, refactors mechanics management, and enhances state management across the mechanics-related features. The codebase is now more modular and maintains better consistency across different components.
+
+
+## 2024/08/14 - version: 0.6.13+37
+
+Refactor: Update Parse Server Repositories and Add New Features. Files and Changes:
+
+1. `assets/data/bgBazzar.db`
+   - Updated the database file.
+
+2. `assets/old/bgBazzar.db`
+   - Added an old backup of the `bgBazzar.db` file.
+
+3. `lib/common/singletons/current_user.dart`
+   - Replaced `UserRepository` with `PSUserRepository` in methods `init` and `logout`.
+
+4. `lib/features/address/address_controller.dart`
+   - Replaced `AdRepository` with `PSAdRepository` in method to move advertisements.
+
+5. `lib/features/address/address_screen.dart`
+   - Replaced `AdRepository` with `PSAdRepository`.
+
+6. `lib/features/bg_search/bg_search_controller.dart`
+   - Replaced `BoardgameRepository` with `PSBoardgameRepository` in method `getBoardInfo`.
+
+7. `lib/features/boardgames/boardgame_controller.dart`
+   - Replaced `BoardgameRepository` with `PSBoardgameRepository` in methods fetching and saving board game data.
+
+8. `lib/features/edit_ad/edit_ad_controller.dart`
+   - Replaced `AdRepository` with `PSAdRepository` in methods to save and update advertisements.
+
+9. `lib/features/login/login_controller.dart`
+   - Replaced `UserRepository` with `PSUserRepository` in login method.
+
+10. `lib/features/mechanics/mechanics_screen.dart`
+    - Added functionality for adding a new mechanic with input fields for name and description.
+    - Implemented a floating action button for admin users to add new mechanics.
+
+11. `lib/features/my_account/my_account_screen.dart`
+    - Refactored `MyAccountScreen` to use separate widgets for different sections (`AdminHooks`, `ShoppingHooks`, `SalesHooks`, `ConfigHooks`).
+
+12. `lib/features/my_account/widgets/admin_hooks.dart`
+    - Created a new widget to handle admin-related actions such as managing mechanics and board games.
+
+13. `lib/features/my_account/widgets/config_hooks.dart`
+    - Created a new widget to handle user configuration options such as managing personal data and addresses.
+
+14. `lib/features/my_account/widgets/sales_hooks.dart`
+    - Created a new widget to handle sales-related actions such as viewing summaries and managing ads.
+
+15. `lib/features/my_account/widgets/shopping_hooks.dart`
+    - Created a new widget to handle shopping-related actions such as managing favorites and purchases.
+
+16. `lib/features/my_ads/my_ads_controller.dart`
+    - Replaced `AdRepository` with `PSAdRepository` in methods to fetch and update ads.
+
+17. `lib/features/my_data/my_data_controller.dart`
+    - Replaced `UserRepository` with `PSUserRepository` in method to save user data.
+
+18. `lib/features/shop/shop_controller.dart`
+    - Replaced `AdRepository` with `PSAdRepository` in methods to fetch ads.
+
+19. `lib/features/signup/signup_controller.dart`
+    - Replaced `UserRepository` with `PSUserRepository` in signup method.
+
+20. `lib/manager/address_manager.dart`
+    - Replaced `AddressRepository` with `PSAddressRepository` in methods for managing addresses.
+
+21. `lib/manager/bg_names_manager.dart`
+    - Replaced `BoardgameRepository` with `PSBoardgameRepository` in methods for managing board game names.
+
+22. `lib/manager/favorites_manager.dart`
+    - Replaced `FavoriteRepository` with `PSFavoriteRepository` in methods for managing favorites.
+
+23. `lib/manager/mechanics_manager.dart`
+    - Added new methods to add and update mechanics.
+    - Implemented `ManagerStatus` enum to manage mechanic status.
+
+24. `lib/repository/parse_server/ad_repository.dart` -> `lib/repository/parse_server/ps_ad_repository.dart`
+    - Renamed file and refactored class to `PSAdRepository`.
+
+25. `lib/repository/parse_server/address_repository.dart` -> `lib/repository/parse_server/ps_address_repository.dart`
+    - Renamed file and refactored class to `PSAddressRepository`.
+
+26. `lib/repository/parse_server/boardgame_repository.dart` -> `lib/repository/parse_server/ps_boardgame_repository.dart`
+    - Renamed file and refactored class to `PSBoardgameRepository`.
+
+27. `lib/repository/parse_server/favorite_repository.dart` -> `lib/repository/parse_server/ps_favorite_repository.dart`
+    - Renamed file and refactored class to `PSFavoriteRepository`.
+
+28. `lib/repository/parse_server/user_repository.dart` -> `lib/repository/parse_server/ps_user_repository.dart`
+    - Renamed file and refactored class to `PSUserRepository`.
+
+29. `lib/repository/sqlite/mechanic_repository.dart`
+    - Added new methods to add and update mechanics in the database.
+    - Updated queries to match the new schema.
+
+30. `lib/store/constants/constants.dart`
+    - Removed unused columns `mechIndexNome` and `mechDescricao`.
+    - Updated constants related to the mechanics table.
+
+31. `lib/store/constants/sql_create_table.dart`
+    - Added SQL scripts to create tables for BG names, DB version, and mechanics.
+
+32. `lib/store/database_manager.dart`
+    - Updated database manager to handle the creation of new tables and database versions.
+
+33. `lib/store/mechanics.dart`
+    - Added new methods to insert, update, and delete mechanics in the SQLite database.
+
+This commit refactors the codebase to adopt a consistent naming convention for Parse Server repositories, introduces new widgets for modularization in the `MyAccountScreen`, and enhances mechanics management features. The database schema and initialization logic have also been updated to support new features.
+
+
 ## 2024/08/13 - version: 0.6.13+36
 
 Update database file name and refactor project components for better organization and functionality.
