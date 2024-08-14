@@ -19,10 +19,10 @@ import 'package:flutter/material.dart';
 
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
-import '../address/address_screen.dart';
-import '../my_ads/my_ads_screen.dart';
-import '../my_data/my_data_screen.dart';
-import '../product/widgets/title_product.dart';
+import 'widgets/admin_hooks.dart';
+import 'widgets/config_hooks.dart';
+import 'widgets/sales_hooks.dart';
+import 'widgets/shopping_hooks.dart';
 
 class MyAccountScreen extends StatefulWidget {
   const MyAccountScreen({super.key});
@@ -47,8 +47,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Minha Conta'),
@@ -75,67 +73,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                   onPressed: _logout,
                 ),
               ),
+              const AdminHooks(),
+              const ShoppingHooks(),
+              const SalesHooks(),
               const Divider(),
-              const TitleProduct(title: 'Compras'),
-              ListTile(
-                leading: const Icon(Icons.favorite),
-                title: const Text('Favoritos'),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.message),
-                title: const Text('Perguntas'),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.shopping_bag),
-                title: const Text('Minhas Compras'),
-                onTap: () {},
-              ),
-              const Divider(),
-              TitleProduct(
-                title: 'Vendas',
-                color: primary,
-              ),
-              ListTile(
-                leading: const Icon(Icons.text_snippet),
-                title: const Text('Resumo'),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Icon(Icons.discount, color: primary),
-                title: Text(
-                  'Anúncios',
-                  style: TextStyle(color: primary),
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, MyAdsScreen.routeName);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.forum_outlined),
-                title: const Text('Perguntas'),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.store),
-                title: const Text('Vendas'),
-                onTap: () {},
-              ),
-              const Divider(),
-              TitleProduct(title: 'Configurações', color: primary),
-              ListTile(
-                leading: Icon(Icons.person, color: primary),
-                title: Text('Meus Dados', style: TextStyle(color: primary)),
-                onTap: () =>
-                    Navigator.pushNamed(context, MyDataScreen.routeName),
-              ),
-              ListTile(
-                leading: Icon(Icons.contact_mail_rounded, color: primary),
-                title: Text('Meus Endereços', style: TextStyle(color: primary)),
-                onTap: () =>
-                    Navigator.pushNamed(context, AddressScreen.routeName),
-              ),
+              const ConfigHooks(),
             ],
           ),
         ),

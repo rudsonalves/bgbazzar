@@ -20,6 +20,8 @@ import 'dart:developer';
 import '../common/models/mechanic.dart';
 import '../repository/sqlite/mechanic_repository.dart';
 
+enum ManagerStatus { ok, error, duplicated }
+
 /// This class manages the list of mechanics, providing methods to initialize,
 /// retrieve mechanic names, and find mechanic names based on their IDs.
 class MechanicsManager {
@@ -75,5 +77,16 @@ class MechanicsManager {
 
   MechanicModel mechanicOfId(int id) {
     return _mechanics.firstWhere((item) => item.id == id);
+  }
+
+  Future<ManagerStatus> add(MechanicModel mech) async {
+    if (mechanicsNames.contains(mech.name)) return ManagerStatus.duplicated;
+    if (mech.id != null) return ManagerStatus.error;
+
+    final newMech = await MechanicRepository.add(mech);
+
+    _mechanics.add(newMech);
+
+    return ManagerStatus.ok;
   }
 }

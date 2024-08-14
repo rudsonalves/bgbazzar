@@ -15,8 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:bgbazzar/store/constants/sql_create_table.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -64,7 +66,12 @@ class DatabaseManager {
       await _copyBggDb(path);
     }
 
-    _database = await openDatabase(path);
+    _database = await openDatabase(
+      path,
+      version: dbVersion,
+      onCreate: _onCreate,
+      // onConfigure: _onConfiguration,
+    );
 
     final version = await getDBVerion();
     if (version != dbAppVersionValue) {
@@ -85,6 +92,23 @@ class DatabaseManager {
         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     await file.writeAsBytes(bytes);
   }
+
+  Future<void> _onCreate(Database db, int version) async {
+    try {
+      Batch batch = db.batch();
+      SqlTable.createDbVersion(batch);
+      SqlTable.createBgNamesTable(batch);
+      SqlTable.createMechanics(batch);
+
+      await batch.commit();
+    } catch (err) {
+      log(err.toString());
+    }
+  }
+
+  // Future<void> _onConfiguration(Database db) async {
+  //   await db.execute('PRAGMA foreign_keys = ON');
+  // }
 
   static Future<int?> getDBVerion() async {
     try {

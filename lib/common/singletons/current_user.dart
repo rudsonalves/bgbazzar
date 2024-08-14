@@ -21,7 +21,7 @@ import 'package:flutter/foundation.dart';
 import '../../get_it.dart';
 import '../../manager/address_manager.dart';
 import '../../manager/favorites_manager.dart';
-import '../../repository/parse_server/user_repository.dart';
+import '../../repository/parse_server/ps_user_repository.dart';
 import '../models/address.dart';
 import '../models/user.dart';
 
@@ -49,7 +49,7 @@ class CurrentUser {
   }
 
   Future<void> init([UserModel? user]) async {
-    user ??= await UserRepository.getCurrentUser();
+    user ??= await PSUserRepository.getCurrentUser();
     if (user == null) return;
     await login(user);
   }
@@ -68,7 +68,7 @@ class CurrentUser {
       addressManager.save(address);
 
   Future<void> logout() async {
-    await UserRepository.logout();
+    await PSUserRepository.logout();
     addressManager.logout();
     favoritesManager.logout();
     _user = null;

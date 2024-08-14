@@ -31,6 +31,9 @@ class MechanicRepository {
     try {
       final result = await MechanicsStore.queryMechs();
 
+      if (result.isEmpty) {
+        return <MechanicModel>[];
+      }
       final mechanics =
           result.map((item) => MechanicModel.fromMap(item)).toList();
       return mechanics;
@@ -40,6 +43,29 @@ class MechanicRepository {
       throw Exception(message);
       // FIXME: put an empty list retrun hare. If there is no connection the
       //        program chould be closed.
+    }
+  }
+
+  static Future<MechanicModel> add(MechanicModel mech) async {
+    try {
+      final id = await MechanicsStore.add(mech.toMap());
+      mech.id = id;
+      return mech;
+    } catch (err) {
+      final message = 'MechanicRepository.add: $err';
+      log(message);
+      throw Exception(message);
+    }
+  }
+
+  static Future<int> update(MechanicModel mech) async {
+    try {
+      final result = await MechanicsStore.update(mech.toMap());
+      return result;
+    } catch (err) {
+      final message = 'MechanicRepository.update: $err';
+      log(message);
+      throw Exception(message);
     }
   }
 }

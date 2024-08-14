@@ -21,12 +21,9 @@ const dbAssertPath = 'assets/data/bgBazzar.db';
 
 const mechTable = "mechanics";
 const mechIndexName = "mechNameIndex";
-const mechIndexNome = "mechNomeIndex";
 const mechId = "id";
 const mechName = "name";
-const mechNome = "nome";
 const mechDescription = "description";
-const mechDescricao = "descricao";
 
 const dbVersionTable = "dbVersion";
 const dbVersionId = "id";
