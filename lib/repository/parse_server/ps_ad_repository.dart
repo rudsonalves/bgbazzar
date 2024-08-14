@@ -30,6 +30,8 @@ import 'common/parse_to_model.dart';
 /// This class provides methods to interact with the Parse Server
 /// to retrieve and save advertisements.
 class PSAdRepository {
+  PSAdRepository._();
+
   static Future<void> moveAdsAddressTo(
     List<String> adsIdList,
     String moveToId,
@@ -220,7 +222,7 @@ class PSAdRepository {
         return [];
       }
 
-      List<AdModel> ads = [];
+      final List<AdModel> ads = [];
       for (final ParseObject ad in response.results!) {
         final adModel = ParseToModel.ad(ad);
         if (adModel != null) ads.add(adModel);

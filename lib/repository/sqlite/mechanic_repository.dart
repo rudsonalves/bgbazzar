@@ -27,9 +27,9 @@ class MechanicRepository {
   ///
   /// Returns a list of `MechanicModel` if the query is successful,
   /// otherwise create an error.
-  static Future<List<MechanicModel>> getList() async {
+  static Future<List<MechanicModel>> get() async {
     try {
-      final result = await MechanicsStore.queryMechs();
+      final result = await MechanicsStore.get();
 
       if (result.isEmpty) {
         return <MechanicModel>[];
@@ -38,7 +38,7 @@ class MechanicRepository {
           result.map((item) => MechanicModel.fromMap(item)).toList();
       return mechanics;
     } catch (err) {
-      final message = 'MechanicRepository.getList: $err';
+      final message = 'MechanicRepository.get: $err';
       log(message);
       throw Exception(message);
       // FIXME: put an empty list retrun hare. If there is no connection the

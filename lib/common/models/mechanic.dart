@@ -22,7 +22,7 @@ class MechanicModel {
   String? description;
 
   MechanicModel({
-    required this.id,
+    this.id,
     required this.name,
     this.description,
   });
@@ -38,12 +38,8 @@ class MechanicModel {
   factory MechanicModel.fromMap(Map<String, dynamic> map) {
     return MechanicModel(
       id: map['id'] as int,
-      name: map.containsKey('name')
-          ? map['name'] as String
-          : map['nome'] as String,
-      description: map.containsKey('description')
-          ? map['description'] as String?
-          : map['descricao'] as String?,
+      name: map['name'] as String,
+      description: map['description'] as String?,
     );
   }
 

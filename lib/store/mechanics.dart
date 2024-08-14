@@ -24,7 +24,7 @@ import 'database_manager.dart';
 class MechanicsStore {
   static final _databaseManager = getIt<DatabaseManager>();
 
-  static Future<List<Map<String, dynamic>>> queryMechs() async {
+  static Future<List<Map<String, dynamic>>> get() async {
     final database = await _databaseManager.database;
 
     try {
@@ -36,7 +36,7 @@ class MechanicsStore {
 
       return result;
     } catch (err) {
-      log('MechanicsStore.queryMechs: $err');
+      log('MechanicsStore.get: $err');
       return [];
     }
   }

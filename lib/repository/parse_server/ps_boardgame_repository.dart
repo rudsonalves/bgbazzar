@@ -113,7 +113,7 @@ class PSBoardgameRepository {
       List<BGNameModel> bgs = [];
       for (final ParseObject p in response.results!) {
         final bg = ParseToModel.bgNameModel(p);
-        if (bg != null) bgs.add(bg);
+        bgs.add(bg);
       }
       return bgs;
     } catch (err) {

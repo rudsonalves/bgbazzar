@@ -73,15 +73,6 @@ class DatabaseManager {
       // onConfigure: _onConfiguration,
     );
 
-    final version = await getDBVerion();
-    if (version != dbAppVersionValue) {
-      _database!.close();
-      final dbFile = File(path);
-      await dbFile.delete();
-      await _copyBggDb(path);
-      _database = await openDatabase(path, readOnly: true);
-    }
-
     return _database!;
   }
 
