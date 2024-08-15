@@ -28,20 +28,20 @@ import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
 import '../mechanics/mechanics_screen.dart';
 import '../product/widgets/sub_title_product.dart';
-import 'boardgame_controller.dart';
-import 'boardgame_state.dart';
+import 'edit_boardgame_controller.dart';
+import 'edit_boardgame_state.dart';
 
-class BoardgamesScreen extends StatefulWidget {
-  const BoardgamesScreen({super.key});
+class EditBoardgamesScreen extends StatefulWidget {
+  const EditBoardgamesScreen({super.key});
 
   static const routeName = '/boardgame';
 
   @override
-  State<BoardgamesScreen> createState() => _BoardgamesScreenState();
+  State<EditBoardgamesScreen> createState() => _EditBoardgamesScreenState();
 }
 
-class _BoardgamesScreenState extends State<BoardgamesScreen> {
-  final ctrl = BoardgameController();
+class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
+  final ctrl = EditBoardgameController();
 
   @override
   void initState() {
@@ -358,11 +358,11 @@ class _BoardgamesScreenState extends State<BoardgamesScreen> {
                       // ),
                     ],
                   ),
-                  if (ctrl.state is BoardgameStateLoading)
+                  if (ctrl.state is EditBoardgameStateLoading)
                     const Positioned.fill(
                       child: StateLoadingMessage(),
                     ),
-                  if (ctrl.state is BoardgameStateError)
+                  if (ctrl.state is EditBoardgameStateError)
                     Positioned.fill(
                       child: StateErrorMessage(
                         closeDialog: ctrl.closeErroMessage,

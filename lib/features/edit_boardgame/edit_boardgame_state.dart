@@ -15,12 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-abstract class BgSearchState {}
+abstract class EditBoardgameState {}
 
-class BgSearchStateInitial extends BgSearchState {}
+class EditBoardgameStateInitial extends EditBoardgameState {}
 
-class BggSearchStateLoading extends BgSearchState {}
+class EditBoardgameStateLoading extends EditBoardgameState {}
 
-class BggSearchStateSuccess extends BgSearchState {}
+class EditBoardgameStateSuccess extends EditBoardgameState {}
 
-class BggSearchStateError extends BgSearchState {}
+class EditBoardgameStateError extends EditBoardgameState {}

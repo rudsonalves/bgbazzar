@@ -24,7 +24,7 @@ import '../../../common/validators/validators.dart';
 import '../../../components/form_fields/custom_form_field.dart';
 import '../../../components/others_widgets/fitted_button_segment.dart';
 import '../../address/address_screen.dart';
-import '../../bg_search/bg_search_screen.dart';
+import '../../boardgame/boardgame_screen.dart';
 import '../../mechanics/mechanics_screen.dart';
 import '../edit_ad_controller.dart';
 
@@ -70,7 +70,7 @@ class _AdFormState extends State<AdForm> {
   Future<void> _getBGGInfo() async {
     final bg = await Navigator.pushNamed(
       context,
-      BgSearchScreen.routeName,
+      BoardgameScreen.routeName,
     ) as BoardgameModel?;
 
     if (bg != null) {

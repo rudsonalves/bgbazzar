@@ -26,10 +26,10 @@ import '../../common/models/boardgame.dart';
 import '../../components/custon_field_controllers/numeric_edit_controller.dart';
 import '../../get_it.dart';
 import '../../repository/parse_server/ps_boardgame_repository.dart';
-import 'boardgame_state.dart';
+import 'edit_boardgame_state.dart';
 
-class BoardgameController extends ChangeNotifier {
-  BoardgameState _state = BoardgameStateInitial();
+class EditBoardgameController extends ChangeNotifier {
+  EditBoardgameState _state = EditBoardgameStateInitial();
 
   final bgNamesManager = getIt<BoardgamesManager>();
   final mechManager = getIt<MechanicsManager>();
@@ -58,12 +58,10 @@ class BoardgameController extends ChangeNotifier {
       .map((c) => c.name)
       .toList();
 
-  BoardgameState get state => _state;
+  EditBoardgameState get state => _state;
   List<String> get bgNames => bgNamesManager.bgNames;
 
-  void init() {
-    // initBggRank();
-  }
+  void init() {}
 
   @override
   void dispose() {
@@ -82,36 +80,26 @@ class BoardgameController extends ChangeNotifier {
     super.dispose();
   }
 
-  void _changeState(BoardgameState newState) {
+  void _changeState(EditBoardgameState newState) {
     _state = newState;
     notifyListeners();
   }
 
-  // Future<void> initBggRank() async {
-  //   try {
-  //     _changeState(BoardgameStateLoading());
-  //     // await bgNamesManager.init();
-  //     _changeState(BoardgameStateSuccess());
-  //   } catch (err) {
-  //     _changeState(BoardgameStateError());
-  //   }
-  // }
-
   Future<void> getBgInfo() async {
     if (nameController.text.isEmpty) return;
     try {
-      _changeState(BoardgameStateLoading());
+      _changeState(EditBoardgameStateLoading());
       final id = bgNamesManager.gameId(nameController.text);
       if (id == null) {
-        _changeState(BoardgameStateSuccess());
+        _changeState(EditBoardgameStateSuccess());
         return;
       }
       final bgInfo = await PSBoardgameRepository.getById(id);
       if (bgInfo != null) loadBoardInfo(bgInfo);
       log(bgInfo.toString());
-      _changeState(BoardgameStateSuccess());
+      _changeState(EditBoardgameStateSuccess());
     } catch (err) {
-      _changeState(BoardgameStateError());
+      _changeState(EditBoardgameStateError());
     }
   }
 
@@ -131,7 +119,7 @@ class BoardgameController extends ChangeNotifier {
 
   Future<void> saveBoardgame() async {
     try {
-      _changeState(BoardgameStateLoading());
+      _changeState(EditBoardgameStateLoading());
       final bg = BoardgameModel(
         name: nameController.text,
         image: imageController.text,
@@ -148,9 +136,9 @@ class BoardgameController extends ChangeNotifier {
       );
 
       await bgNamesManager.saveNewBoardgame(bg);
-      _changeState(BoardgameStateSuccess());
+      _changeState(EditBoardgameStateSuccess());
     } catch (err) {
-      _changeState(BoardgameStateError());
+      _changeState(EditBoardgameStateError());
       log(err.toString());
     }
   }
@@ -162,6 +150,6 @@ class BoardgameController extends ChangeNotifier {
   }
 
   void closeErroMessage() {
-    _changeState(BoardgameStateSuccess());
+    _changeState(EditBoardgameStateSuccess());
   }
 }
