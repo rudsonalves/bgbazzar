@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../bg_search/bg_search_screen.dart';
+import '../../boardgame/boardgame_screen.dart';
 import '../../mechanics/mechanics_screen.dart';
 import '../../product/widgets/title_product.dart';
 
@@ -64,7 +64,7 @@ class AdminHooks extends StatelessWidget {
           ),
           onTap: () => Navigator.pushNamed(
             context,
-            BgSearchScreen.routeName,
+            BoardgameScreen.routeName,
           ),
         ),
       ],

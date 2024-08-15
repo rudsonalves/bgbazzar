@@ -24,8 +24,8 @@ import 'common/models/filter.dart';
 import 'common/singletons/app_settings.dart';
 import 'common/theme/theme.dart';
 import 'common/theme/util.dart';
-import 'features/bg_search/bg_search_screen.dart';
-import 'features/boardgames/boardgame_screen.dart';
+import 'features/boardgame/boardgame_screen.dart';
+import 'features/edit_boardgame/edit_boardgame_screen.dart';
 import 'features/favorites/favorites_screen.dart';
 import 'features/my_account/my_account_screen.dart';
 import 'features/address/address_screen.dart';
@@ -84,8 +84,9 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               MyAdsScreen.routeName: (_) => const MyAdsScreen(),
               MyDataScreen.routeName: (_) => const MyDataScreen(),
               FavoritesScreen.routeName: (_) => const FavoritesScreen(),
-              BoardgamesScreen.routeName: (_) => const BoardgamesScreen(),
-              BgSearchScreen.routeName: (_) => const BgSearchScreen(),
+              EditBoardgamesScreen.routeName: (_) =>
+                  const EditBoardgamesScreen(),
+              BoardgameScreen.routeName: (_) => const BoardgameScreen(),
             },
             onGenerateRoute: (settings) {
               switch (settings.name) {

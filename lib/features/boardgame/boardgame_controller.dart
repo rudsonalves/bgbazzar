@@ -23,16 +23,16 @@ import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
 import '../../manager/boardgames_manager.dart';
 import '../../repository/parse_server/ps_boardgame_repository.dart';
-import 'bg_search_state.dart';
+import 'boardgame_state.dart';
 
-class BgController extends ChangeNotifier {
-  BgSearchState _state = BgSearchStateInitial();
+class BoardgameController extends ChangeNotifier {
+  BoardgameState _state = BoardgameStateInitial();
 
   final bgName = TextEditingController();
   List<BGNameModel> bggSearchList = [];
   BoardgameModel? selectedGame;
 
-  BgSearchState get state => _state;
+  BoardgameState get state => _state;
 
   final bgNamesManager = getIt<BoardgamesManager>();
   final user = getIt<CurrentUser>();
@@ -45,7 +45,7 @@ class BgController extends ChangeNotifier {
     super.dispose();
   }
 
-  void _changeState(BgSearchState newState) {
+  void _changeState(BoardgameState newState) {
     _state = newState;
     notifyListeners();
   }
@@ -55,25 +55,25 @@ class BgController extends ChangeNotifier {
     if (searchBg.isEmpty) return;
 
     try {
-      _changeState(BggSearchStateLoading());
+      _changeState(BoardgameStateLoading());
       bggSearchList = bgNamesManager.searchName(searchBg);
-      _changeState(BggSearchStateSuccess());
+      _changeState(BoardgameStateSuccess());
     } catch (err) {
-      _changeState(BggSearchStateError());
+      _changeState(BoardgameStateError());
     }
   }
 
   closeError() {
-    _changeState(BggSearchStateSuccess());
+    _changeState(BoardgameStateSuccess());
   }
 
   Future<void> getBoardInfo(String id) async {
     try {
-      _changeState(BggSearchStateLoading());
+      _changeState(BoardgameStateLoading());
       selectedGame = await PSBoardgameRepository.getById(id);
-      _changeState(BggSearchStateSuccess());
+      _changeState(BoardgameStateSuccess());
     } catch (err) {
-      _changeState(BggSearchStateError());
+      _changeState(BoardgameStateError());
     }
   }
 }

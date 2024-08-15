@@ -20,23 +20,23 @@ import 'package:flutter/material.dart';
 
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
-import '../boardgames/boardgame_screen.dart';
-import 'bg_search_controller.dart';
-import 'bg_search_state.dart';
+import '../edit_boardgame/edit_boardgame_screen.dart';
+import 'boardgame_controller.dart';
+import 'boardgame_state.dart';
 import 'widgets/bg_info_card.dart';
 import 'widgets/search_card.dart';
 
-class BgSearchScreen extends StatefulWidget {
-  const BgSearchScreen({super.key});
+class BoardgameScreen extends StatefulWidget {
+  const BoardgameScreen({super.key});
 
   static const routeName = '/bggsearch';
 
   @override
-  State<BgSearchScreen> createState() => _BgSearchScreenState();
+  State<BoardgameScreen> createState() => _BoardgameScreenState();
 }
 
-class _BgSearchScreenState extends State<BgSearchScreen> {
-  final ctrl = BgController();
+class _BoardgameScreenState extends State<BoardgameScreen> {
+  final ctrl = BoardgameController();
 
   @override
   void dispose() {
@@ -54,7 +54,7 @@ class _BgSearchScreenState extends State<BgSearchScreen> {
   void _backPageWithGame() => Navigator.pop(context, ctrl.selectedGame);
 
   void _addBoardgame() {
-    Navigator.pushNamed(context, BoardgamesScreen.routeName);
+    Navigator.pushNamed(context, EditBoardgamesScreen.routeName);
   }
 
   @override
@@ -128,11 +128,11 @@ class _BgSearchScreenState extends State<BgSearchScreen> {
                     ),
                   ),
                 ),
-                if (ctrl.state is BggSearchStateLoading)
+                if (ctrl.state is BoardgameStateLoading)
                   const Positioned.fill(
                     child: StateLoadingMessage(),
                   ),
-                if (ctrl.state is BggSearchStateError)
+                if (ctrl.state is BoardgameStateError)
                   Positioned.fill(
                     child: StateErrorMessage(
                       closeDialog: ctrl.closeError,

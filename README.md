@@ -9,6 +9,51 @@
 
 # ChangeLog
 
+## 2024/08/15 - version: 0.6.16+40
+
+Refactor: Rename and Reorganize Boardgame Search and Management. Files and Changes:
+
+1. `lib/features/bg_search/bg_search_controller.dart` -> `lib/features/boardgame/boardgame_controller.dart`
+   - Renamed file and class from `BgController` to `BoardgameController`.
+   - Updated the state management references from `BgSearchState` to `BoardgameState`.
+
+2. `lib/features/bg_search/bg_search_screen.dart` -> `lib/features/boardgame/boardgame_screen.dart`
+   - Renamed file and class from `BgSearchScreen` to `BoardgameScreen`.
+   - Updated route name and widget class names accordingly.
+
+3. `lib/features/boardgames/boardgame_state.dart` -> `lib/features/boardgame/boardgame_state.dart`
+   - Renamed file to reflect the updated naming conventions.
+
+4. `lib/features/bg_search/widgets/bg_info_card.dart` -> `lib/features/boardgame/widgets/bg_info_card.dart`
+   - Moved the `bg_info_card.dart` widget to the `boardgame` directory.
+
+5. `lib/features/bg_search/widgets/search_card.dart` -> `lib/features/boardgame/widgets/search_card.dart`
+   - Moved the `search_card.dart` widget to the `boardgame` directory.
+
+6. `lib/features/edit_ad/widgets/ad_form.dart`
+   - Updated imports to reflect the renaming from `BgSearchScreen` to `BoardgameScreen`.
+
+7. `lib/features/boardgames/boardgame_controller.dart` -> `lib/features/edit_boardgame/edit_boardgame_controller.dart`
+   - Renamed file and class from `BoardgameController` to `EditBoardgameController`.
+   - Updated the state management references from `BoardgameState` to `EditBoardgameState`.
+
+8. `lib/features/boardgames/boardgame_screen.dart` -> `lib/features/edit_boardgame/edit_boardgame_screen.dart`
+   - Renamed file and class from `BoardgamesScreen` to `EditBoardgamesScreen`.
+   - Updated route name and widget class names accordingly.
+
+9. `lib/features/bg_search/bg_search_state.dart` -> `lib/features/edit_boardgame/edit_boardgame_state.dart`
+   - Renamed file and class from `BgSearchState` to `EditBoardgameState`.
+   - Updated the state management classes to reflect the new context.
+
+10. `lib/features/my_account/widgets/admin_hooks.dart`
+    - Updated import and navigation references from `BgSearchScreen` to `BoardgameScreen`.
+
+11. `lib/my_material_app.dart`
+    - Updated route mappings to reflect the renaming from `BgSearchScreen` to `BoardgameScreen` and from `BoardgamesScreen` to `EditBoardgamesScreen`.
+
+This commit refactors and reorganizes the boardgame search and management components, aligning file and class names with their functionalities. The changes enhance code clarity and maintain consistency throughout the project.
+
+
 ## 2024/08/15 - version: 0.6.16+39
 
 Refactor: Rename and Update Boardgame and Mechanics Management. Files and Changes:
