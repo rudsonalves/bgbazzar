@@ -9,6 +9,42 @@
 
 # ChangeLog
 
+## 2024/08/15 - version: 0.6.17+41
+
+Refactor: Update Boardgame Models and Controller Logic. Files and Changes:
+
+1. `lib/common/models/bg_name.dart`
+   - Added the `toString` method to the `BGNameModel` class for easier debugging.
+   - Included a new directive to ignore `public_member_api_docs` and `sort_constructors_first` lint warnings.
+
+2. `lib/common/models/boardgame.dart`
+   - Removed the `scoring` field from the `BoardgameModel` class as it is no longer required.
+   - Updated the `toString` method to reflect the removal of the `scoring` field.
+
+3. `lib/features/boardgame/boardgame_controller.dart`
+   - Refactored the controller to manage the search and selection of board games.
+   - Removed the `bgName` text controller and replaced the search functionality with a more efficient filtering method.
+   - Added methods to manage search filters and handle the selection of board games by their ID.
+
+4. `lib/features/boardgame/boardgame_screen.dart`
+   - Updated the UI to use the new filtering mechanism for displaying and selecting board games.
+   - Integrated a search dialog to allow users to search for board games by name.
+   - Removed the outdated text field and search button for a more streamlined search experience.
+
+5. `lib/repository/parse_server/common/constants.dart`
+   - Removed the `keyBgScoring` constant as it is no longer used.
+
+6. `lib/repository/parse_server/common/parse_to_model.dart`
+   - Updated the `boardgameModel` method to properly parse the list of mechanics from the Parse Server response.
+
+7. `lib/repository/parse_server/ps_boardgame_repository.dart`
+   - Removed the `scoring` field from the methods interacting with the Parse Server.
+   - Improved the `getById` method to handle cases where no results are found more gracefully.
+   - Corrected error handling and logging in the `getNames` method.
+
+This commit introduces significant improvements to the board game management logic, streamlining the search and selection process. The changes include removing unused fields, enhancing data parsing, and updating the user interface to provide a more efficient and user-friendly experience.
+
+
 ## 2024/08/15 - version: 0.6.16+40
 
 Refactor: Rename and Reorganize Boardgame Search and Management. Files and Changes:
