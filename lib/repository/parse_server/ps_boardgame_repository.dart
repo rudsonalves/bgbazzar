@@ -59,7 +59,6 @@ class PSBoardgameRepository {
         ..set<String?>(keyBgDesigner, bg.designer)
         ..set<String?>(keyBgArtist, bg.artist)
         ..set<String?>(keyBgDescription, bg.description)
-        ..set<double?>(keyBgScoring, bg.scoring)
         ..set<int?>(keyBgViews, bg.views)
         ..set<List<int>>(keyBgMechanics, bg.mechanics);
 
@@ -76,18 +75,20 @@ class PSBoardgameRepository {
     }
   }
 
-  static Future<BoardgameModel?> getById(String id) async {
+  static Future<BoardgameModel?> getById(String bgId) async {
     try {
-      final query = QueryBuilder<ParseObject>(
-        ParseObject(keyBgTable)..objectId = id,
-      );
+      final parse = ParseObject(keyBgTable);
 
-      final response = await query.query();
-      if (!response.success) {
-        throw Exception(response.error);
+      final response = await parse.getObject(bgId);
+      if (!response.success ||
+          response.results == null ||
+          response.results!.isEmpty) {
+        throw Exception(response.error ?? 'no data found');
       }
 
-      return ParseToModel.boardgameModel(query.object);
+      final resultParse = response.results!.first as ParseObject;
+
+      return ParseToModel.boardgameModel(resultParse);
     } catch (err) {
       final message = 'BgRepository.getById: $err';
       log(message);
@@ -117,7 +118,7 @@ class PSBoardgameRepository {
       }
       return bgs;
     } catch (err) {
-      final message = 'BgRepository.getById: $err';
+      final message = 'BgRepository.getNames: $err';
       log(message);
       rethrow;
     }

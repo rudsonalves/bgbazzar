@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -41,4 +42,7 @@ class BGNameModel {
       name: map['name'] != null ? map['name'] as String : null,
     );
   }
+
+  @override
+  String toString() => 'BGNameModel(id: $id, bgId: $bgId, name: $name)';
 }

@@ -87,7 +87,6 @@ const keyBgDesigner = 'designer';
 const keyBgArtist = 'artist';
 const keyBgDescription = 'description';
 const keyBgViews = 'views';
-const keyBgScoring = 'scoring';
 const keyBgMechanics = 'mechanics';
 
 const keyMechTable = mechTable;

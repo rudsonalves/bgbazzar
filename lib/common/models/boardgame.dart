@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -29,7 +28,6 @@ class BoardgameModel {
   String? designer;
   String? artist;
   String? description;
-  double? scoring;
   int views;
   List<int> mechanics;
 
@@ -46,7 +44,6 @@ class BoardgameModel {
     this.designer,
     this.artist,
     this.description,
-    this.scoring,
     this.views = 0,
     required this.mechanics,
   });
@@ -76,7 +73,6 @@ class BoardgameModel {
         ' designer: $designer,\n'
         ' artist: $artist,\n'
         ' description: $description,\n'
-        ' scoring: $scoring,\n'
         ' views: $views,\n'
         ' boardgamemechanic: $mechanics)';
   }

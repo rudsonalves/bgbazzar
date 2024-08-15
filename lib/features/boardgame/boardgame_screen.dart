@@ -21,15 +21,14 @@ import 'package:flutter/material.dart';
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
 import '../edit_boardgame/edit_boardgame_screen.dart';
+import '../shop/widgets/search/search_dialog.dart';
 import 'boardgame_controller.dart';
 import 'boardgame_state.dart';
-import 'widgets/bg_info_card.dart';
-import 'widgets/search_card.dart';
 
 class BoardgameScreen extends StatefulWidget {
   const BoardgameScreen({super.key});
 
-  static const routeName = '/bggsearch';
+  static const routeName = '/boardgame_screen';
 
   @override
   State<BoardgameScreen> createState() => _BoardgameScreenState();
@@ -39,26 +38,40 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
   final ctrl = BoardgameController();
 
   @override
+  void initState() {
+    super.initState();
+    ctrl.init();
+  }
+
+  @override
   void dispose() {
     ctrl.dispose();
+
     super.dispose();
   }
 
-  void _startSearch() {
-    FocusScope.of(context).nextFocus();
-    ctrl.searchBg();
-  }
-
-  void _backPage() => Navigator.pop(context, null);
-
-  void _backPageWithGame() => Navigator.pop(context, ctrl.selectedGame);
+  void _backPageWithGame() => Navigator.pop(context, ctrl.selectedBGId);
 
   void _addBoardgame() {
     Navigator.pushNamed(context, EditBoardgamesScreen.routeName);
   }
 
+  Future<void> _openSearchDialog() async {
+    String? result = await showSearch<String>(
+      context: context,
+      delegate: SearchDialog(),
+    );
+
+    if (result != null && result.isEmpty) {
+      result = null;
+    }
+    ctrl.changeSearchName(result ?? '');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Boardgames'),
@@ -67,6 +80,12 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
           onPressed: _backPageWithGame,
           icon: const Icon(Icons.arrow_back_ios_rounded),
         ),
+        actions: [
+          IconButton(
+            onPressed: _openSearchDialog,
+            icon: const Icon(Icons.search),
+          ),
+        ],
       ),
       floatingActionButton: ctrl.isAdmin
           ? FloatingActionButton.extended(
@@ -75,56 +94,22 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
               label: const Text('Boardgame'),
             )
           : null,
-      body: ListenableBuilder(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        child: ListenableBuilder(
           listenable: ctrl,
           builder: (context, _) {
             return Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 12,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          controller: ctrl.bgName,
-                          decoration: InputDecoration(
-                            hintText: 'Entre com o nome do jogo',
-                            suffixIcon: IconButton(
-                              onPressed: _startSearch,
-                              icon: const Icon(Icons.search),
-                            ),
-                          ),
-                          onSubmitted: (value) => _startSearch(),
-                        ),
-                        if (ctrl.bggSearchList.isNotEmpty)
-                          SearchCard(
-                            bgSearchList: ctrl.bggSearchList,
-                            getBoardInfo: ctrl.getBoardInfo,
-                          ),
-                        if (ctrl.selectedGame != null)
-                          BGInfoCard(ctrl.selectedGame!),
-                        if (ctrl.selectedGame != null)
-                          OverflowBar(
-                            alignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              FilledButton.tonalIcon(
-                                onPressed: _backPageWithGame,
-                                label: const Text('Selecionar'),
-                                icon: const Icon(
-                                    Icons.check_circle_outline_rounded),
-                              ),
-                              FilledButton.tonalIcon(
-                                onPressed: _backPage,
-                                label: const Text('Cancelar'),
-                                icon: const Icon(Icons.cancel),
-                              ),
-                            ],
-                          ),
-                      ],
+                ListView.builder(
+                  itemCount: ctrl.filteredBGs.length,
+                  itemBuilder: (context, index) => Card(
+                    color: ctrl.isSelected(ctrl.filteredBGs[index])
+                        ? colorScheme.tertiaryContainer
+                        : null,
+                    child: ListTile(
+                      title: Text(ctrl.filteredBGs[index].name!),
+                      onTap: () => ctrl.selectBGId(ctrl.filteredBGs[index]),
                     ),
                   ),
                 ),
@@ -140,7 +125,9 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
                   ),
               ],
             );
-          }),
+          },
+        ),
+      ),
     );
   }
 }

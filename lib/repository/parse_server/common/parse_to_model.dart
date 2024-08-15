@@ -121,6 +121,8 @@ class ParseToModel {
   }
 
   static BoardgameModel boardgameModel(ParseObject parse) {
+    final mechs = parse.get<List<dynamic>>(keyBgMechanics)!;
+
     return BoardgameModel(
       id: parse.objectId,
       name: parse.get<String>(keyBgName)!,
@@ -134,9 +136,8 @@ class ParseToModel {
       designer: parse.get<String?>(keyBgDesigner)!,
       artist: parse.get<String?>(keyBgArtist)!,
       description: parse.get<String?>(keyBgDescription)!,
-      scoring: parse.get<double?>(keyBgScoring)!,
       views: parse.get<int>(keyBgViews)!,
-      mechanics: parse.get<List<int>>(keyBgMechanics)!,
+      mechanics: mechs.map((item) => item as int).toList(),
     );
   }
 
