@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../bg_search/bg_search_screen.dart';
 import '../../mechanics/mechanics_screen.dart';
 import '../../product/widgets/title_product.dart';
 
@@ -53,9 +54,18 @@ class AdminHooks extends StatelessWidget {
           ),
         ),
         ListTile(
-          leading: const Icon(Icons.casino),
-          title: const Text('Boardgames'),
-          onTap: () {},
+          leading: Icon(
+            Icons.casino,
+            color: primary,
+          ),
+          title: Text(
+            'Boardgames',
+            style: TextStyle(color: primary),
+          ),
+          onTap: () => Navigator.pushNamed(
+            context,
+            BgSearchScreen.routeName,
+          ),
         ),
       ],
     );

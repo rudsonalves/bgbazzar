@@ -35,12 +35,12 @@ class BGNamesStore {
 
       return result;
     } catch (err) {
-      log('Error: $err');
+      log('BGNamesStore.get: $err');
       return [];
     }
   }
 
-  static Future<int> put(Map<String, String> map) async {
+  static Future<int> add(Map<String, dynamic> map) async {
     final database = await _databaseManager.database;
 
     try {
@@ -53,7 +53,23 @@ class BGNamesStore {
       }
       return id;
     } catch (err) {
-      log('Error: $err');
+      log('BGNamesStore.add: $err');
+      return -1;
+    }
+  }
+
+  static Future<int> update(Map<String, dynamic> map) async {
+    final database = await _databaseManager.database;
+
+    try {
+      final result = await database.update(
+        bgNamesTable,
+        map,
+      );
+
+      return result;
+    } catch (err) {
+      log('BGNamesStore.update: $err');
       return -1;
     }
   }

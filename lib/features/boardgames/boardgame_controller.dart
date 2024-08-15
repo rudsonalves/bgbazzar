@@ -20,7 +20,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import '../../common/models/mechanic.dart';
-import '../../manager/bg_names_manager.dart';
+import '../../manager/boardgames_manager.dart';
 import '../../manager/mechanics_manager.dart';
 import '../../common/models/boardgame.dart';
 import '../../components/custon_field_controllers/numeric_edit_controller.dart';
@@ -31,7 +31,7 @@ import 'boardgame_state.dart';
 class BoardgameController extends ChangeNotifier {
   BoardgameState _state = BoardgameStateInitial();
 
-  final bgNamesManager = getIt<BgNamesManager>();
+  final bgNamesManager = getIt<BoardgamesManager>();
   final mechManager = getIt<MechanicsManager>();
   final mechanicsManager = getIt<MechanicsManager>();
 
@@ -62,7 +62,7 @@ class BoardgameController extends ChangeNotifier {
   List<String> get bgNames => bgNamesManager.bgNames;
 
   void init() {
-    initBggRank();
+    // initBggRank();
   }
 
   @override
@@ -87,15 +87,15 @@ class BoardgameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> initBggRank() async {
-    try {
-      _changeState(BoardgameStateLoading());
-      await bgNamesManager.init();
-      _changeState(BoardgameStateSuccess());
-    } catch (err) {
-      _changeState(BoardgameStateError());
-    }
-  }
+  // Future<void> initBggRank() async {
+  //   try {
+  //     _changeState(BoardgameStateLoading());
+  //     // await bgNamesManager.init();
+  //     _changeState(BoardgameStateSuccess());
+  //   } catch (err) {
+  //     _changeState(BoardgameStateError());
+  //   }
+  // }
 
   Future<void> getBgInfo() async {
     if (nameController.text.isEmpty) return;

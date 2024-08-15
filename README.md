@@ -9,6 +9,67 @@
 
 # ChangeLog
 
+## 2024/08/15 - version: 0.6.16+39
+
+Refactor: Rename and Update Boardgame and Mechanics Management. Files and Changes:
+
+1. `lib/common/models/bg_name.dart`
+   - Modified `BGNameModel` to use non-final fields.
+   - Added `toMap` and `fromMap` methods for easier conversion between `BGNameModel` and `Map<String, dynamic>`.
+
+2. `lib/features/bg_search/bg_search_controller.dart`
+   - Renamed the `BgNamesManager` to `BoardgamesManager`.
+   - Updated method names to reflect this change.
+   - Refactored method `searchBgg` to `searchBg`.
+
+3. `lib/features/bg_search/bg_search_screen.dart`
+   - Renamed `BggSearchScreen` to `BgSearchScreen`.
+   - Updated the route name and widget class names accordingly.
+
+4. `lib/features/boardgames/boardgame_controller.dart`
+   - Renamed `BgNamesManager` to `BoardgamesManager`.
+   - Commented out the initialization of BGG rank to focus on the new board game management approach.
+
+5. `lib/features/edit_ad/edit_ad_controller.dart`
+   - Removed the unused import of `BgNamesManager`.
+
+6. `lib/features/edit_ad/widgets/ad_form.dart`
+   - Updated the route name from `BggSearchScreen.routeName` to `BgSearchScreen.routeName`.
+
+7. `lib/features/my_account/widgets/admin_hooks.dart`
+   - Updated the `Boardgames` list tile to navigate to the updated `BgSearchScreen`.
+
+8. `lib/get_it.dart`
+   - Replaced `BgNamesManager` with `BoardgamesManager` in the dependency injection setup.
+
+9. `lib/main.dart`
+   - Replaced `BgNamesManager` with `BoardgamesManager` during initialization.
+
+10. `lib/manager/bg_names_manager.dart` -> `lib/manager/boardgames_manager.dart`
+    - Renamed the file and class from `BgNamesManager` to `BoardgamesManager`.
+    - Added logic to manage board games both locally and from the Parse Server.
+    - Included methods for fetching and updating board game names.
+
+11. `lib/my_material_app.dart`
+    - Updated routes to reflect the renaming from `BggSearchScreen` to `BgSearchScreen`.
+
+12. `lib/repository/sqlite/bg_names_repository.dart`
+    - Created a new repository to handle SQLite operations related to board game names.
+
+13. `lib/repository/sqlite/mechanic_repository.dart`
+    - Renamed import from `mechanics.dart` to `mechanics_store.dart`.
+    - Improved error handling and logging.
+
+14. `lib/store/bg_names.dart` -> `lib/store/bg_names_store.dart`
+    - Renamed the file to follow the updated naming conventions.
+    - Enhanced methods for adding and updating board game names in the local SQLite database.
+
+15. `lib/store/mechanics.dart` -> `lib/store/mechanics_store.dart`
+    - Renamed the file for consistency with the new naming conventions.
+
+This commit refactors the codebase to rename and update the management of board games and mechanics. It introduces a consistent naming convention across files and classes, while also enhancing the integration between local storage and the Parse Server.
+
+
 ## 2024/08/14 - version: 0.6.15+38
 
 Documentation and Code Refactor: Update README and Mechanics Features. Files and Changes:

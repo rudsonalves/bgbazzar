@@ -85,7 +85,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               MyDataScreen.routeName: (_) => const MyDataScreen(),
               FavoritesScreen.routeName: (_) => const FavoritesScreen(),
               BoardgamesScreen.routeName: (_) => const BoardgamesScreen(),
-              BggSearchScreen.routeName: (_) => const BggSearchScreen(),
+              BgSearchScreen.routeName: (_) => const BgSearchScreen(),
             },
             onGenerateRoute: (settings) {
               switch (settings.name) {

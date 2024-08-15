@@ -70,7 +70,7 @@ class _AdFormState extends State<AdForm> {
   Future<void> _getBGGInfo() async {
     final bg = await Navigator.pushNamed(
       context,
-      BggSearchScreen.routeName,
+      BgSearchScreen.routeName,
     ) as BoardgameModel?;
 
     if (bg != null) {

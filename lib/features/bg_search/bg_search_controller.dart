@@ -21,7 +21,7 @@ import '../../common/models/bg_name.dart';
 import '../../common/models/boardgame.dart';
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
-import '../../manager/bg_names_manager.dart';
+import '../../manager/boardgames_manager.dart';
 import '../../repository/parse_server/ps_boardgame_repository.dart';
 import 'bg_search_state.dart';
 
@@ -34,7 +34,7 @@ class BgController extends ChangeNotifier {
 
   BgSearchState get state => _state;
 
-  final bgNamesManager = getIt<BgNamesManager>();
+  final bgNamesManager = getIt<BoardgamesManager>();
   final user = getIt<CurrentUser>();
 
   bool get isAdmin => user.isAdmin;
@@ -50,7 +50,7 @@ class BgController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> searchBgg() async {
+  Future<void> searchBg() async {
     final searchBg = bgName.text.trim();
     if (searchBg.isEmpty) return;
 

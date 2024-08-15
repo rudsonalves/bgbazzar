@@ -16,13 +16,29 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 class BGNameModel {
-  final int? id;
-  final String? bgId;
-  final String? name;
+  int? id;
+  String? bgId;
+  String? name;
 
   BGNameModel({
     this.id,
     this.bgId,
     this.name,
   });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'bgId': bgId,
+      'name': name,
+    };
+  }
+
+  factory BGNameModel.fromMap(Map<String, dynamic> map) {
+    return BGNameModel(
+      id: map['id'] != null ? map['id'] as int : null,
+      bgId: map['bgId'] != null ? map['bgId'] as String : null,
+      name: map['name'] != null ? map['name'] as String : null,
+    );
+  }
 }

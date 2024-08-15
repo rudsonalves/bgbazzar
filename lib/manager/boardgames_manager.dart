@@ -27,8 +27,9 @@ import '../common/models/bg_name.dart';
 import '../common/models/boardgame.dart';
 import '../common/settings/local_server.dart';
 import '../repository/parse_server/ps_boardgame_repository.dart';
+import '../repository/sqlite/bg_names_repository.dart';
 
-class BgNamesManager {
+class BoardgamesManager {
   final List<BGNameModel> _bgs = [];
 
   List<BGNameModel> get bgs => _bgs;
@@ -39,13 +40,29 @@ class BgNamesManager {
   }
 
   Future<void> getBGNames() async {
-    // FIXME: esta lista deve ser baixada do parse server apenas se houver novas
-    //        informações, e somente as novas informações.
-    final bgNames = await PSBoardgameRepository.getNames();
-    _bgs.clear();
-    if (bgNames.isNotEmpty) {
-      _bgs.addAll(bgNames);
+    _getLocalBgNames();
+    // FIXME: Check is have news bgNames
+    // get news bgNames from Parse Server
+    final newsBGNames = await _getParseBgNames();
+    final psBGIds = _bgs.map((bg) => bg.bgId!).toList();
+    for (final bg in newsBGNames) {
+      if (!psBGIds.contains(bg.bgId!)) {
+        final newBg = await BGNamesRepository.add(bg);
+        _bgs.add(newBg);
+      }
     }
+  }
+
+  Future<List<BGNameModel>> _getParseBgNames() async {
+    final bgs = await PSBoardgameRepository.getNames();
+    return bgs;
+  }
+
+  Future<void> _getLocalBgNames() async {
+    final bgs = await BGNamesRepository.get();
+    _bgs.clear();
+    if (bgs.isEmpty) return;
+    _bgs.addAll(bgs);
   }
 
   String? gameId(String gameName) {

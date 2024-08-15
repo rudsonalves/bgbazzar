@@ -26,16 +26,16 @@ import 'bg_search_state.dart';
 import 'widgets/bg_info_card.dart';
 import 'widgets/search_card.dart';
 
-class BggSearchScreen extends StatefulWidget {
-  const BggSearchScreen({super.key});
+class BgSearchScreen extends StatefulWidget {
+  const BgSearchScreen({super.key});
 
   static const routeName = '/bggsearch';
 
   @override
-  State<BggSearchScreen> createState() => _BggSearchScreenState();
+  State<BgSearchScreen> createState() => _BgSearchScreenState();
 }
 
-class _BggSearchScreenState extends State<BggSearchScreen> {
+class _BgSearchScreenState extends State<BgSearchScreen> {
   final ctrl = BgController();
 
   @override
@@ -46,7 +46,7 @@ class _BggSearchScreenState extends State<BggSearchScreen> {
 
   void _startSearch() {
     FocusScope.of(context).nextFocus();
-    ctrl.searchBgg();
+    ctrl.searchBg();
   }
 
   void _backPage() => Navigator.pop(context, null);
@@ -61,7 +61,7 @@ class _BggSearchScreenState extends State<BggSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Boardgame Info'),
+        title: const Text('Boardgames'),
         centerTitle: true,
         leading: IconButton(
           onPressed: _backPageWithGame,

@@ -27,7 +27,7 @@ import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
 import '../../components/custon_field_controllers/currency_text_controller.dart';
 import '../../get_it.dart';
-import '../../manager/bg_names_manager.dart';
+// import '../../manager/boardgames_manager.dart';
 import '../../manager/mechanics_manager.dart';
 import '../../repository/parse_server/ps_ad_repository.dart';
 import 'edit_ad_state.dart';
@@ -40,7 +40,6 @@ class EditAdController extends ChangeNotifier {
   final app = getIt<AppSettings>();
   final currentUser = getIt<CurrentUser>();
   final mechanicsManager = getIt<MechanicsManager>();
-  final bgNamesManager = getIt<BgNamesManager>();
 
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();

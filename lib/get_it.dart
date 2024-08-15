@@ -25,7 +25,7 @@ import 'common/singletons/search_filter.dart';
 import 'common/singletons/search_history.dart';
 import 'features/shop/shop_controller.dart';
 import 'manager/address_manager.dart';
-import 'manager/bg_names_manager.dart';
+import 'manager/boardgames_manager.dart';
 import 'manager/favorites_manager.dart';
 import 'manager/mechanics_manager.dart';
 import 'store/database_manager.dart';
@@ -50,7 +50,7 @@ void setupDependencies() {
 
     getIt.registerLazySingleton<DatabaseManager>(() => DatabaseManager());
 
-    getIt.registerLazySingleton<BgNamesManager>(() => BgNamesManager());
+    getIt.registerLazySingleton<BoardgamesManager>(() => BoardgamesManager());
 
     // Pages controllers
     getIt.registerLazySingleton<ShopController>(() => ShopController());

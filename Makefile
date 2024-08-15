@@ -32,6 +32,7 @@ git_push:
 	git add .
 	git commit -F ~/commit.txt
 	git push origin HEAD
+	git checkout main
 
 build_profile:
 	flutter clean
