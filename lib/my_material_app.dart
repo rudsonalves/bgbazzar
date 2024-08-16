@@ -20,11 +20,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'common/models/address.dart';
 import 'common/models/ad.dart';
+import 'common/models/boardgame.dart';
 import 'common/models/filter.dart';
 import 'common/singletons/app_settings.dart';
 import 'common/theme/theme.dart';
 import 'common/theme/util.dart';
 import 'features/boardgame/boardgame_screen.dart';
+import 'features/boardgame/widgets/view_boardgame.dart';
 import 'features/edit_boardgame/edit_boardgame_screen.dart';
 import 'features/favorites/favorites_screen.dart';
 import 'features/my_account/my_account_screen.dart';
@@ -126,6 +128,12 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                     return NewAddressScreen(
                       address: address,
                     );
+                  });
+                case ViewBoardgame.routeName:
+                  return MaterialPageRoute(builder: (context) {
+                    final bg = settings.arguments as BoardgameModel;
+
+                    return ViewBoardgame(bg);
                   });
                 default:
                   return null;

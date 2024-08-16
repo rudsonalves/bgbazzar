@@ -109,10 +109,12 @@ class BoardgamesManager {
         await File(convertedImagePath).delete();
       }
 
-      _bgs.add(BGNameModel(
+      final bgName = BGNameModel(
         bgId: newBg.id,
         name: '${newBg.name} (${newBg.publishYear})',
-      ));
+      );
+      BGNamesRepository.add(bgName);
+      _bgs.add(bgName);
     } catch (err) {
       log(err.toString());
     }
@@ -152,5 +154,9 @@ class BoardgamesManager {
     } catch (err) {
       throw Exception('Error downloading image: $err');
     }
+  }
+
+  Future<BoardgameModel?> getBoardgameId(String bgId) async {
+    return await PSBoardgameRepository.getById(bgId);
   }
 }

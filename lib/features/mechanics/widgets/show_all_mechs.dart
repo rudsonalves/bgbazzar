@@ -36,6 +36,7 @@ class ShowAllMechs extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return ListView.separated(
+      padding: const EdgeInsets.only(bottom: 70),
       itemCount: selectedIds.length,
       separatorBuilder: (context, index) =>
           const Divider(indent: 24, endIndent: 24),
@@ -45,7 +46,7 @@ class ShowAllMechs extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: colorScheme.tertiary.withOpacity(0.15),
+            color: colorScheme.tertiaryContainer,
           ),
           child: ListTile(
             title: Text(mech.name),

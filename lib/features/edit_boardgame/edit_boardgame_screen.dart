@@ -62,7 +62,7 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
 
   Future<void> _backPageWithSave() async {
     await ctrl.saveBoardgame();
-    // if (mounted) Navigator.pop(context);
+    if (mounted) Navigator.pop(context);
   }
 
   void _setImage() async {
@@ -155,9 +155,7 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
                         names: ctrl.bgNames,
                         fullBorder: false,
                         textCapitalization: TextCapitalization.sentences,
-                        onSubmitted: () {
-                          ctrl.getBgInfo();
-                        },
+                        onSubmitted: ctrl.getBgInfo,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4, bottom: 12),
@@ -351,11 +349,6 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
                           ),
                         ],
                       ),
-                      // BigButton(
-                      //   color: Colors.yellow.withOpacity(0.45),
-                      //   label: 'Voltar',
-                      //   onPressed: _backPage,
-                      // ),
                     ],
                   ),
                   if (ctrl.state is EditBoardgameStateLoading)

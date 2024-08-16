@@ -80,6 +80,8 @@ class _MechanicDialogState extends State<MechanicDialog> {
           labelText: 'Descrição',
           hintText: 'Adicione uma descrição',
           fullBorder: false,
+          minLines: 1,
+          maxLines: 5,
         ),
         OverflowBar(
           alignment: MainAxisAlignment.spaceAround,

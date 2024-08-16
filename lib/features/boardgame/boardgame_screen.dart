@@ -24,6 +24,7 @@ import '../edit_boardgame/edit_boardgame_screen.dart';
 import '../shop/widgets/search/search_dialog.dart';
 import 'boardgame_controller.dart';
 import 'boardgame_state.dart';
+import 'widgets/view_boardgame.dart';
 
 class BoardgameScreen extends StatefulWidget {
   const BoardgameScreen({super.key});
@@ -52,8 +53,23 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
 
   void _backPageWithGame() => Navigator.pop(context, ctrl.selectedBGId);
 
-  void _addBoardgame() {
-    Navigator.pushNamed(context, EditBoardgamesScreen.routeName);
+  Future<void> _addBoardgame() async {
+    await Navigator.pushNamed(context, EditBoardgamesScreen.routeName);
+    ctrl.changeSearchName('');
+  }
+
+  Future<void> _editBoardgame() async {
+    final bg = await ctrl.getBoardgameSelected();
+    if (bg != null) {
+      if (mounted) {
+        Navigator.pushNamed(
+          context,
+          EditBoardgamesScreen.routeName,
+          arguments: bg,
+        );
+      }
+    }
+    ctrl.changeSearchName('');
   }
 
   Future<void> _openSearchDialog() async {
@@ -66,6 +82,14 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
       result = null;
     }
     ctrl.changeSearchName(result ?? '');
+  }
+
+  Future<void> _viewBoardgame() async {
+    final bg = await ctrl.getBoardgameSelected();
+    if (bg == null) return;
+    if (mounted) {
+      Navigator.pushNamed(context, ViewBoardgame.routeName, arguments: bg);
+    }
   }
 
   @override
@@ -87,13 +111,30 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
           ),
         ],
       ),
-      floatingActionButton: ctrl.isAdmin
-          ? FloatingActionButton.extended(
-              onPressed: _addBoardgame,
-              icon: const Icon(Icons.add),
-              label: const Text('Boardgame'),
+      floatingActionButton: !ctrl.isAdmin
+          ? OverflowBar(
+              children: [
+                FloatingActionButton.extended(
+                  heroTag: 'Fab01',
+                  onPressed: _addBoardgame,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Adicionar'),
+                ),
+                const SizedBox(width: 20),
+                FloatingActionButton.extended(
+                  heroTag: 'Fab02',
+                  onPressed: _editBoardgame,
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Editar'),
+                ),
+              ],
             )
-          : null,
+          : FloatingActionButton.extended(
+              heroTag: 'Fab03',
+              onPressed: _viewBoardgame,
+              icon: const Icon(Icons.visibility),
+              label: const Text('Visualizar'),
+            ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: ListenableBuilder(
@@ -103,10 +144,13 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
               children: [
                 ListView.builder(
                   itemCount: ctrl.filteredBGs.length,
-                  itemBuilder: (context, index) => Card(
-                    color: ctrl.isSelected(ctrl.filteredBGs[index])
-                        ? colorScheme.tertiaryContainer
-                        : null,
+                  itemBuilder: (context, index) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: ctrl.isSelected(ctrl.filteredBGs[index])
+                          ? colorScheme.tertiaryContainer
+                          : null,
+                    ),
                     child: ListTile(
                       title: Text(ctrl.filteredBGs[index].name!),
                       onTap: () => ctrl.selectBGId(ctrl.filteredBGs[index]),

@@ -106,43 +106,6 @@ class BGInfoCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        // if (game.views > 0)
-                        //   Row(
-                        //     children: [
-                        //       Text(
-                        //         'Visualizações: ',
-                        //         style: AppTextStyle.font16,
-                        //       ),
-                        //       Text(
-                        //         game.views.toString(),
-                        //         style: AppTextStyle.font16.copyWith(
-                        //           color: colorScheme.primary,
-                        //         ),
-                        //       ),
-                        //       Text(
-                        //         '/5 *',
-                        //         style: AppTextStyle.font16,
-                        //       ),
-                        //     ],
-                        //   ),
-                        // if (game.scoring != null)
-                        //   Row(
-                        //     children: [
-                        //       Text(
-                        //         'Pontuação: ',
-                        //         style: AppTextStyle.font16,
-                        //       ),
-                        //       Text(
-                        //         game.scoring?.toStringAsFixed(2) ?? '*',
-                        //         style: AppTextStyle.font16
-                        //             .copyWith(color: colorScheme.primary),
-                        //       ),
-                        //       Text(
-                        //         '/10 *',
-                        //         style: AppTextStyle.font16,
-                        //       ),
-                        //     ],
-                        //   ),
                       ],
                     ),
                   ),
@@ -187,10 +150,6 @@ class BGInfoCard extends StatelessWidget {
               ),
             DescriptionProduct(
               description: game.description ?? '- * -',
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: Text('* dados exclusivos do BGG'),
             ),
           ],
         ),
