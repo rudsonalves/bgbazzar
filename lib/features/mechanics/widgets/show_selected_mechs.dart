@@ -36,15 +36,14 @@ class ShowSelectedMechs extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return ListView.separated(
+      padding: const EdgeInsets.only(bottom: 70),
       itemCount: mechanics.length,
       separatorBuilder: (context, index) =>
           const Divider(indent: 24, endIndent: 24),
       itemBuilder: (context, index) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: isSelectedIndex(index)
-              ? colorScheme.tertiary.withOpacity(0.15)
-              : null,
+          color: isSelectedIndex(index) ? colorScheme.tertiaryContainer : null,
         ),
         child: ListTile(
           title: Text(mechanics[index].name),

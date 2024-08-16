@@ -46,10 +46,12 @@ class MechanicsController extends ChangeNotifier {
   final List<int> _selectedIds = [];
   final _redraw = ValueNotifier<bool>(false);
   final _showSelected = ValueNotifier<bool>(false);
+  final _counter = ValueNotifier<int>(0);
 
   List<int> get selectedIds => _selectedIds;
   ValueNotifier<bool> get showSelected => _showSelected;
   ValueNotifier<bool> get redraw => _redraw;
+  ValueNotifier<int> get counter => _counter;
 
   void init(List<int> ids) {
     _selectedIds.clear();
@@ -60,6 +62,7 @@ class MechanicsController extends ChangeNotifier {
   void dispose() {
     _redraw.dispose();
     _showSelected.dispose();
+    _counter.dispose();
 
     super.dispose();
   }
@@ -77,6 +80,7 @@ class MechanicsController extends ChangeNotifier {
 
   void redrawList() {
     _redraw.value = !_redraw.value;
+    _counter.value = _selectedIds.length;
   }
 
   bool isSelectedIndex(int index) {

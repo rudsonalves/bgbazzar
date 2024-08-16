@@ -98,13 +98,17 @@ class MechanicsManager {
   }
 
   Future<ManagerStatus> add(MechanicModel mech) async {
+    // add in local database
     final newMech = await _localAdd(mech);
     if (newMech == null || newMech.id == null) return ManagerStatus.error;
+    // add in parse server database
     await _psAdd(newMech);
     _mechanics.add(newMech);
+    _sortingMechsNames();
     return ManagerStatus.ok;
   }
 
+  // Add mechanic in local sqlite database
   Future<MechanicModel?> _localAdd(MechanicModel mech) async {
     if (mechanicsNames.contains(mech.name)) return null;
     if (mech.id != null) return null;
@@ -114,7 +118,19 @@ class MechanicsManager {
     return newMech;
   }
 
+  // Add mechanic in parse server database
   Future<void> _psAdd(MechanicModel mech) async {
     await PSMechanicsRepository.add(mech);
+  }
+
+  void _sortingMechsNames() {
+    List<String> names = mechanicsNames;
+    names.sort();
+    final List<MechanicModel> sortMechList = [];
+    for (final name in names) {
+      sortMechList.add(_mechanics.firstWhere((m) => m.name == name));
+    }
+    _mechanics.clear();
+    _mechanics.addAll(sortMechList);
   }
 }

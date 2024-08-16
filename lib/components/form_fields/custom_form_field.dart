@@ -30,6 +30,7 @@ class CustomFormField extends StatelessWidget {
   final FocusNode? nextFocusNode;
   final bool fullBorder;
   final int? maxLines;
+  final int? minLines;
   final FloatingLabelBehavior? floatingLabelBehavior;
   final bool readOnly;
   final Widget? suffixIcon;
@@ -50,6 +51,7 @@ class CustomFormField extends StatelessWidget {
     this.nextFocusNode,
     this.fullBorder = true,
     this.maxLines = 1,
+    this.minLines,
     this.floatingLabelBehavior = FloatingLabelBehavior.always,
     this.readOnly = false,
     this.suffixIcon,
@@ -71,6 +73,7 @@ class CustomFormField extends StatelessWidget {
         focusNode: focusNode,
         keyboardType: keyboardType,
         textInputAction: textInputAction ?? TextInputAction.next,
+        minLines: minLines,
         maxLines: maxLines,
         readOnly: readOnly,
         textCapitalization: textCapitalization ?? TextCapitalization.none,

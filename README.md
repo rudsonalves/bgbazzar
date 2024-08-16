@@ -9,6 +9,66 @@
 
 # ChangeLog
 
+## 2024/08/15 - version: 0.6.17+42
+
+Refactor: Enhance Theme, Boardgame, Mechanics, and My Account Features. 
+Files and Changes:
+
+1. `lib/common/theme/theme.dart`
+   - Adjusted color scheme values across different themes to improve visual consistency.
+   - Updated the primary, secondary, and tertiary color tones for better contrast and readability.
+   - Modified the scaffold background color to match the updated theme configurations.
+
+2. `lib/components/form_fields/custom_form_field.dart`
+   - Added `minLines` property support for text fields to allow dynamic height adjustment based on content.
+
+3. `lib/features/boardgame/boardgame_controller.dart`
+   - Implemented `getBoardgameSelected` method to retrieve details of the selected board game.
+   - Added a method to fetch a board game by its ID and return the corresponding model.
+
+4. `lib/features/boardgame/boardgame_screen.dart`
+   - Integrated new actions in the UI to allow adding, editing, and viewing board games directly from the screen.
+   - Updated the floating action button behavior to reflect the current user’s role (admin or regular user).
+
+5. `lib/features/boardgame/widgets/bg_info_card.dart`
+   - Removed outdated code related to displaying board game views and scoring.
+
+6. `lib/features/boardgame/widgets/view_boardgame.dart`
+   - Created a new widget to display detailed information about a board game in a dedicated screen.
+
+7. `lib/features/edit_boardgame/edit_boardgame_screen.dart`
+   - Fixed a bug that prevented the screen from closing after saving a board game.
+   - Streamlined the on-submit logic for fetching board game information.
+
+8. `lib/features/mechanics/mechanics_controller.dart`
+   - Introduced a counter to track and display the number of selected mechanics.
+   - Implemented logic to update the counter and reflect the current selection status.
+
+9. `lib/features/mechanics/mechanics_screen.dart`
+   - Enhanced the UI to display the number of selected mechanics in the app bar title.
+   - Improved the layout and padding for the mechanics list view.
+
+10. `lib/features/mechanics/widgets/mechanic_dialog.dart`
+    - Added `minLines` and `maxLines` properties to the description text field for better usability.
+
+11. `lib/manager/boardgames_manager.dart`
+    - Added a method to fetch and return a board game by its ID.
+    - Streamlined the board game addition process, including saving to the local database and updating the in-memory list.
+
+12. `lib/manager/mechanics_manager.dart`
+    - Added methods to sort and update the mechanics list after adding new items to ensure alphabetical order.
+    - Separated the logic for adding mechanics to the local and Parse Server databases.
+
+13. `lib/my_material_app.dart`
+    - Registered a new route for the `ViewBoardgame` screen.
+    - Enhanced the app’s routing logic to handle navigation to the new board game view screen.
+
+14. `lib/features/my_account/my_account_screen.dart`
+    - Added a brightness toggle action to the app bar, allowing users to switch between light and dark modes.
+
+This commit introduces various enhancements across the theme settings, board game management, and user interface components. It also includes new functionality for viewing board games and improving the mechanics selection process, ensuring a more seamless and user-friendly experience.
+
+
 ## 2024/08/15 - version: 0.6.17+41
 
 Refactor: Update Boardgame Models and Controller Logic. Files and Changes:

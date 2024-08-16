@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
 import 'widgets/admin_hooks.dart';
@@ -35,6 +36,7 @@ class MyAccountScreen extends StatefulWidget {
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
   final currentUser = getIt<CurrentUser>();
+  final app = getIt<AppSettings>();
 
   void _backPage() {
     Navigator.pop(context);
@@ -56,6 +58,19 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: _backPage,
         ),
+        actions: [
+          ValueListenableBuilder(
+            valueListenable: app.brightness,
+            builder: (context, value, _) {
+              return IconButton(
+                onPressed: app.toggleBrightnessMode,
+                icon: Icon(value == Brightness.dark
+                    ? Icons.dark_mode
+                    : Icons.light_mode),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),

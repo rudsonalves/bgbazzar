@@ -72,7 +72,11 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mecânicas'),
+        title: ValueListenableBuilder(
+            valueListenable: ctrl.counter,
+            builder: (context, counter, _) {
+              return Text('Mecânicas ($counter)');
+            }),
         centerTitle: true,
         leading: IconButton(
           onPressed: _closeMechanicsPage,
@@ -126,34 +130,34 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: ListenableBuilder(
-            listenable:
-                Listenable.merge([ctrl.redraw, ctrl.showSelected, ctrl]),
-            builder: (context, _) {
-              return Stack(
-                children: [
-                  (!ctrl.showSelected.value)
-                      ? ShowSelectedMechs(
-                          mechanics: ctrl.mechanics,
-                          isSelectedIndex: ctrl.isSelectedIndex,
-                          toogleSelectionIndex: ctrl.toogleSelectionIndex)
-                      : ShowAllMechs(
-                          selectedIds: ctrl.selectedIds,
-                          mechanicOfId: ctrl.mechanicOfId,
-                          toogleSelectedInIndex: ctrl.toogleSelectedInIndex,
-                        ),
-                  if (ctrl.state is MechanicsStateLoading)
-                    const Positioned.fill(
-                      child: StateLoadingMessage(),
-                    ),
-                  if (ctrl.state is MechanicsStateError)
-                    Positioned(
-                      child: StateErrorMessage(
-                        closeDialog: ctrl.closeDialog,
+          listenable: Listenable.merge([ctrl.redraw, ctrl.showSelected, ctrl]),
+          builder: (context, _) {
+            return Stack(
+              children: [
+                (!ctrl.showSelected.value)
+                    ? ShowSelectedMechs(
+                        mechanics: ctrl.mechanics,
+                        isSelectedIndex: ctrl.isSelectedIndex,
+                        toogleSelectionIndex: ctrl.toogleSelectionIndex)
+                    : ShowAllMechs(
+                        selectedIds: ctrl.selectedIds,
+                        mechanicOfId: ctrl.mechanicOfId,
+                        toogleSelectedInIndex: ctrl.toogleSelectedInIndex,
                       ),
+                if (ctrl.state is MechanicsStateLoading)
+                  const Positioned.fill(
+                    child: StateLoadingMessage(),
+                  ),
+                if (ctrl.state is MechanicsStateError)
+                  Positioned(
+                    child: StateErrorMessage(
+                      closeDialog: ctrl.closeDialog,
                     ),
-                ],
-              );
-            }),
+                  ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
