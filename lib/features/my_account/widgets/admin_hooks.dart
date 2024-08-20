@@ -50,7 +50,7 @@ class AdminHooks extends StatelessWidget {
           onTap: () => Navigator.pushNamed(
             context,
             MechanicsScreen.routeName,
-            arguments: <int>[],
+            arguments: <String>[],
           ),
         ),
         ListTile(

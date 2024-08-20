@@ -61,7 +61,7 @@ class EditAdController extends ChangeNotifier {
 
   final _images = <String>[];
   final _imagesLength = ValueNotifier<int>(0);
-  final List<int> _selectedMechIds = [];
+  final List<String> _selectedMechPsIds = [];
 
   String _selectedAddressId = '';
   String get selectedAddressId => _selectedAddressId;
@@ -73,9 +73,9 @@ class EditAdController extends ChangeNotifier {
   ProductCondition get condition => _condition;
   AdStatus get adStatus => _adStatus;
 
-  List<int> get selectedMechIds => _selectedMechIds;
+  List<String> get selectedMechIds => _selectedMechPsIds;
   List<String> get selectedMachNames => mechanics
-      .where((c) => _selectedMechIds.contains(c.id!))
+      .where((c) => _selectedMechPsIds.contains(c.psId!))
       .map((c) => c.name)
       .toList();
 
@@ -93,7 +93,7 @@ class EditAdController extends ChangeNotifier {
       hidePhone.value = editAd.hidePhone;
       priceController.currencyValue = editAd.price;
       setAdStatus(editAd.status);
-      setMechanicsIds(editAd.mechanicsId);
+      setMechanicsPsIds(editAd.mechanicsId);
       setSelectedAddress(editAd.address!.name);
       setImages(editAd.images);
       setCondition(editAd.condition);
@@ -148,7 +148,7 @@ class EditAdController extends ChangeNotifier {
       _changeState(EditAdStateLoading());
       final bg = await bgManager.getBoardgameId(bgId);
       if (bg != null) {
-        setMechanicsIds(bg.mechanics);
+        setMechanicsPsIds(bg.mechsPsIds);
         nameController.text = bg.name;
         ad.title = bg.name;
         ad.yearpublished = bg.publishYear;
@@ -159,7 +159,7 @@ class EditAdController extends ChangeNotifier {
         ad.age = bg.minAge;
         ad.designer = bg.designer;
         ad.artist = bg.artist;
-        ad.mechanicsId = bg.mechanics;
+        ad.mechanicsId = bg.mechsPsIds;
         ad.images.add(bg.image);
       }
       log(ad.toString());
@@ -172,9 +172,9 @@ class EditAdController extends ChangeNotifier {
     }
   }
 
-  void setMechanicsIds(List<int> mechIds) {
-    _selectedMechIds.clear();
-    _selectedMechIds.addAll(mechIds);
+  void setMechanicsPsIds(List<String> mechPsIds) {
+    _selectedMechPsIds.clear();
+    _selectedMechPsIds.addAll(mechPsIds);
     mechanicsController.text = selectedMachNames.join(', ');
   }
 
@@ -195,7 +195,7 @@ class EditAdController extends ChangeNotifier {
       ad.images = _images;
       ad.title = nameController.text;
       ad.description = descriptionController.text;
-      ad.mechanicsId = _selectedMechIds;
+      ad.mechanicsId = _selectedMechPsIds;
       ad.address = currentUser.addresses
           .firstWhere((address) => address.id == _selectedAddressId);
       ad.price = priceController.currencyValue;
@@ -222,7 +222,7 @@ class EditAdController extends ChangeNotifier {
       ad.images = _images;
       ad.title = nameController.text;
       ad.description = descriptionController.text;
-      ad.mechanicsId = _selectedMechIds;
+      ad.mechanicsId = _selectedMechPsIds;
       ad.address = currentUser.addresses
           .firstWhere((address) => address.id == _selectedAddressId);
       ad.price = priceController.currencyValue;

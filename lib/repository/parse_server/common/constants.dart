@@ -91,6 +91,5 @@ const keyBgMechanics = 'mechanics';
 
 const keyMechTable = mechTable;
 const keyMechObjectId = 'objectId';
-const keyMechId = 'mechId'; // id is an invalid field name for parse server
 const keyMechName = mechName;
 const keyMechDescription = mechDescription;

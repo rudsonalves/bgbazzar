@@ -27,7 +27,10 @@ class NumericEditController<T extends num> extends TextEditingController {
     throw UnsupportedError('Unsupported type: $T');
   }
 
-  set numericValue(T value) => text = value.toString();
+  set numericValue(T value) {
+    oldValue = value.toString();
+    _setControllerText();
+  }
 
   bool _isValidateValue = false;
 

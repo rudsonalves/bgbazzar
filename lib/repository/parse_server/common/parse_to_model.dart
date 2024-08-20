@@ -92,7 +92,7 @@ class ParseToModel {
       images: (parse.get<List<dynamic>>(keyAdImages) as List<dynamic>)
           .map((item) => (item as ParseFile).url!)
           .toList(),
-      mechanicsId: mechs.map((e) => e as int).toList(),
+      mechanicsId: mechs.map((e) => e as String).toList(),
       address: address,
       status: AdStatus.values
           .firstWhere((s) => s.index == parse.get<int>(keyAdStatus)!),
@@ -124,7 +124,7 @@ class ParseToModel {
     final mechs = parse.get<List<dynamic>>(keyBgMechanics)!;
 
     return BoardgameModel(
-      id: parse.objectId,
+      bgId: parse.objectId,
       name: parse.get<String>(keyBgName)!,
       image: parse.get<ParseFile>(keyBgImage)!.url!,
       publishYear: parse.get<int>(keyBgPublishYear)!,
@@ -137,7 +137,7 @@ class ParseToModel {
       artist: parse.get<String?>(keyBgArtist)!,
       description: parse.get<String?>(keyBgDescription)!,
       views: parse.get<int>(keyBgViews)!,
-      mechanics: mechs.map((item) => item as int).toList(),
+      mechsPsIds: mechs.map((item) => item as String).toList(),
     );
   }
 
@@ -153,7 +153,7 @@ class ParseToModel {
 
   static MechanicModel mechanic(ParseObject parse) {
     return MechanicModel(
-      id: parse.get<int>(keyMechId)!,
+      psId: parse.objectId,
       name: parse.get<String>(keyMechName)!,
       description: parse.get<String>(keyMechDescription)!,
     );

@@ -40,22 +40,22 @@ class MechanicsController extends ChangeNotifier {
   final mechanicManager = getIt<MechanicsManager>();
 
   List<MechanicModel> get mechanics => mechanicManager.mechanics;
-  MechanicModel Function(int id) get mechanicOfId =>
-      mechanicManager.mechanicOfId;
+  MechanicModel Function(String psId) get mechanicOfPsId =>
+      mechanicManager.mechanicOfPsId;
 
-  final List<int> _selectedIds = [];
+  final List<String> _selectedPsIds = [];
   final _redraw = ValueNotifier<bool>(false);
   final _showSelected = ValueNotifier<bool>(false);
   final _counter = ValueNotifier<int>(0);
 
-  List<int> get selectedIds => _selectedIds;
+  List<String> get selectedPsIds => _selectedPsIds;
   ValueNotifier<bool> get showSelected => _showSelected;
   ValueNotifier<bool> get redraw => _redraw;
   ValueNotifier<int> get counter => _counter;
 
-  void init(List<int> ids) {
-    _selectedIds.clear();
-    _selectedIds.addAll(ids);
+  void init(List<String> psIds) {
+    _selectedPsIds.clear();
+    _selectedPsIds.addAll(psIds);
   }
 
   @override
@@ -68,9 +68,9 @@ class MechanicsController extends ChangeNotifier {
   }
 
   void toogleShowSelection() {
-    if (_selectedIds.isEmpty && !_showSelected.value) {
+    if (_selectedPsIds.isEmpty && !_showSelected.value) {
       return;
-    } else if (_selectedIds.isEmpty && _showSelected.value) {
+    } else if (_selectedPsIds.isEmpty && _showSelected.value) {
       _showSelected.value = false;
     } else {
       _showSelected.value = !_showSelected.value;
@@ -80,26 +80,26 @@ class MechanicsController extends ChangeNotifier {
 
   void redrawList() {
     _redraw.value = !_redraw.value;
-    _counter.value = _selectedIds.length;
+    _counter.value = _selectedPsIds.length;
   }
 
   bool isSelectedIndex(int index) {
-    return _selectedIds.contains(mechanics[index].id!);
+    return _selectedPsIds.contains(mechanics[index].psId!);
   }
 
   void toogleSelectionIndex(int index) {
-    int id = mechanics[index].id!;
-    if (_selectedIds.contains(id)) {
-      _selectedIds.remove(id);
+    final psId = mechanics[index].psId!;
+    if (_selectedPsIds.contains(psId)) {
+      _selectedPsIds.remove(psId);
     } else {
-      _selectedIds.add(id);
+      _selectedPsIds.add(psId);
     }
     redrawList();
   }
 
   void toogleSelectedInIndex(int index) {
-    _selectedIds.removeAt(index);
-    if (_selectedIds.isEmpty && _showSelected.value) {
+    _selectedPsIds.removeAt(index);
+    if (_selectedPsIds.isEmpty && _showSelected.value) {
       _showSelected.value = false;
     } else {
       redrawList();
@@ -107,8 +107,8 @@ class MechanicsController extends ChangeNotifier {
   }
 
   void deselectAll() {
-    _selectedIds.clear();
-    if (_selectedIds.isEmpty && _showSelected.value) {
+    _selectedPsIds.clear();
+    if (_selectedPsIds.isEmpty && _showSelected.value) {
       _showSelected.value = false;
     } else {
       redrawList();

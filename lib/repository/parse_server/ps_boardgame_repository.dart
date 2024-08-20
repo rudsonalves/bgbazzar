@@ -60,9 +60,58 @@ class PSBoardgameRepository {
         ..set<String?>(keyBgArtist, bg.artist)
         ..set<String?>(keyBgDescription, bg.description)
         ..set<int?>(keyBgViews, bg.views)
-        ..set<List<int>>(keyBgMechanics, bg.mechanics);
+        ..set<List<String>>(keyBgMechanics, bg.mechsPsIds);
 
       final response = await parse.save();
+      if (!response.success) {
+        throw Exception(response.error);
+      }
+
+      return ParseToModel.boardgameModel(parse);
+    } catch (err) {
+      final message = 'AdRepository.save: $err';
+      log(message);
+      return null;
+    }
+  }
+
+  static Future<BoardgameModel?> update(BoardgameModel bg) async {
+    try {
+      final parse = ParseObject(keyBgTable);
+
+      final parseUser = await ParseUser.currentUser() as ParseUser?;
+      if (parseUser == null) {
+        throw Exception('Current user access error');
+      }
+
+      final parseImage = await _saveImage(
+        path: bg.image,
+        parseUser: parseUser,
+        fileName: '${bg.name}_${bg.publishYear}.jpg',
+      );
+
+      final parseAcl = ParseACL(owner: parseUser);
+      parseAcl.setPublicReadAccess(allowed: true);
+      parseAcl.setPublicWriteAccess(allowed: false);
+
+      parse
+        ..objectId = bg.bgId
+        ..setACL(parseAcl)
+        ..set<String>(keyBgName, bg.name)
+        ..set<ParseFile>(keyBgImage, parseImage)
+        ..set<int>(keyBgPublishYear, bg.publishYear)
+        ..set<int>(keyBgMinPlayers, bg.minPlayers)
+        ..set<int>(keyBgMaxPlayers, bg.maxPlayers)
+        ..set<int>(keyBgMinTime, bg.minTime)
+        ..set<int>(keyBgMaxTime, bg.maxTime)
+        ..set<int>(keyBgMinAge, bg.minAge)
+        ..set<String?>(keyBgDesigner, bg.designer)
+        ..set<String?>(keyBgArtist, bg.artist)
+        ..set<String?>(keyBgDescription, bg.description)
+        ..set<int?>(keyBgViews, bg.views)
+        ..set<List<String>>(keyBgMechanics, bg.mechsPsIds);
+
+      final response = await parse.update();
       if (!response.success) {
         throw Exception(response.error);
       }

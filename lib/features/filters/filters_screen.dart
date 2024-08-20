@@ -67,12 +67,12 @@ class _FiltersScreenState extends State<FiltersScreen> {
   }
 
   Future<void> _selectMechanics() async {
-    final newMechsIds = await Navigator.pushNamed(
+    final newMechsPsIds = await Navigator.pushNamed(
       context,
       MechanicsScreen.routeName,
       arguments: ctrl.selectedMechIds,
-    ) as List<int>;
-    ctrl.mechUpdateNames(newMechsIds);
+    ) as List<String>;
+    ctrl.mechUpdateNames(newMechsPsIds);
   }
 
   @override

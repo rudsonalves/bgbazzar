@@ -20,14 +20,14 @@ import 'package:flutter/material.dart';
 import '../../../common/models/mechanic.dart';
 
 class ShowAllMechs extends StatelessWidget {
-  final List<int> selectedIds;
-  final MechanicModel Function(int) mechanicOfId;
+  final List<String> selectedPsIds;
+  final MechanicModel Function(String) mechanicOfPsId;
   final void Function(int) toogleSelectedInIndex;
 
   const ShowAllMechs({
     super.key,
-    required this.selectedIds,
-    required this.mechanicOfId,
+    required this.selectedPsIds,
+    required this.mechanicOfPsId,
     required this.toogleSelectedInIndex,
   });
 
@@ -37,11 +37,11 @@ class ShowAllMechs extends StatelessWidget {
 
     return ListView.separated(
       padding: const EdgeInsets.only(bottom: 70),
-      itemCount: selectedIds.length,
+      itemCount: selectedPsIds.length,
       separatorBuilder: (context, index) =>
           const Divider(indent: 24, endIndent: 24),
       itemBuilder: (context, index) {
-        final mech = mechanicOfId(selectedIds[index]);
+        final mech = mechanicOfPsId(selectedPsIds[index]);
 
         return Container(
           decoration: BoxDecoration(

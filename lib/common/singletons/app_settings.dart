@@ -48,7 +48,10 @@ class AppSettings {
 
   Future<void> _saveBright() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(keyBrightness, _brightness.value.toString());
+    prefs.setString(
+      keyBrightness,
+      _brightness.value == Brightness.dark ? 'dark' : 'light',
+    );
   }
 
   Future<void> setLocalDBVersion(int version) async {

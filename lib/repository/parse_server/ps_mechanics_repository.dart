@@ -42,7 +42,6 @@ class PSMechanicsRepository {
 
       parse
         ..setACL(parseAcl)
-        ..set<int>(keyMechId, mech.id!)
         ..set<String>(keyMechName, mech.name)
         ..set<String>(keyMechDescription, mech.description!);
 
@@ -85,11 +84,11 @@ class PSMechanicsRepository {
     }
   }
 
-  static Future<List<int>> getIds() async {
+  static Future<List<String>> getPsIds() async {
     final query = QueryBuilder<ParseObject>(ParseObject(keyMechTable));
 
     try {
-      query.keysToReturn([keyMechId]);
+      query.keysToReturn([keyMechObjectId]);
 
       final response = await query.query();
       if (!response.success) {
@@ -98,10 +97,10 @@ class PSMechanicsRepository {
         throw Exception(message);
       }
 
-      final List<int> mechs = [];
+      final List<String> mechs = [];
       for (final ParseObject parse in response.results!) {
-        final id = parse.get<int>(keyMechId)!;
-        mechs.add(id);
+        final id = parse.objectId;
+        mechs.add(id!);
       }
       return mechs;
     } catch (err) {

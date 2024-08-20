@@ -19,6 +19,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../common/models/boardgame.dart';
 import '../../common/theme/app_text_style.dart';
 import '../../components/form_fields/custom_form_field.dart';
 import '../../components/form_fields/custom_long_form_field.dart';
@@ -32,7 +33,12 @@ import 'edit_boardgame_controller.dart';
 import 'edit_boardgame_state.dart';
 
 class EditBoardgamesScreen extends StatefulWidget {
-  const EditBoardgamesScreen({super.key});
+  final BoardgameModel? bg;
+
+  const EditBoardgamesScreen(
+    this.bg, {
+    super.key,
+  });
 
   static const routeName = '/boardgame';
 
@@ -47,7 +53,7 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
   void initState() {
     super.initState();
 
-    ctrl.init();
+    ctrl.init(widget.bg);
   }
 
   @override
@@ -108,14 +114,14 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
   }
 
   Future<void> _addMecanics() async {
-    final mechIds = await Navigator.pushNamed(
+    final mechPsIds = await Navigator.pushNamed(
       context,
       MechanicsScreen.routeName,
       arguments: ctrl.selectedMechIds,
-    ) as List<int>?;
+    ) as List<String>?;
 
-    if (mechIds != null) {
-      ctrl.setMechanicsIds(mechIds);
+    if (mechPsIds != null) {
+      ctrl.setMechanicsPsIds(mechPsIds);
       if (mounted) FocusScope.of(context).nextFocus();
     }
   }

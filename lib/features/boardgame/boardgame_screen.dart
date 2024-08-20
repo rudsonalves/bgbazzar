@@ -114,23 +114,30 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
       floatingActionButton: ctrl.isAdmin
           ? OverflowBar(
               children: [
-                FloatingActionButton.extended(
+                FloatingActionButton(
                   heroTag: 'Fab01',
                   onPressed: _addBoardgame,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Adicionar'),
+                  tooltip: 'Adicionar',
+                  child: const Icon(Icons.add),
                 ),
                 const SizedBox(width: 20),
-                FloatingActionButton.extended(
+                FloatingActionButton(
                   heroTag: 'Fab02',
                   onPressed: _editBoardgame,
-                  icon: const Icon(Icons.edit),
-                  label: const Text('Editar'),
+                  tooltip: 'Editar',
+                  child: const Icon(Icons.edit),
+                ),
+                const SizedBox(width: 20),
+                FloatingActionButton(
+                  heroTag: 'Fab03',
+                  onPressed: _viewBoardgame,
+                  tooltip: 'Visualizar',
+                  child: const Icon(Icons.visibility),
                 ),
               ],
             )
           : FloatingActionButton.extended(
-              heroTag: 'Fab03',
+              heroTag: 'Fab04',
               onPressed: _viewBoardgame,
               icon: const Icon(Icons.visibility),
               label: const Text('Visualizar'),

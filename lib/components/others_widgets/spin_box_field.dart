@@ -19,16 +19,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class SpinBoxField extends StatefulWidget {
-  final num? value;
+import '../custon_field_controllers/numeric_edit_controller.dart';
+
+class SpinBoxField<T extends num> extends StatefulWidget {
+  final T? value;
   final Widget? label;
   final TextStyle? style;
   final String? hintText;
   final TextEditingController controller;
   final int flex;
-  final num minValue;
-  final num maxValue;
-  final num increment;
+  final T minValue;
+  final T maxValue;
+  final T increment;
   final InputDecoration? decoration;
   final int fractionDigits;
 
@@ -40,19 +42,21 @@ class SpinBoxField extends StatefulWidget {
     this.hintText,
     required this.controller,
     this.flex = 1,
-    this.minValue = 0,
-    this.maxValue = 10,
-    this.increment = 1,
+    T? minValue,
+    T? maxValue,
+    T? increment,
     this.decoration,
     this.fractionDigits = 0,
-  });
+  })  : minValue = minValue ?? (T == int ? 0 as T : 0.0 as T),
+        maxValue = maxValue ?? (T == int ? 10 as T : 10.0 as T),
+        increment = increment ?? (T == int ? 1 as T : 1.0 as T);
 
   @override
-  State<SpinBoxField> createState() => _SpinBoxFieldState();
+  State<SpinBoxField> createState() => _SpinBoxFieldState<T>();
 }
 
-class _SpinBoxFieldState extends State<SpinBoxField> {
-  late num value;
+class _SpinBoxFieldState<T extends num> extends State<SpinBoxField<T>> {
+  late T value;
   Timer? _incrementTimer;
   Timer? _decrementTimer;
   bool _isLongPressActive = false;
@@ -62,19 +66,30 @@ class _SpinBoxFieldState extends State<SpinBoxField> {
   void initState() {
     super.initState();
 
-    value = widget.value ?? 0;
-    widget.controller.text = value.toStringAsFixed(widget.fractionDigits);
+    if (widget.controller is NumericEditController) {
+      value = (widget.controller as NumericEditController).numericValue as T;
+    } else {
+      value = widget.value ?? widget.minValue;
+      widget.controller.text = value.toStringAsFixed(widget.fractionDigits);
+    }
 
     widget.controller.addListener(() {
       if (_internalChange) return;
-      value = num.tryParse(widget.controller.text) ?? 0;
-      if (value == 0 || widget.fractionDigits == 0) return;
-      String text = value.toStringAsFixed(widget.fractionDigits);
-      value = num.parse(text);
-      _internalChange = true;
-      widget.controller.text = text;
-      _internalChange = false;
+      final parseValue = _parseValue(widget.controller.text);
+      if (parseValue != null) {
+        value = parseValue;
+        _changeText(value);
+      }
     });
+  }
+
+  T? _parseValue(String text) {
+    if (T == int) {
+      return int.tryParse(text) as T?;
+    } else if (T == double) {
+      return double.tryParse(text) as T?;
+    }
+    return null;
   }
 
   void _longIncrement() {
@@ -113,7 +128,7 @@ class _SpinBoxFieldState extends State<SpinBoxField> {
 
   void _increment() {
     if (value < widget.maxValue) {
-      value += widget.increment;
+      value = (value + widget.increment) as T;
       value = value > widget.maxValue ? widget.maxValue : value;
       _changeText(value);
     }
@@ -121,13 +136,13 @@ class _SpinBoxFieldState extends State<SpinBoxField> {
 
   void _decrement() {
     if (value > widget.minValue) {
-      value -= widget.increment;
+      value = (value - widget.increment) as T;
       value = value < widget.minValue ? widget.minValue : value;
       _changeText(value);
     }
   }
 
-  void _changeText(num value) {
+  void _changeText(T value) {
     _internalChange = true;
     widget.controller.text = value.toStringAsFixed(widget.fractionDigits);
     _internalChange = false;

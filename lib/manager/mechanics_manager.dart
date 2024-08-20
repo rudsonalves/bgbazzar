@@ -44,10 +44,10 @@ class MechanicsManager {
       _mechanics.addAll(mechs);
     }
 
-    final ids = await PSMechanicsRepository.getIds();
-    final localIds = _mechanics.map((m) => m.id).toList();
+    final ids = await PSMechanicsRepository.getPsIds();
+    final localIds = _mechanics.map((m) => m.psId).toList();
 
-    for (int id in ids) {
+    for (final id in ids) {
       if (!localIds.contains(id)) {
         log('need get id$id');
       }
@@ -56,12 +56,12 @@ class MechanicsManager {
 
   /// Returns the name of the mechanic given its ID.
   ///
-  /// [id] - The ID of the mechanic.
+  /// [psId] - The ID of the mechanic.
   /// Returns the name of the mechanic if found, otherwise returns null.
-  String? nameFromId(int id) {
+  String? nameFromPsId(String psId) {
     return _mechanics
         .firstWhere(
-          (item) => item.id == id,
+          (item) => item.psId == psId,
           orElse: () => MechanicModel(id: null, name: ''),
         )
         .name;
@@ -69,40 +69,41 @@ class MechanicsManager {
 
   /// Returns a list of mechanic names given a list of mechanic IDs.
   ///
-  /// [ids] - A list of mechanic IDs.
+  /// [psIds] - A list of mechanic IDs.
   /// Returns a list of mechanic names corresponding to the provided IDs.
   /// If a mechanic ID does not correspond to a mechanic, it logs an error.
-  List<String> namesFromIdList(List<int> ids) {
+  List<String> namesFromPsIdList(List<String> psIds) {
     List<String> names = [];
-    for (final id in ids) {
-      final name = nameFromId(id);
+    for (final psId in psIds) {
+      final name = nameFromPsId(psId);
       if (name != null) {
         names.add(name);
         continue;
       }
-      log('MechanicsManager.namesFromIdList: name from MechanicModel.id $id return erro');
+      log('MechanicsManager.namesFromIdList: name from MechanicModel.id $psId return erro');
     }
 
     return names;
   }
 
-  String namesFromIdListString(List<int> ids) {
-    return namesFromIdList(ids)
+  String namesFromIdListString(List<String> psIds) {
+    return namesFromPsIdList(psIds)
         .toString()
         .replaceAll('[', '')
         .replaceAll(']', '');
   }
 
-  MechanicModel mechanicOfId(int id) {
-    return _mechanics.firstWhere((item) => item.id == id);
+  MechanicModel mechanicOfPsId(String psId) {
+    return _mechanics.firstWhere((item) => item.psId == psId);
   }
 
   Future<ManagerStatus> add(MechanicModel mech) async {
-    // add in local database
-    final newMech = await _localAdd(mech);
-    if (newMech == null || newMech.id == null) return ManagerStatus.error;
     // add in parse server database
-    await _psAdd(newMech);
+    final newMech = await _psAdd(mech);
+    if (newMech == null || newMech.psId == null) return ManagerStatus.error;
+    // add in local database
+    await _localAdd(newMech);
+
     _mechanics.add(newMech);
     _sortingMechsNames();
     return ManagerStatus.ok;
@@ -119,8 +120,8 @@ class MechanicsManager {
   }
 
   // Add mechanic in parse server database
-  Future<void> _psAdd(MechanicModel mech) async {
-    await PSMechanicsRepository.add(mech);
+  Future<MechanicModel?> _psAdd(MechanicModel mech) async {
+    return await PSMechanicsRepository.add(mech);
   }
 
   void _sortingMechsNames() {

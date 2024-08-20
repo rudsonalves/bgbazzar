@@ -28,11 +28,11 @@ import 'widgets/show_all_mechs.dart';
 import 'widgets/show_selected_mechs.dart';
 
 class MechanicsScreen extends StatefulWidget {
-  final List<int> selectedIds;
+  final List<String> selectedPsIds;
 
   const MechanicsScreen({
     super.key,
-    required this.selectedIds,
+    required this.selectedPsIds,
   });
 
   static const routeName = '/mechanics';
@@ -48,7 +48,7 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
   void initState() {
     super.initState();
 
-    ctrl.init(widget.selectedIds);
+    ctrl.init(widget.selectedPsIds);
   }
 
   @override
@@ -58,7 +58,7 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
   }
 
   void _closeMechanicsPage() {
-    Navigator.pop(context, ctrl.selectedIds);
+    Navigator.pop(context, ctrl.selectedPsIds);
   }
 
   Future<void> _addMechanic() async {
@@ -140,8 +140,8 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                         isSelectedIndex: ctrl.isSelectedIndex,
                         toogleSelectionIndex: ctrl.toogleSelectionIndex)
                     : ShowAllMechs(
-                        selectedIds: ctrl.selectedIds,
-                        mechanicOfId: ctrl.mechanicOfId,
+                        selectedPsIds: ctrl.selectedPsIds,
+                        mechanicOfPsId: ctrl.mechanicOfPsId,
                         toogleSelectedInIndex: ctrl.toogleSelectedInIndex,
                       ),
                 if (ctrl.state is MechanicsStateLoading)

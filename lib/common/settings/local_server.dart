@@ -24,4 +24,6 @@ class LocalServer {
   static get keyApplicationId => 'IYbf1NRGo31PJbm4SUfibVvBS6XX4LyVfXwb6Vbd';
   static get keyClientKey => 'UXD8yIPFSaVQ3Wk46gPErwcVkl5c40pp00hH306q';
   static get keyParseServerUrl => 'https://parseapi.back4app.com';
+
+  static get keyParseServerImageUrl => 'https://parsefiles.back4app.com';
 }
