@@ -22,6 +22,7 @@ class BigButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
   final FocusNode? focusNode;
+  final IconData? iconData;
 
   const BigButton({
     super.key,
@@ -29,6 +30,7 @@ class BigButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.focusNode,
+    this.iconData,
   });
 
   @override
@@ -53,11 +55,24 @@ class BigButton extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 18,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (iconData != null)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: Icon(
+                          iconData,
+                          size: 22,
+                        ),
+                      ),
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

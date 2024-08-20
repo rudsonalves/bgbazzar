@@ -18,10 +18,12 @@
 import 'package:flutter/material.dart';
 
 class StateErrorMessage extends StatelessWidget {
+  final String? message;
   final void Function() closeDialog;
 
   const StateErrorMessage({
     super.key,
+    this.message,
     required this.closeDialog,
   });
 
@@ -47,9 +49,11 @@ class StateErrorMessage extends StatelessWidget {
                       size: 80,
                     ),
                     const SizedBox(height: 20),
-                    const Text(
-                      'Desculpe. Ocorreu algum problema.\n'
-                      ' Tente mais tarde.',
+                    Text(
+                      message != null
+                          ? message!
+                          : 'Desculpe. Ocorreu algum problema.\n'
+                              ' Tente mais tarde.',
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 16),

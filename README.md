@@ -9,6 +9,101 @@
 
 # ChangeLog
 
+## 2024/08/20 - version: 0.6.17+43
+
+
+Update: Android Manifest, Database Management, and Various Model Enhancements. Files and Changes:
+
+1. `android/app/src/main/AndroidManifest.xml`
+   - Added necessary permissions (INTERNET, CAMERA, READ/WRITE_EXTERNAL_STORAGE) as comments for potential future use.
+   - Integrated `UCropActivity` for image cropping functionality.
+
+2. `assets/data/bgBazzar.db`
+   - Updated database file to include new or modified data.
+
+3. `lib/common/constants/shared_preferenses.dart`
+   - Created new constants for managing shared preferences keys (`keySearchHistory`, `keyLocalDBVersion`, `keyBrightness`).
+
+4. `lib/common/models/ad.dart`
+   - Reformatted the `toString` method for better readability, adding line breaks between fields.
+
+5. `lib/common/models/mechanic.dart`
+   - Added a new `psId` field to the `MechanicModel`.
+   - Updated the `toMap`, `fromMap`, and `toString` methods to reflect this change.
+
+6. `lib/common/singletons/app_settings.dart`
+   - Implemented methods to manage and persist app settings, including brightness mode and local database version.
+   - Enhanced initialization with shared preferences support.
+
+7. `lib/common/singletons/search_history.dart`
+   - Updated to use the new shared preferences constants for managing search history.
+
+8. `lib/common/theme/theme.dart`
+   - Minor adjustment: changed `scaffoldBackgroundColor` to use `colorScheme.surface` instead of `colorScheme.background`.
+
+9. `lib/components/buttons/big_button.dart`
+   - Added support for an optional icon in the `BigButton` widget, allowing more customization.
+
+10. `lib/components/others_widgets/state_error_message.dart`
+    - Enhanced the `StateErrorMessage` widget to accept a custom error message.
+
+11. `lib/features/boardgame/boardgame_screen.dart`
+    - Fixed an issue where the floating action button was displayed incorrectly based on the user’s admin status.
+
+12. `lib/features/edit_ad/edit_ad_controller.dart`
+    - Improved the `setBgInfo` method to handle potential errors when retrieving board game data.
+    - Added error handling and updated the UI accordingly.
+
+13. `lib/features/edit_ad/edit_ad_screen.dart`
+    - Updated UI labels and buttons to reflect the current context (e.g., "Salvar" vs. "Atualizar").
+    - Integrated new icon options for buttons.
+
+14. `lib/features/edit_ad/widgets/ad_form.dart`
+    - Refactored the method for retrieving board game information, ensuring proper error handling and feedback.
+
+15. `lib/features/my_account/my_account_screen.dart`
+    - Simplified the code by renaming variables for consistency (`currentUser` to `user`).
+    - Updated the logout process to use the newly named variable.
+
+16. `lib/get_it.dart`
+    - Adjusted imports to reflect the reorganization of the database management files.
+
+17. `lib/main.dart`
+    - Added initialization for the database provider to handle migrations and backups.
+
+18. `lib/repository/sqlite/bg_names_repository.dart`
+    - Updated the import paths following the reorganization of store files.
+
+19. `lib/repository/sqlite/mechanic_repository.dart`
+    - Updated the import paths following the reorganization of store files.
+
+20. `lib/store/constants/constants.dart`
+    - Added constants for new database fields (`mechPSId`) and indices.
+
+21. `lib/store/constants/migration_sql_scripts.dart`
+    - Added a new script for migrating the database to version 1001, including adding a `psId` field to the `Mechanics` table.
+
+22. `lib/store/database/database_backup.dart`
+    - Created a utility class to handle database backups and restoration.
+
+23. `lib/store/database/database_manager.dart`
+    - Renamed and refactored to improve database initialization and management processes.
+
+24. `lib/store/database/database_migration.dart`
+    - Added a new class to manage database migrations, applying necessary changes to keep the database schema up-to-date.
+
+25. `lib/store/database/database_provider.dart`
+    - Created a provider class to handle database initialization, including applying migrations and managing backups.
+
+26. `lib/store/database/database_util.dart`
+    - Added utility functions to manage database directories and configurations, abstracting platform-specific logic.
+
+27. `lib/store/bg_names_store.dart` and `lib/store/mechanics_store.dart`
+    - Updated paths and imports following the reorganization of the store files.
+
+This commit includes significant updates across various components, focusing on database management, error handling, and UI/UX improvements. It also lays the groundwork for future enhancements by implementing robust database migration and backup strategies.
+
+
 ## 2024/08/15 - version: 0.6.17+42
 
 Refactor: Enhance Theme, Boardgame, Mechanics, and My Account Features. 

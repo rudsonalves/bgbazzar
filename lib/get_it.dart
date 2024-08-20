@@ -28,7 +28,7 @@ import 'manager/address_manager.dart';
 import 'manager/boardgames_manager.dart';
 import 'manager/favorites_manager.dart';
 import 'manager/mechanics_manager.dart';
-import 'store/database_manager.dart';
+import 'store/database/database_manager.dart';
 
 final getIt = GetIt.instance;
 
