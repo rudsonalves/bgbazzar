@@ -33,7 +33,7 @@ class AdModel {
   bool hidePhone;
   double price;
   AdStatus status;
-  List<int> mechanicsId;
+  List<String> mechanicsId;
   AddressModel? address;
   List<String> images;
   ProductCondition condition;

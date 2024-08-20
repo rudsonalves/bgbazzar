@@ -31,7 +31,7 @@ import 'edit_boardgame_state.dart';
 class EditBoardgameController extends ChangeNotifier {
   EditBoardgameState _state = EditBoardgameStateInitial();
 
-  final bgNamesManager = getIt<BoardgamesManager>();
+  final bgManager = getIt<BoardgamesManager>();
   final mechManager = getIt<MechanicsManager>();
   final mechanicsManager = getIt<MechanicsManager>();
 
@@ -48,20 +48,38 @@ class EditBoardgameController extends ChangeNotifier {
   final descriptionController = TextEditingController();
   final mechsController = TextEditingController();
 
-  final List<int> _selectedMechIds = [];
+  final List<String> _selectedMechPsIds = [];
+
+  BoardgameModel? _editedBg;
 
   List<MechanicModel> get mechanics => mechanicsManager.mechanics;
 
-  List<int> get selectedMechIds => _selectedMechIds;
+  List<String> get selectedMechIds => _selectedMechPsIds;
   List<String> get selectedMachNames => mechanics
-      .where((c) => _selectedMechIds.contains(c.id!))
+      .where((c) => _selectedMechPsIds.contains(c.psId!))
       .map((c) => c.name)
       .toList();
 
   EditBoardgameState get state => _state;
-  List<String> get bgNames => bgNamesManager.bgNames;
+  List<String> get bgNames => bgManager.bgNames;
 
-  void init() {}
+  void init(BoardgameModel? bg) {
+    if (bg != null) {
+      _editedBg = bg;
+      nameController.text = bg.name;
+      yearController.numericValue = bg.publishYear;
+      imageController.text = bg.image;
+      minPlayersController.numericValue = bg.minPlayers;
+      maxPlayersController.numericValue = bg.maxPlayers;
+      minTimeController.numericValue = bg.minTime;
+      maxTimeController.numericValue = bg.maxTime;
+      ageController.numericValue = bg.minAge;
+      designerController.text = bg.designer ?? '';
+      artistController.text = bg.artist ?? '';
+      descriptionController.text = bg.description ?? '';
+      mechsController.text = mechManager.namesFromIdListString(bg.mechsPsIds);
+    }
+  }
 
   @override
   void dispose() {
@@ -89,7 +107,7 @@ class EditBoardgameController extends ChangeNotifier {
     if (nameController.text.isEmpty) return;
     try {
       _changeState(EditBoardgameStateLoading());
-      final id = bgNamesManager.gameId(nameController.text);
+      final id = bgManager.gameId(nameController.text);
       if (id == null) {
         _changeState(EditBoardgameStateSuccess());
         return;
@@ -114,28 +132,45 @@ class EditBoardgameController extends ChangeNotifier {
     designerController.text = bg.designer ?? '';
     artistController.text = bg.designer ?? '';
     descriptionController.text = bg.description ?? '';
-    mechsController.text = mechManager.namesFromIdListString(bg.mechanics);
+    mechsController.text = mechManager.namesFromIdListString(bg.mechsPsIds);
   }
 
   Future<void> saveBoardgame() async {
     try {
       _changeState(EditBoardgameStateLoading());
-      final bg = BoardgameModel(
-        name: nameController.text,
-        image: imageController.text,
-        publishYear: yearController.numericValue,
-        minPlayers: minPlayersController.numericValue,
-        maxPlayers: maxPlayersController.numericValue,
-        minTime: minTimeController.numericValue,
-        maxTime: maxTimeController.numericValue,
-        minAge: ageController.numericValue,
-        mechanics: _selectedMechIds,
-        designer: designerController.text,
-        artist: artistController.text,
-        description: descriptionController.text,
-      );
+      if (_editedBg != null && _editedBg!.bgId != null) {
+        _editedBg!.name = nameController.text;
+        _editedBg!.image = imageController.text;
+        _editedBg!.publishYear = yearController.numericValue;
+        _editedBg!.minPlayers = minPlayersController.numericValue;
+        _editedBg!.maxPlayers = maxPlayersController.numericValue;
+        _editedBg!.minTime = minTimeController.numericValue;
+        _editedBg!.maxTime = maxTimeController.numericValue;
+        _editedBg!.minAge = ageController.numericValue;
+        _editedBg!.mechsPsIds = _selectedMechPsIds;
+        _editedBg!.designer = designerController.text;
+        _editedBg!.artist = artistController.text;
+        _editedBg!.description = descriptionController.text;
 
-      await bgNamesManager.saveNewBoardgame(bg);
+        await bgManager.update(_editedBg!);
+      } else {
+        final bg = BoardgameModel(
+          name: nameController.text,
+          image: imageController.text,
+          publishYear: yearController.numericValue,
+          minPlayers: minPlayersController.numericValue,
+          maxPlayers: maxPlayersController.numericValue,
+          minTime: minTimeController.numericValue,
+          maxTime: maxTimeController.numericValue,
+          minAge: ageController.numericValue,
+          mechsPsIds: _selectedMechPsIds,
+          designer: designerController.text,
+          artist: artistController.text,
+          description: descriptionController.text,
+        );
+
+        await bgManager.save(bg);
+      }
       _changeState(EditBoardgameStateSuccess());
     } catch (err) {
       _changeState(EditBoardgameStateError());
@@ -143,9 +178,9 @@ class EditBoardgameController extends ChangeNotifier {
     }
   }
 
-  void setMechanicsIds(List<int> mechIds) {
-    _selectedMechIds.clear();
-    _selectedMechIds.addAll(mechIds);
+  void setMechanicsPsIds(List<String> mechPsIds) {
+    _selectedMechPsIds.clear();
+    _selectedMechPsIds.addAll(mechPsIds);
     mechsController.text = selectedMachNames.join(', ');
   }
 

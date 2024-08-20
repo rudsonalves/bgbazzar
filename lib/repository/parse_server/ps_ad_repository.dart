@@ -179,8 +179,8 @@ class PSAdRepository {
       }
 
       // Filter by machanics
-      if (filter.mechanicsId.isNotEmpty) {
-        for (final mechId in filter.mechanicsId) {
+      if (filter.mechanicsPsId.isNotEmpty) {
+        for (final mechId in filter.mechanicsPsId) {
           final mechParse = ParseObject(keyMechanicTable)
             ..set(keyMechanicId, mechId);
           query.whereEqualTo(keyAdMechanics, mechParse.toPointer());
@@ -281,7 +281,7 @@ class PSAdRepository {
         ..set<String?>(keyAdArtist, ad.artist)
         ..set<ParseObject>(keyAdAddress, parseAddress)
         ..set<List<ParseFile>>(keyAdImages, parseImages)
-        ..set<List<int>>(keyAdMechanics, ad.mechanicsId);
+        ..set<List<String>>(keyAdMechanics, ad.mechanicsId);
 
       final response = await parseAd.save();
       if (!response.success) {
@@ -338,7 +338,7 @@ class PSAdRepository {
         ..set<String?>(keyAdArtist, ad.artist)
         ..set<ParseObject>(keyAdAddress, parseAddress)
         ..set<List<ParseFile>>(keyAdImages, parseImages)
-        ..set<List<int>>(keyAdMechanics, ad.mechanicsId);
+        ..set<List<String>>(keyAdMechanics, ad.mechanicsId);
 
       final response = await parseAd.update();
       if (!response.success) {

@@ -27,7 +27,7 @@ class FilterModel {
   String city;
   SortOrder sortBy;
   ProductCondition condition;
-  List<int> mechanicsId;
+  List<String> mechanicsPsId;
   int minPrice;
   int maxPrice;
 
@@ -36,17 +36,17 @@ class FilterModel {
     this.city = '',
     this.sortBy = SortOrder.date,
     this.condition = ProductCondition.all,
-    List<int>? mechanicsId,
+    List<String>? mechanicsId,
     this.minPrice = 0,
     this.maxPrice = 0,
-  }) : mechanicsId = mechanicsId ?? [];
+  }) : mechanicsPsId = mechanicsId ?? [];
 
   bool get isEmpty {
     return state.isEmpty &&
         city.isEmpty &&
         sortBy == SortOrder.date &&
         condition == ProductCondition.all &&
-        mechanicsId.isEmpty &&
+        mechanicsPsId.isEmpty &&
         minPrice == 0 &&
         maxPrice == 0;
   }
@@ -59,7 +59,7 @@ class FilterModel {
         other.city == city &&
         other.sortBy == sortBy &&
         other.condition == condition &&
-        listEquals(other.mechanicsId, mechanicsId) &&
+        listEquals(other.mechanicsPsId, mechanicsPsId) &&
         other.minPrice == minPrice &&
         other.maxPrice == maxPrice;
   }
@@ -70,7 +70,7 @@ class FilterModel {
         city.hashCode ^
         sortBy.hashCode ^
         condition.hashCode ^
-        mechanicsId.hashCode ^
+        mechanicsPsId.hashCode ^
         minPrice.hashCode ^
         maxPrice.hashCode;
   }
@@ -80,7 +80,7 @@ class FilterModel {
     city = f.city;
     sortBy = f.sortBy;
     condition = f.condition;
-    mechanicsId = f.mechanicsId;
+    mechanicsPsId = f.mechanicsPsId;
     minPrice = f.minPrice;
     maxPrice = f.maxPrice;
   }

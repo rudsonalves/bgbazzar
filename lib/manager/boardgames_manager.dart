@@ -78,7 +78,7 @@ class BoardgamesManager {
     return result.toList();
   }
 
-  Future<void> saveNewBoardgame(BoardgameModel bg) async {
+  Future<void> save(BoardgameModel bg) async {
     try {
       String localImagePath = '';
       String convertedImagePath = '';
@@ -110,13 +110,69 @@ class BoardgamesManager {
       }
 
       final bgName = BGNameModel(
-        bgId: newBg.id,
+        bgId: newBg.bgId,
         name: '${newBg.name} (${newBg.publishYear})',
       );
       BGNamesRepository.add(bgName);
       _bgs.add(bgName);
     } catch (err) {
       log(err.toString());
+    }
+  }
+
+  Future<void> update(BoardgameModel bg) async {
+    try {
+      String localImagePath = '';
+      String convertedImagePath = '';
+
+      if (!bg.image.contains(LocalServer.keyParseServerImageUrl)) {
+        if (bg.image.contains('http')) {
+          localImagePath = await _downloadImage(bg.image);
+        } else {
+          localImagePath = bg.image;
+        }
+
+        final imageName = '${bg.name}_${bg.publishYear}.jpg';
+        convertedImagePath =
+            await _convertImageToJpg(localImagePath, imageName);
+
+        bg.image = convertedImagePath;
+      }
+
+      final newBg = await PSBoardgameRepository.update(bg);
+      if (newBg == null) {
+        throw Exception('new bg creating error');
+      }
+
+      if (localImagePath.isNotEmpty) {
+        await File(localImagePath).delete();
+      }
+      if (convertedImagePath.isNotEmpty) {
+        await File(convertedImagePath).delete();
+      }
+
+      final bgName = _bgs.firstWhere((b) => b.bgId == bg.bgId,
+          orElse: () => BGNameModel());
+      if (bgName.id == null) {
+        throw Exception('_bgs bgId not found.');
+      }
+
+      final name = '${newBg.name} (${newBg.publishYear})';
+      if (bgName.name == name) return;
+
+      bgName.name = name;
+
+      BGNamesRepository.update(bgName);
+
+      final index = _bgs.indexWhere((b) => b.bgId == bg.bgId);
+      if (index == -1) {
+        throw Exception('_bgs index not found.');
+      }
+      _bgs[index].name = bgName.name;
+    } catch (err) {
+      final message = 'BoardgamesManager.update: $err';
+      log(message);
+      throw Exception(message);
     }
   }
 

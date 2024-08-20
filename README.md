@@ -9,6 +9,105 @@
 
 # ChangeLog
 
+## 2024/08/20 - version: 0.6.17+44
+
+Update: Refactor Mechanics IDs and Various Model Updates. Files and Changes:
+
+1. `lib/common/models/ad.dart`
+   - Updated `mechanicsId` from `List<int>` to `List<String>` to reflect changes in ID management.
+
+2. `lib/common/models/boardgame.dart`
+   - Renamed the `id` field to `bgId`.
+   - Updated `mechanics` to `mechsPsIds`, changing the type from `List<int>` to `List<String>`.
+
+3. `lib/common/models/filter.dart`
+   - Changed `mechanicsId` to `mechanicsPsId` and updated its type from `List<int>` to `List<String>`.
+
+4. `lib/common/settings/local_server.dart`
+   - Added `keyParseServerImageUrl` to manage image URLs more efficiently.
+
+5. `lib/common/singletons/app_settings.dart`
+   - Enhanced `_saveBright()` to save brightness settings as 'dark' or 'light' strings.
+
+6. `lib/components/custon_field_controllers/numeric_edit_controller.dart`
+   - Improved the `numericValue` setter to better manage old values and trigger appropriate UI updates.
+
+7. `lib/components/others_widgets/spin_box_field.dart`
+   - Refactored to use generics, allowing support for both `int` and `double` types in `SpinBoxField`.
+
+8. `lib/features/boardgame/boardgame_screen.dart`
+   - Refined the floating action button to allow for multiple actions with tooltips for better UX.
+
+9. `lib/features/edit_ad/edit_ad_controller.dart`
+   - Updated `setMechanicsIds()` to `setMechanicsPsIds()` to handle the new `String` ID format.
+
+10. `lib/features/edit_ad/widgets/ad_form.dart`
+    - Refactored to use the new `setMechanicsPsIds()` method.
+
+11. `lib/features/edit_boardgame/edit_boardgame_controller.dart`
+    - Updated mechanics handling to reflect changes from `int` to `String` for IDs.
+    - Introduced a method for updating existing board games.
+
+12. `lib/features/edit_boardgame/edit_boardgame_screen.dart`
+    - Modified the initialization to pass `BoardgameModel` objects where applicable.
+
+13. `lib/features/filters/filters_controller.dart`
+    - Changed `selectedMechIds` from `List<int>` to `List<String>`.
+    - Updated method calls to align with this change.
+
+14. `lib/features/filters/filters_screen.dart`
+    - Refined the mechanics selection process to handle `String` IDs.
+
+15. `lib/features/mechanics/mechanics_controller.dart`
+    - Adapted the controller to work with `String` IDs.
+    - Updated methods for selecting and managing mechanics.
+
+16. `lib/features/mechanics/mechanics_screen.dart`
+    - Updated arguments and state management to work with `String` IDs instead of `int`.
+
+17. `lib/features/mechanics/widgets/show_all_mechs.dart`
+    - Refined to handle `String` IDs, ensuring compatibility with the rest of the application.
+
+18. `lib/features/my_account/widgets/admin_hooks.dart`
+    - Adjusted to pass `String` IDs in the navigation arguments for mechanics management.
+
+19. `lib/manager/boardgames_manager.dart`
+    - Implemented `update()` method to handle board game updates with the new `String` ID format.
+    - Renamed `saveNewBoardgame()` to `save()` for consistency.
+
+20. `lib/manager/mechanics_manager.dart`
+    - Updated to handle `String` IDs for mechanics.
+    - Modified the `add()` method to return the new mechanic after saving it to the server.
+
+21. `lib/my_material_app.dart`
+    - Adjusted routes to pass `BoardgameModel` objects where required.
+    - Updated mechanics selection to handle `String` IDs.
+
+22. `lib/repository/parse_server/common/constants.dart`
+    - Removed the now redundant `keyMechId` constant.
+
+23. `lib/repository/parse_server/common/parse_to_model.dart`
+    - Updated parsing logic to handle `String` IDs for mechanics and board games.
+
+24. `lib/repository/parse_server/ps_ad_repository.dart`
+    - Refined to work with `String` IDs for mechanics within advertisements.
+
+25. `lib/repository/parse_server/ps_boardgame_repository.dart`
+    - Implemented an `update()` method for board games, ensuring proper handling of the new `String` IDs.
+
+26. `lib/repository/parse_server/ps_mechanics_repository.dart`
+    - Changed method names and return types to work with `String` IDs.
+    - Removed the setting of `mechId` in the `add()` method, now relying on `objectId`.
+
+27. `lib/store/constants/migration_sql_scripts.dart`
+    - Added a placeholder for a future migration script (version 1002).
+
+28. `lib/store/stores/mechanics_store.dart`
+    - Updated queries to include the new `mechPSId` column.
+
+This commit introduces significant changes to the handling of mechanics and board game IDs across the codebase, migrating from `int` to `String` IDs for better compatibility with the Parse server. The update also includes improvements in UI components and overall data management.
+
+
 ## 2024/08/20 - version: 0.6.17+43
 
 

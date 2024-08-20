@@ -48,14 +48,14 @@ class _AdFormState extends State<AdForm> {
   }
 
   Future<void> _addMecanics() async {
-    final mechIds = await Navigator.pushNamed(
+    final mechPsIds = await Navigator.pushNamed(
       context,
       MechanicsScreen.routeName,
       arguments: ctrl.selectedMechIds,
-    ) as List<int>?;
+    ) as List<String>?;
 
-    if (mechIds != null) {
-      ctrl.setMechanicsIds(mechIds);
+    if (mechPsIds != null) {
+      ctrl.setMechanicsPsIds(mechPsIds);
       if (mounted) FocusScope.of(context).nextFocus();
     }
   }

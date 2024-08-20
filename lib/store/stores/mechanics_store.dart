@@ -30,7 +30,7 @@ class MechanicsStore {
     try {
       List<Map<String, dynamic>> result = await database.query(
         mechTable,
-        columns: [mechId, mechName, mechDescription],
+        columns: [mechId, mechPSId, mechName, mechDescription],
         orderBy: mechName,
       );
 

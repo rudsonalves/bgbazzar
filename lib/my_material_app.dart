@@ -86,12 +86,15 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               MyAdsScreen.routeName: (_) => const MyAdsScreen(),
               MyDataScreen.routeName: (_) => const MyDataScreen(),
               FavoritesScreen.routeName: (_) => const FavoritesScreen(),
-              EditBoardgamesScreen.routeName: (_) =>
-                  const EditBoardgamesScreen(),
               BoardgameScreen.routeName: (_) => const BoardgameScreen(),
             },
             onGenerateRoute: (settings) {
               switch (settings.name) {
+                case EditBoardgamesScreen.routeName:
+                  return MaterialPageRoute(builder: (context) {
+                    final bg = settings.arguments as BoardgameModel?;
+                    return EditBoardgamesScreen(bg);
+                  });
                 case EditAdScreen.routeName:
                   return MaterialPageRoute(builder: (context) {
                     final ad = settings.arguments as AdModel?;
@@ -114,10 +117,10 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
 
                 case MechanicsScreen.routeName:
                   return MaterialPageRoute(builder: (context) {
-                    final selectedIds = settings.arguments as List<int>;
+                    final selectedPsIds = settings.arguments as List<String>;
 
                     return MechanicsScreen(
-                      selectedIds: selectedIds,
+                      selectedPsIds: selectedPsIds,
                     );
                   });
 

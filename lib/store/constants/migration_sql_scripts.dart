@@ -28,5 +28,6 @@ class MigrationSqlScripts {
       'ALTER TABLE $mechTable ADD COLUMN $mechPSId CHAR(10)',
       'CREATE INDEX IF NOT EXISTS $mechIndexPSId ON $mechTable ($mechPSId)',
     ],
+    1002: [],
   };
 }
