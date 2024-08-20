@@ -121,7 +121,9 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         AdForm(controller: ctrl),
                         BigButton(
                           color: Colors.orange,
-                          label: widget.ad != null ? 'Atualizar' : 'Salvar',
+                          label: widget.ad != null ? 'Atualizar' : 'Publicar',
+                          iconData:
+                              widget.ad != null ? Icons.update : Icons.save,
                           onPressed: _createAnnounce,
                         ),
                       ],
@@ -133,6 +135,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
             if (ctrl.state is EditAdStateLoading) const StateLoadingMessage(),
             if (ctrl.state is EditAdStateError)
               StateErrorMessage(
+                message: ctrl.errorMessage,
                 closeDialog: ctrl.gotoSuccess,
               ),
           ],

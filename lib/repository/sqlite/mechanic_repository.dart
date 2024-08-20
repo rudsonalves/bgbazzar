@@ -18,7 +18,7 @@
 import 'dart:developer';
 
 import '../../common/models/mechanic.dart';
-import '../../store/mechanics_store.dart';
+import '../../store/stores/mechanics_store.dart';
 
 /// This class provides methods to interact with the Parse Server
 /// to retrieve a list of mechanics.

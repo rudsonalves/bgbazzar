@@ -17,7 +17,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../common/models/boardgame.dart';
 import '../../../components/buttons/big_button.dart';
 import '../../../common/models/ad.dart';
 import '../../../common/validators/validators.dart';
@@ -68,13 +67,13 @@ class _AdFormState extends State<AdForm> {
   }
 
   Future<void> _getBGGInfo() async {
-    final bg = await Navigator.pushNamed(
+    final bgId = await Navigator.pushNamed(
       context,
       BoardgameScreen.routeName,
-    ) as BoardgameModel?;
+    ) as String?;
 
-    if (bg != null) {
-      ctrl.setBggInfo(bg);
+    if (bgId != null) {
+      ctrl.setBgInfo(bgId);
     }
   }
 
@@ -96,9 +95,10 @@ class _AdFormState extends State<AdForm> {
           ),
           Center(
             child: BigButton(
-              color: Colors.cyan.withOpacity(0.45),
+              color: Colors.cyan,
               onPressed: _getBGGInfo,
               label: 'Informações do Jogo',
+              iconData: Icons.info_outline_rounded,
             ),
           ),
           CustomFormField(

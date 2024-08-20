@@ -17,7 +17,7 @@
 
 import 'dart:developer';
 
-import '../../store/bg_names_store.dart';
+import '../../store/stores/bg_names_store.dart';
 import '/common/models/bg_name.dart';
 
 class BGNamesRepository {

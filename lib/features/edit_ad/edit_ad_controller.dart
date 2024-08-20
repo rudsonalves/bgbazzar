@@ -21,13 +21,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../common/models/ad.dart';
-import '../../common/models/boardgame.dart';
 import '../../common/models/mechanic.dart';
 import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
 import '../../components/custon_field_controllers/currency_text_controller.dart';
 import '../../get_it.dart';
-// import '../../manager/boardgames_manager.dart';
+import '../../manager/boardgames_manager.dart';
 import '../../manager/mechanics_manager.dart';
 import '../../repository/parse_server/ps_ad_repository.dart';
 import 'edit_ad_state.dart';
@@ -40,6 +39,7 @@ class EditAdController extends ChangeNotifier {
   final app = getIt<AppSettings>();
   final currentUser = getIt<CurrentUser>();
   final mechanicsManager = getIt<MechanicsManager>();
+  final bgManager = getIt<BoardgamesManager>();
 
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
@@ -49,6 +49,7 @@ class EditAdController extends ChangeNotifier {
   final addressController = TextEditingController();
   final priceController = CurrencyTextController();
   final hidePhone = ValueNotifier<bool>(false);
+  String? errorMessage;
 
   AdModel ad = AdModel(
     images: [],
@@ -142,20 +143,33 @@ class EditAdController extends ChangeNotifier {
     }
   }
 
-  void setBggInfo(BoardgameModel bg) {
-    _changeState(EditAdStateLoading());
-    setMechanicsIds(bg.mechanics);
-    nameController.text = bg.name;
-    ad.title = bg.name;
-    ad.yearpublished = bg.publishYear;
-    ad.minplayers = bg.minPlayers;
-    ad.maxplayers = bg.maxPlayers;
-    ad.minplaytime = bg.minTime;
-    ad.maxplaytime = bg.maxTime;
-    ad.age = bg.minAge;
-    ad.designer = bg.designer;
-    ad.artist = bg.artist;
-    _changeState(EditAdStateSuccess());
+  Future<void> setBgInfo(String bgId) async {
+    try {
+      _changeState(EditAdStateLoading());
+      final bg = await bgManager.getBoardgameId(bgId);
+      if (bg != null) {
+        setMechanicsIds(bg.mechanics);
+        nameController.text = bg.name;
+        ad.title = bg.name;
+        ad.yearpublished = bg.publishYear;
+        ad.minplayers = bg.minPlayers;
+        ad.maxplayers = bg.maxPlayers;
+        ad.minplaytime = bg.minTime;
+        ad.maxplaytime = bg.maxTime;
+        ad.age = bg.minAge;
+        ad.designer = bg.designer;
+        ad.artist = bg.artist;
+        ad.mechanicsId = bg.mechanics;
+        ad.images.add(bg.image);
+      }
+      log(ad.toString());
+      _changeState(EditAdStateSuccess());
+    } catch (err) {
+      log(err.toString());
+      errorMessage = 'Estamos tendo algum problema com a conexão.'
+          ' Tente novamente mais tarde.';
+      _changeState(EditAdStateError());
+    }
   }
 
   void setMechanicsIds(List<int> mechIds) {

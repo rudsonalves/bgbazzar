@@ -7,6 +7,7 @@ import 'get_it.dart';
 import 'manager/boardgames_manager.dart';
 import 'manager/mechanics_manager.dart';
 import 'my_material_app.dart';
+import 'store/database/database_provider.dart';
 
 Future<void> startParseServer() async {
   await Parse().initialize(
@@ -23,6 +24,7 @@ void main() async {
   await startParseServer();
 
   setupDependencies();
+  await DatabaseProvider.init();
   await getIt<SearchHistory>().init();
   await getIt<BoardgamesManager>().init();
   await getIt<MechanicsManager>().init();

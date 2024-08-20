@@ -35,7 +35,7 @@ class MyAccountScreen extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
-  final currentUser = getIt<CurrentUser>();
+  final user = getIt<CurrentUser>();
   final app = getIt<AppSettings>();
 
   void _backPage() {
@@ -44,7 +44,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   void _logout() async {
     if (mounted) Navigator.pop(context);
-    await currentUser.logout();
+    await user.logout();
   }
 
   @override
@@ -81,14 +81,14 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             children: [
               ListTile(
                 leading: const Icon(Icons.person),
-                title: Text(currentUser.user!.name!),
-                subtitle: Text(currentUser.user!.email),
+                title: Text(user.user!.name!),
+                subtitle: Text(user.user!.email),
                 trailing: IconButton(
                   icon: const Icon(Icons.power_settings_new_rounded),
                   onPressed: _logout,
                 ),
               ),
-              const AdminHooks(),
+              if (user.isAdmin) const AdminHooks(),
               const ShoppingHooks(),
               const SalesHooks(),
               const Divider(),

@@ -19,14 +19,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bgbazzar/store/constants/sql_create_table.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
-import 'constants/constants.dart';
+import '../constants/constants.dart';
+import 'database_util.dart';
 
 class DatabaseManager {
   static Database? _database;
@@ -37,7 +35,7 @@ class DatabaseManager {
     return _database!;
   }
 
-  Future<void> databaseClose() async {
+  Future<void> close() async {
     if (_database != null) {
       await _database!.close();
     }
@@ -45,21 +43,21 @@ class DatabaseManager {
   }
 
   Future<Database> _initDatabase() async {
-    String basePath = '';
-    if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-      basePath = 'App/bgBazzar';
-    } else if (kIsWeb) {
-      databaseFactory = databaseFactoryFfiWeb;
-    }
-
-    final baseDir = await getApplicationDocumentsDirectory();
-    final directory =
-        basePath.isEmpty ? baseDir : Directory(join(baseDir.path, basePath));
-    if (!await directory.exists()) {
-      await directory.create(recursive: true);
-    }
+    // String basePath = '';
+    // if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+    //   sqfliteFfiInit();
+    //   databaseFactory = databaseFactoryFfi;
+    //   basePath = 'App/bgBazzar';
+    // } else if (kIsWeb) {
+    //   databaseFactory = databaseFactoryFfiWeb;
+    // }
+    // final baseDir = await getApplicationDocumentsDirectory();
+    // final directory =
+    //     basePath.isEmpty ? baseDir : Directory(join(baseDir.path, basePath));
+    // if (!await directory.exists()) {
+    //   await directory.create(recursive: true);
+    // }
+    final Directory directory = await DatabaseUtil.getDirectory();
     final path = join(directory.path, dbName);
 
     if (FileSystemEntity.typeSync(path) == FileSystemEntityType.notFound) {

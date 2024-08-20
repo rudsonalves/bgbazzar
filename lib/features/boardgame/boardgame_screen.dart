@@ -111,7 +111,7 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
           ),
         ],
       ),
-      floatingActionButton: !ctrl.isAdmin
+      floatingActionButton: ctrl.isAdmin
           ? OverflowBar(
               children: [
                 FloatingActionButton.extended(

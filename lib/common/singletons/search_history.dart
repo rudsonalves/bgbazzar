@@ -18,7 +18,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const keySearchHistory = 'SearchHistory';
+import '../constants/shared_preferenses.dart';
+
 const historyMaxLength = 20;
 
 class SearchHistory {

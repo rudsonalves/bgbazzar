@@ -17,11 +17,11 @@
 
 import 'dart:developer';
 
-import '../get_it.dart';
-import 'constants/constants.dart';
-import 'database_manager.dart';
+import '../../get_it.dart';
+import '../constants/constants.dart';
+import '../database/database_manager.dart';
 
-class MechanicsStore {
+class BGNamesStore {
   static final _databaseManager = getIt<DatabaseManager>();
 
   static Future<List<Map<String, dynamic>>> get() async {
@@ -29,14 +29,13 @@ class MechanicsStore {
 
     try {
       List<Map<String, dynamic>> result = await database.query(
-        mechTable,
-        columns: [mechId, mechName, mechDescription],
-        orderBy: mechName,
+        bgNamesTable,
+        orderBy: bgName,
       );
 
       return result;
     } catch (err) {
-      log('MechanicsStore.get: $err');
+      log('BGNamesStore.get: $err');
       return [];
     }
   }
@@ -45,14 +44,16 @@ class MechanicsStore {
     final database = await _databaseManager.database;
 
     try {
-      final result = await database.insert(
-        mechTable,
+      final id = await database.insert(
+        bgNamesTable,
         map,
       );
-
-      return result;
+      if (id < 0) {
+        throw Exception('id return $id');
+      }
+      return id;
     } catch (err) {
-      log('MechanicsStore.add: $err');
+      log('BGNamesStore.add: $err');
       return -1;
     }
   }
@@ -62,30 +63,13 @@ class MechanicsStore {
 
     try {
       final result = await database.update(
-        mechTable,
+        bgNamesTable,
         map,
       );
 
       return result;
     } catch (err) {
-      log('MechanicsStore.add: $err');
-      return -1;
-    }
-  }
-
-  static Future<int> delete(int id) async {
-    final database = await _databaseManager.database;
-
-    try {
-      final result = await database.delete(
-        mechTable,
-        where: '$mechId: ?',
-        whereArgs: [id],
-      );
-
-      return result;
-    } catch (err) {
-      log('MechanicsStore.add: $err');
+      log('BGNamesStore.update: $err');
       return -1;
     }
   }
