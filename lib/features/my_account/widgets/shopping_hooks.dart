@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../favorites/favorites_screen.dart';
 import '../../product/widgets/title_product.dart';
 
 class ShoppingHooks extends StatelessWidget {
@@ -26,17 +27,23 @@ class ShoppingHooks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final primary = Theme.of(context).colorScheme.primary;
+    final primary = Theme.of(context).colorScheme.primary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Divider(),
-        const TitleProduct(title: 'Compras'),
+        TitleProduct(
+          title: 'Compras',
+          color: primary,
+        ),
         ListTile(
-          leading: const Icon(Icons.favorite),
-          title: const Text('Favoritos'),
-          onTap: () {},
+          leading: Icon(Icons.favorite, color: primary),
+          title: Text(
+            'Favoritos',
+            style: TextStyle(color: primary),
+          ),
+          onTap: () => Navigator.pushNamed(context, FavoritesScreen.routeName),
         ),
         ListTile(
           leading: const Icon(Icons.message),
