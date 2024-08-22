@@ -19,6 +19,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:bgbazzar/common/utils/utils.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import '../../common/models/bg_name.dart';
@@ -39,7 +40,7 @@ class PSBoardgameRepository {
       final parseImage = await _saveImage(
         path: bg.image,
         parseUser: parseUser,
-        fileName: '${bg.name}_${bg.publishYear}.jpg',
+        fileName: '${Utils.normalizeFileName(bg.name)}_${bg.publishYear}.jpg',
       );
 
       final parseAcl = ParseACL(owner: parseUser);
@@ -87,7 +88,7 @@ class PSBoardgameRepository {
       final parseImage = await _saveImage(
         path: bg.image,
         parseUser: parseUser,
-        fileName: '${bg.name}_${bg.publishYear}.jpg',
+        fileName: '${Utils.normalizeFileName(bg.name)}_${bg.publishYear}.jpg',
       );
 
       final parseAcl = ParseACL(owner: parseUser);
@@ -206,8 +207,9 @@ class PSBoardgameRepository {
 
       return parseFile;
     } catch (err) {
-      log('exception in _saveImages: $err');
-      rethrow;
+      final message = 'exception in _saveImages: $err';
+      log(message);
+      throw Exception(message);
     }
   }
 }

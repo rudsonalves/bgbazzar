@@ -50,7 +50,7 @@ class PSAdRepository {
         }
       }
     } catch (err) {
-      final message = 'AdRepository.getMyAds: $err';
+      final message = 'PSAdRepository.moveAdsAddressTo: $err';
       log(message);
       throw Exception(message);
     }
@@ -76,7 +76,7 @@ class PSAdRepository {
 
       return adsId;
     } catch (err) {
-      final message = 'AddressRepository.delete: $err';
+      final message = 'PSAddressRepository.adsInAddress: $err';
       log(message);
       return [];
     }
@@ -96,7 +96,7 @@ class PSAdRepository {
 
       return true;
     } catch (err) {
-      final message = 'AdRepository.getMyAds: $err';
+      final message = 'PSAdRepository.updateStatus: $err';
       log(message);
       return false;
     }
@@ -140,7 +140,7 @@ class PSAdRepository {
 
       return ads;
     } catch (err) {
-      final message = 'AdRepository.getMyAds: $err';
+      final message = 'PSAdRepository.getMyAds: $err';
       log(message);
       return null;
     }
@@ -230,7 +230,7 @@ class PSAdRepository {
 
       return ads;
     } catch (err) {
-      final message = 'AdRepository.get: $err';
+      final message = 'PSAdRepository.get: $err';
       log(message);
       return null;
     }
@@ -297,7 +297,7 @@ class PSAdRepository {
 
       return ParseToModel.ad(parseAd);
     } catch (err) {
-      final message = 'AdRepository.save: $err';
+      final message = 'PSAdRepository.save: $err';
       log(message);
       rethrow;
     }
@@ -354,7 +354,7 @@ class PSAdRepository {
 
       return ad;
     } catch (err) {
-      final message = 'AdRepository.update: $err';
+      final message = 'PSAdRepository.update: $err';
       log(message);
       rethrow;
     }
@@ -403,7 +403,7 @@ class PSAdRepository {
 
       return parseImages;
     } catch (err) {
-      log('exception in _saveImages: $err');
+      log('PSAdRepository._saveImages: $err');
       rethrow;
     }
   }
@@ -418,7 +418,7 @@ class PSAdRepository {
       }
       return;
     } catch (err) {
-      final message = 'AdRepository.delete: $err';
+      final message = 'PSAdRepository.delete: $err';
       log(message);
     }
   }

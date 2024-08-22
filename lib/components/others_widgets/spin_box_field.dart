@@ -68,6 +68,10 @@ class _SpinBoxFieldState<T extends num> extends State<SpinBoxField<T>> {
 
     if (widget.controller is NumericEditController) {
       value = (widget.controller as NumericEditController).numericValue as T;
+      if (value == 0 && widget.value != null && widget.value != 0) {
+        value = widget.value as T;
+        (widget.controller as NumericEditController<T>).numericValue = value;
+      }
     } else {
       value = widget.value ?? widget.minValue;
       widget.controller.text = value.toStringAsFixed(widget.fractionDigits);

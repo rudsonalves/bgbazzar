@@ -68,6 +68,7 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
 
   Future<void> _backPageWithSave() async {
     await ctrl.saveBoardgame();
+    // FIXME: await by DataResult implementation
     if (mounted) Navigator.pop(context);
   }
 
@@ -139,6 +140,25 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
           onPressed: Navigator.of(context).pop,
           icon: const Icon(Icons.arrow_back_ios_rounded),
         ),
+      ),
+      floatingActionButton: OverflowBar(
+        children: [
+          FloatingActionButton.extended(
+            heroTag: 'fab01',
+            backgroundColor: colorScheme.primaryContainer.withOpacity(0.85),
+            onPressed: _backPageWithSave,
+            icon: const Icon(Icons.save),
+            label: const Text('Salvar'),
+          ),
+          const SizedBox(width: 20),
+          FloatingActionButton.extended(
+            heroTag: 'fab02',
+            backgroundColor: colorScheme.primaryContainer.withOpacity(0.85),
+            onPressed: _backPage,
+            icon: const Icon(Icons.cancel),
+            label: const Text('Cancelar'),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -340,21 +360,7 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
                           ),
                         ),
                       ),
-                      OverflowBar(
-                        alignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          FilledButton.tonalIcon(
-                            onPressed: _backPageWithSave,
-                            icon: const Icon(Icons.save),
-                            label: const Text('Salvar'),
-                          ),
-                          FilledButton.tonalIcon(
-                            onPressed: _backPage,
-                            icon: const Icon(Icons.cancel),
-                            label: const Text('Cancelar'),
-                          ),
-                        ],
-                      ),
+                      const SizedBox(height: 80),
                     ],
                   ),
                   if (ctrl.state is EditBoardgameStateLoading)

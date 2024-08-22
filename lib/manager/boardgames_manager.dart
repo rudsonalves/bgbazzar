@@ -26,6 +26,7 @@ import 'package:path_provider/path_provider.dart';
 import '../common/models/bg_name.dart';
 import '../common/models/boardgame.dart';
 import '../common/settings/local_server.dart';
+import '../common/utils/utils.dart';
 import '../repository/parse_server/ps_boardgame_repository.dart';
 import '../repository/sqlite/bg_names_repository.dart';
 
@@ -51,6 +52,8 @@ class BoardgamesManager {
         _bgs.add(newBg);
       }
     }
+
+    _sortingBGNames();
   }
 
   Future<List<BGNameModel>> _getParseBgNames() async {
@@ -63,6 +66,7 @@ class BoardgamesManager {
     _bgs.clear();
     if (bgs.isEmpty) return;
     _bgs.addAll(bgs);
+    _sortingBGNames();
   }
 
   String? gameId(String gameName) {
@@ -90,7 +94,8 @@ class BoardgamesManager {
           localImagePath = bg.image;
         }
 
-        final imageName = '${bg.name}_${bg.publishYear}.jpg';
+        final imageName =
+            '${Utils.normalizeFileName(bg.name)}_${bg.publishYear}.jpg';
         convertedImagePath =
             await _convertImageToJpg(localImagePath, imageName);
 
@@ -115,6 +120,7 @@ class BoardgamesManager {
       );
       BGNamesRepository.add(bgName);
       _bgs.add(bgName);
+      _sortingBGNames();
     } catch (err) {
       log(err.toString());
     }
@@ -169,6 +175,7 @@ class BoardgamesManager {
         throw Exception('_bgs index not found.');
       }
       _bgs[index].name = bgName.name;
+      _sortingBGNames();
     } catch (err) {
       final message = 'BoardgamesManager.update: $err';
       log(message);
@@ -214,5 +221,16 @@ class BoardgamesManager {
 
   Future<BoardgameModel?> getBoardgameId(String bgId) async {
     return await PSBoardgameRepository.getById(bgId);
+  }
+
+  void _sortingBGNames() {
+    List<String> names = bgNames;
+    names.sort();
+    final List<BGNameModel> sortBGList = [];
+    for (final name in names) {
+      sortBGList.add(_bgs.firstWhere((m) => m.name == name));
+    }
+    _bgs.clear();
+    _bgs.addAll(sortBGList);
   }
 }

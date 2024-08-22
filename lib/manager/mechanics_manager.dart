@@ -97,6 +97,12 @@ class MechanicsManager {
     return _mechanics.firstWhere((item) => item.psId == psId);
   }
 
+  MechanicModel? mechanicOfName(String name) {
+    final mech = _mechanics.firstWhere((item) => item.name == name,
+        orElse: () => MechanicModel(name: ''));
+    return mech.id != null ? mech : null;
+  }
+
   Future<ManagerStatus> add(MechanicModel mech) async {
     // add in parse server database
     final newMech = await _psAdd(mech);

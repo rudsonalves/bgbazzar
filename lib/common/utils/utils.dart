@@ -37,4 +37,77 @@ class Utils {
 
     return buffer.toString();
   }
+
+  static String normalizeFileName(String fileName) {
+    // Remove accents
+    String normalized = _removeDiacritics(fileName);
+
+    // Replace spaces with underscore
+    normalized = normalized.replaceAll(' ', '_');
+
+    // Remove or replace other invalid characters
+    normalized = normalized.replaceAll(RegExp(r'[^\w\.\-]'), '');
+
+    return normalized;
+  }
+
+  static String _removeDiacritics(String text) {
+    const base = 'áéíóúàèìòùäëïöüâêîôûãẽĩõũçñÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÂÊÎÔÛÃẼĨÕŨÇÑ'
+        'åÅøØæÆœŒßþÞðÐ'
+        'šŠžŽ'
+        'łŁ'
+        'đĐ'
+        'ńŃ'
+        'řŘ'
+        'ůŮ'
+        'čČ'
+        'ďĎ'
+        'ťŤ'
+        'ýÝ'
+        'žŽ'
+        'ůŮ'
+        'ľĽ'
+        'żŻ'
+        'ąĄęĘłŁńŃśŚźŹ'
+        'çÇ'
+        'ğĞşŞ'
+        'æÆøØåÅ'
+        'ªº'
+        ' ';
+    const replace = 'aeiouaeiouaeiouaeiouaeioucnAEIOUAEIOUAEIOUAEIOUAEIOUCN'
+        'aAooeEe'
+        'sSzZ'
+        'lL'
+        'dD'
+        'nN'
+        'rR'
+        'uU'
+        'cC'
+        'dD'
+        'tT'
+        'yY'
+        'zZ'
+        'uU'
+        'lL'
+        'zZ'
+        'aAeoEnNsSzZ'
+        'cC'
+        'gGsS'
+        'aeAEoeOaA'
+        'aO'
+        '_';
+
+    StringBuffer buffer = StringBuffer();
+
+    for (int i = 0; i < text.length; i++) {
+      String char = text[i];
+      int index = base.indexOf(char);
+      if (index != -1) {
+        buffer.write(replace[index]);
+      } else {
+        buffer.write(char);
+      }
+    }
+    return buffer.toString();
+  }
 }

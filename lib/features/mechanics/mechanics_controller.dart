@@ -16,15 +16,11 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import '../../common/models/mechanic.dart';
 import '../../get_it.dart';
 import '../../manager/mechanics_manager.dart';
-
-import 'package:flutter/foundation.dart';
-
 import 'mechanics_state.dart';
 
 class MechanicsController extends ChangeNotifier {
@@ -37,21 +33,22 @@ class MechanicsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  final mechanicManager = getIt<MechanicsManager>();
+  final _mechanicManager = getIt<MechanicsManager>();
 
-  List<MechanicModel> get mechanics => mechanicManager.mechanics;
+  List<MechanicModel> get mechanics => _mechanicManager.mechanics;
+  List<String> get mechsNames => _mechanicManager.mechanicsNames;
   MechanicModel Function(String psId) get mechanicOfPsId =>
-      mechanicManager.mechanicOfPsId;
+      _mechanicManager.mechanicOfPsId;
 
-  final List<String> _selectedPsIds = [];
-  final _redraw = ValueNotifier<bool>(false);
-  final _showSelected = ValueNotifier<bool>(false);
   final _counter = ValueNotifier<int>(0);
+  final List<String> _selectedPsIds = [];
+  bool _showSelected = false;
+  bool _hideDescription = false;
 
-  List<String> get selectedPsIds => _selectedPsIds;
-  ValueNotifier<bool> get showSelected => _showSelected;
-  ValueNotifier<bool> get redraw => _redraw;
   ValueNotifier<int> get counter => _counter;
+  List<String> get selectedPsIds => _selectedPsIds;
+  bool get showSelected => _showSelected;
+  bool get hideDescription => _hideDescription;
 
   void init(List<String> psIds) {
     _selectedPsIds.clear();
@@ -60,27 +57,41 @@ class MechanicsController extends ChangeNotifier {
 
   @override
   void dispose() {
-    _redraw.dispose();
-    _showSelected.dispose();
     _counter.dispose();
 
     super.dispose();
   }
 
   void toogleShowSelection() {
-    if (_selectedPsIds.isEmpty && !_showSelected.value) {
+    if (_selectedPsIds.isEmpty && !_showSelected) {
       return;
-    } else if (_selectedPsIds.isEmpty && _showSelected.value) {
-      _showSelected.value = false;
+    } else if (_selectedPsIds.isEmpty && _showSelected) {
+      _showSelected = false;
     } else {
-      _showSelected.value = !_showSelected.value;
+      _showSelected = !_showSelected;
     }
     redrawList();
   }
 
-  void redrawList() {
-    _redraw.value = !_redraw.value;
+  void selectMechByName(String name) {
+    if (name.isEmpty) return;
+    final index = mechanics.indexWhere((mech) => mech.name == name);
+    if (index == -1) return;
+    toogleSelectionIndex(index);
+  }
+
+  Future<void> redrawList() async {
+    _changeState(MechanicsStateLoading());
     _counter.value = _selectedPsIds.length;
+    await Future.delayed(const Duration(milliseconds: 50));
+    _changeState(MechanicsStateSuccess());
+  }
+
+  Future<void> toogleDescription() async {
+    _changeState(MechanicsStateLoading());
+    _hideDescription = !_hideDescription;
+    await Future.delayed(const Duration(milliseconds: 50));
+    _changeState(MechanicsStateSuccess());
   }
 
   bool isSelectedIndex(int index) {
@@ -97,19 +108,18 @@ class MechanicsController extends ChangeNotifier {
     redrawList();
   }
 
-  void toogleSelectedInIndex(int index) {
+  void removeSelectionIndex(int index) {
     _selectedPsIds.removeAt(index);
-    if (_selectedPsIds.isEmpty && _showSelected.value) {
-      _showSelected.value = false;
-    } else {
-      redrawList();
+    if (_selectedPsIds.isEmpty) {
+      _showSelected = false;
     }
+    redrawList();
   }
 
   void deselectAll() {
     _selectedPsIds.clear();
-    if (_selectedPsIds.isEmpty && _showSelected.value) {
-      _showSelected.value = false;
+    if (_selectedPsIds.isEmpty && _showSelected) {
+      _showSelected = false;
     } else {
       redrawList();
     }
@@ -118,7 +128,7 @@ class MechanicsController extends ChangeNotifier {
   Future<void> add(MechanicModel mech) async {
     try {
       _changeState(MechanicsStateLoading());
-      await getIt<MechanicsManager>().add(mech);
+      await _mechanicManager.add(mech);
       _changeState(MechanicsStateSuccess());
     } catch (err) {
       log(err.toString());

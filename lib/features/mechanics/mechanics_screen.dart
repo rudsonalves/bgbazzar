@@ -15,17 +15,18 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:bgbazzar/components/others_widgets/state_error_message.dart';
-import 'package:bgbazzar/components/others_widgets/state_loading_message.dart';
-import 'package:bgbazzar/features/mechanics/mechanics_state.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/singletons/current_user.dart';
+import '../../components/others_widgets/state_error_message.dart';
+import '../../components/others_widgets/state_loading_message.dart';
 import '../../get_it.dart';
 import 'mechanics_controller.dart';
+import 'mechanics_state.dart';
 import 'widgets/mechanic_dialog.dart';
+import 'widgets/search_mechs_delegate.dart';
+import 'widgets/show_only_selected_mechs.dart';
 import 'widgets/show_all_mechs.dart';
-import 'widgets/show_selected_mechs.dart';
 
 class MechanicsScreen extends StatefulWidget {
   final List<String> selectedPsIds;
@@ -70,95 +71,143 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: ValueListenableBuilder(
-            valueListenable: ctrl.counter,
-            builder: (context, counter, _) {
-              return Text('Mecânicas ($counter)');
-            }),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: _closeMechanicsPage,
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-          ),
-          ValueListenableBuilder(
-              valueListenable: ctrl.showSelected,
-              builder: (context, value, _) {
-                return IconButton(
-                  onPressed: ctrl.toogleShowSelection,
-                  isSelected: value,
-                  icon: const Icon(Icons.ballot_outlined),
-                  selectedIcon: const Icon(Icons.ballot_rounded),
-                );
-              }),
-        ],
-      ),
-      floatingActionButton: OverflowBar(
-        alignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          getIt<CurrentUser>().isAdmin
-              ? FloatingActionButton.extended(
-                  heroTag: 'hero-1',
-                  backgroundColor:
-                      colorScheme.primaryContainer.withOpacity(0.60),
-                  onPressed: _addMechanic,
-                  label: const Text('Adicionar'),
-                  icon: const Icon(Icons.add),
-                )
-              : FloatingActionButton.extended(
-                  heroTag: 'hero-2',
-                  backgroundColor:
-                      colorScheme.primaryContainer.withOpacity(0.60),
+    return ListenableBuilder(
+      listenable: ctrl,
+      builder: (context, _) {
+        return Stack(
+          children: [
+            Scaffold(
+              appBar: AppBar(
+                title: ValueListenableBuilder(
+                    valueListenable: ctrl.counter,
+                    builder: (context, value, _) {
+                      return Text('Mecânicas [$value]');
+                    }),
+                centerTitle: true,
+                leading: IconButton(
                   onPressed: _closeMechanicsPage,
-                  label: const Text('Voltar'),
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  icon: const Icon(Icons.arrow_back_ios_new),
                 ),
-          FloatingActionButton.extended(
-            backgroundColor: colorScheme.primaryContainer.withOpacity(0.60),
-            onPressed: ctrl.deselectAll,
-            icon: const Icon(Icons.deselect),
-            label: const Text('Deselecionar'),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: ListenableBuilder(
-          listenable: Listenable.merge([ctrl.redraw, ctrl.showSelected, ctrl]),
-          builder: (context, _) {
-            return Stack(
-              children: [
-                (!ctrl.showSelected.value)
-                    ? ShowSelectedMechs(
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      showSearch(
+                        context: context,
+                        delegate: SearchMechsDelegate(
+                          mechsNames: ctrl.mechsNames,
+                          selectMechByName: ctrl.selectMechByName,
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.search),
+                  ),
+                  PopupMenuButton(
+                    icon: const Icon(Icons.more_vert),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 0,
+                        child: ListTile(
+                          leading: Icon(
+                            ctrl.hideDescription
+                                ? Icons.description_outlined
+                                : Icons.insert_drive_file_outlined,
+                          ),
+                          title: Text(
+                            ctrl.hideDescription
+                                ? 'Mostrar Descrição'
+                                : 'Ocultar Descrição',
+                          ),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 1,
+                        child: ListTile(
+                          leading: Icon(
+                            ctrl.showSelected
+                                ? Icons.ballot_rounded
+                                : Icons.ballot_outlined,
+                          ),
+                          title: Text(
+                            ctrl.showSelected
+                                ? 'Mostrar Todos'
+                                : 'Mostrar Seleção',
+                          ),
+                        ),
+                      ),
+                    ],
+                    onSelected: (value) {
+                      switch (value) {
+                        case 0:
+                          ctrl.toogleDescription();
+                          break;
+                        case 1:
+                          ctrl.toogleShowSelection();
+                          break;
+                      }
+                    },
+                  ),
+                ],
+              ),
+              floatingActionButton: OverflowBar(
+                children: [
+                  getIt<CurrentUser>().isAdmin
+                      ? FloatingActionButton.extended(
+                          heroTag: 'hero-1',
+                          backgroundColor:
+                              colorScheme.primaryContainer.withOpacity(0.85),
+                          onPressed: _addMechanic,
+                          label: const Text('Adicionar'),
+                          icon: const Icon(Icons.add),
+                        )
+                      : FloatingActionButton.extended(
+                          heroTag: 'hero-2',
+                          backgroundColor:
+                              colorScheme.primaryContainer.withOpacity(0.85),
+                          onPressed: _closeMechanicsPage,
+                          label: const Text('Voltar'),
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                        ),
+                  const SizedBox(width: 20),
+                  FloatingActionButton.extended(
+                    backgroundColor:
+                        colorScheme.primaryContainer.withOpacity(0.85),
+                    onPressed: ctrl.deselectAll,
+                    icon: const Icon(Icons.deselect),
+                    label: const Text('Deselecionar'),
+                  ),
+                ],
+              ),
+              body: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: (!ctrl.showSelected)
+                    ? ShowAllMechs(
                         mechanics: ctrl.mechanics,
                         isSelectedIndex: ctrl.isSelectedIndex,
-                        toogleSelectionIndex: ctrl.toogleSelectionIndex)
-                    : ShowAllMechs(
+                        toogleSelectionIndex: ctrl.toogleSelectionIndex,
+                        hideDescription: ctrl.hideDescription,
+                      )
+                    : ShowOnlySelectedMechs(
                         selectedPsIds: ctrl.selectedPsIds,
                         mechanicOfPsId: ctrl.mechanicOfPsId,
-                        toogleSelectedInIndex: ctrl.toogleSelectedInIndex,
+                        toogleSelectedInIndex: ctrl.removeSelectionIndex,
+                        hideDescription: ctrl.hideDescription,
                       ),
-                if (ctrl.state is MechanicsStateLoading)
-                  const Positioned.fill(
-                    child: StateLoadingMessage(),
-                  ),
-                if (ctrl.state is MechanicsStateError)
-                  Positioned(
-                    child: StateErrorMessage(
-                      closeDialog: ctrl.closeDialog,
-                    ),
-                  ),
-              ],
-            );
-          },
-        ),
-      ),
+              ),
+            ),
+            if (ctrl.state is MechanicsStateLoading)
+              const Positioned.fill(
+                child: StateLoadingMessage(),
+              ),
+            if (ctrl.state is MechanicsStateError)
+              Positioned.fill(
+                child: StateErrorMessage(
+                  closeDialog: ctrl.closeDialog,
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

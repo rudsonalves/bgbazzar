@@ -20,15 +20,17 @@ import 'package:flutter/material.dart';
 import '../../../common/models/mechanic.dart';
 
 class ShowAllMechs extends StatelessWidget {
-  final List<String> selectedPsIds;
-  final MechanicModel Function(String) mechanicOfPsId;
-  final void Function(int) toogleSelectedInIndex;
+  final List<MechanicModel> mechanics;
+  final bool Function(int) isSelectedIndex;
+  final void Function(int) toogleSelectionIndex;
+  final bool hideDescription;
 
   const ShowAllMechs({
     super.key,
-    required this.selectedPsIds,
-    required this.mechanicOfPsId,
-    required this.toogleSelectedInIndex,
+    required this.mechanics,
+    required this.isSelectedIndex,
+    required this.toogleSelectionIndex,
+    this.hideDescription = false,
   });
 
   @override
@@ -37,24 +39,21 @@ class ShowAllMechs extends StatelessWidget {
 
     return ListView.separated(
       padding: const EdgeInsets.only(bottom: 70),
-      itemCount: selectedPsIds.length,
+      itemCount: mechanics.length,
       separatorBuilder: (context, index) =>
           const Divider(indent: 24, endIndent: 24),
-      itemBuilder: (context, index) {
-        final mech = mechanicOfPsId(selectedPsIds[index]);
-
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: colorScheme.tertiaryContainer,
-          ),
-          child: ListTile(
-            title: Text(mech.name),
-            subtitle: Text(mech.description ?? ''),
-            onTap: () => toogleSelectedInIndex(index),
-          ),
-        );
-      },
+      itemBuilder: (context, index) => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: isSelectedIndex(index) ? colorScheme.tertiaryContainer : null,
+        ),
+        child: ListTile(
+          title: Text(mechanics[index].name),
+          subtitle:
+              hideDescription ? null : Text(mechanics[index].description ?? ''),
+          onTap: () => toogleSelectionIndex(index),
+        ),
+      ),
     );
   }
 }
