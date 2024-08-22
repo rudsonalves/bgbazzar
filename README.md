@@ -9,6 +9,18 @@
 
 # ChangeLog
 
+## 2024/08/22 - version: 0.6.18+46
+
+Update ShoppingHooks with FavoritesScreen integration and minor visual enhancements. Files Modified:
+
+1. `lib/features/my_account/widgets/shopping_hooks.dart`
+   - Added: Import statement for `FavoritesScreen`.
+   - Modified: Updated `TitleProduct` widget in the ShoppingHooks with the theme's primary color for consistency.
+   - Updated: The ListTile for 'Favoritos' now navigates to the `FavoritesScreen` when tapped, using `Navigator.pushNamed`. The color of the icon and text has been set to the primary color for visual coherence.
+ 
+This update introduces navigation to the `FavoritesScreen` from the ShoppingHooks and enhances the visual consistency by applying the primary theme color to specific UI elements. Additionally, the project version has been incremented to ensure proper version control.
+
+
 ## 2024/08/22 - version: 0.6.17+45
 
 Update: Improvements and Refactoring Across Multiple Components. Files and Changes:
