@@ -9,6 +9,58 @@
 
 # ChangeLog
 
+## 2024/08/22 - version: 0.6.17+45
+
+Update: Improvements and Refactoring Across Multiple Components. Files and Changes:
+
+1. `lib/common/utils/utils.dart`
+   - Added `normalizeFileName` method to standardize filenames by removing accents, replacing spaces with underscores, and removing invalid characters.
+   - Introduced `_removeDiacritics` method to handle accent removal for various special characters.
+
+2. `lib/components/others_widgets/spin_box_field.dart`
+   - Enhanced initialization logic to ensure the correct value is set in the `NumericEditController` when it's initially zero but should reflect a non-zero value.
+
+3. `lib/features/edit_boardgame/edit_boardgame_screen.dart`
+   - Added floating action buttons for saving and canceling operations.
+   - Refined UI layout to improve user experience, including the addition of a save and cancel action bar at the bottom.
+
+4. `lib/features/mechanics/mechanics_controller.dart`
+   - Refactored to use private fields for better encapsulation.
+   - Added `selectMechByName` method for selecting a mechanic by its name.
+   - Introduced `toogleDescription` method to show or hide mechanic descriptions.
+   - Replaced redundant state management with simplified boolean flags.
+
+5. `lib/features/mechanics/mechanics_screen.dart`
+   - Updated the UI to include search functionality with the new `SearchMechsDelegate`.
+   - Replaced old mechanics selection logic with a more robust implementation that includes options for showing descriptions and toggling selected items.
+
+6. `lib/features/mechanics/widgets/search_mechs_delegate.dart`
+   - Introduced a new widget to provide a search interface for mechanics, allowing for case-sensitive and insensitive searches.
+
+7. `lib/features/mechanics/widgets/show_all_mechs.dart`
+   - Updated to handle displaying all mechanics with options to hide descriptions and highlight selected items.
+
+8. `lib/features/mechanics/widgets/show_selected_mechs.dart` -> `lib/features/mechanics/widgets/show_only_selected_mechs.dart`
+   - Renamed file and updated logic to better reflect the functionality of displaying only selected mechanics.
+
+9. `lib/manager/boardgames_manager.dart`
+   - Added `normalizeFileName` usage when saving board games to ensure filenames are correctly formatted.
+   - Introduced `_sortingBGNames` method to keep the list of board games sorted alphabetically by name after any modification.
+
+10. `lib/manager/mechanics_manager.dart`
+    - Added `mechanicOfName` method to retrieve mechanics by their name.
+    - Updated internal logic to ensure consistency with other components.
+
+11. `lib/repository/parse_server/ps_ad_repository.dart`
+    - Updated error logging messages to reflect the correct repository class (`PSAdRepository`) for easier debugging.
+
+12. `lib/repository/parse_server/ps_boardgame_repository.dart`
+    - Incorporated `normalizeFileName` into image saving logic to ensure filenames are standardized.
+    - Updated error handling to provide clearer exception messages.
+
+This commit introduces various improvements, including new utility methods for filename normalization, enhancements to the mechanics selection process, and improved error handling across multiple repositories. The changes ensure a more consistent and user-friendly experience, with better management of filenames and mechanic data.
+
+
 ## 2024/08/20 - version: 0.6.17+44
 
 Update: Refactor Mechanics IDs and Various Model Updates. Files and Changes:
