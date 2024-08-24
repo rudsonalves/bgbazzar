@@ -19,6 +19,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+import '../../common/abstracts/data_result.dart';
 import '../../common/models/mechanic.dart';
 import '../../manager/boardgames_manager.dart';
 import '../../manager/mechanics_manager.dart';
@@ -103,21 +104,30 @@ class EditBoardgameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getBgInfo() async {
-    if (nameController.text.isEmpty) return;
+  Future<DataResult<void>> getBgInfo() async {
     try {
       _changeState(EditBoardgameStateLoading());
+      if (nameController.text.isEmpty) {
+        throw Exception('name is note defined');
+      }
       final id = bgManager.gameId(nameController.text);
       if (id == null) {
-        _changeState(EditBoardgameStateSuccess());
-        return;
+        throw Exception('boardgame id not found');
       }
-      final bgInfo = await PSBoardgameRepository.getById(id);
+      final result = await PSBoardgameRepository.getById(id);
+      if (result.isFailure) {
+        throw Exception(result.error);
+      }
+      final bgInfo = result.data;
+
       if (bgInfo != null) loadBoardInfo(bgInfo);
       log(bgInfo.toString());
       _changeState(EditBoardgameStateSuccess());
+      return DataResult.success(null);
     } catch (err) {
       _changeState(EditBoardgameStateError());
+      final message = 'EditBoardgameController.getBgInfo: $err';
+      return DataResult.failure(GenericFailure(message));
     }
   }
 
@@ -135,7 +145,7 @@ class EditBoardgameController extends ChangeNotifier {
     mechsController.text = mechManager.namesFromIdListString(bg.mechsPsIds);
   }
 
-  Future<void> saveBoardgame() async {
+  Future<DataResult<void>> saveBoardgame() async {
     try {
       _changeState(EditBoardgameStateLoading());
       if (_editedBg != null && _editedBg!.bgId != null) {
@@ -147,12 +157,17 @@ class EditBoardgameController extends ChangeNotifier {
         _editedBg!.minTime = minTimeController.numericValue;
         _editedBg!.maxTime = maxTimeController.numericValue;
         _editedBg!.minAge = ageController.numericValue;
-        _editedBg!.mechsPsIds = _selectedMechPsIds;
+        _editedBg!.mechsPsIds = _selectedMechPsIds.isNotEmpty
+            ? _selectedMechPsIds
+            : _editedBg!.mechsPsIds;
         _editedBg!.designer = designerController.text;
         _editedBg!.artist = artistController.text;
         _editedBg!.description = descriptionController.text;
 
-        await bgManager.update(_editedBg!);
+        final result = await bgManager.update(_editedBg!);
+        if (result.isFailure) {
+          throw Exception(result.error);
+        }
       } else {
         final bg = BoardgameModel(
           name: nameController.text,
@@ -169,12 +184,19 @@ class EditBoardgameController extends ChangeNotifier {
           description: descriptionController.text,
         );
 
-        await bgManager.save(bg);
+        final result = await bgManager.save(bg);
+        if (result.isFailure) {
+          throw Exception(result.error);
+        }
       }
+
       _changeState(EditBoardgameStateSuccess());
+      return DataResult.success(null);
     } catch (err) {
       _changeState(EditBoardgameStateError());
-      log(err.toString());
+      final message = 'EditBoardController.saveBoardgame: $err';
+      log(message);
+      return DataResult.failure(GenericFailure(message));
     }
   }
 

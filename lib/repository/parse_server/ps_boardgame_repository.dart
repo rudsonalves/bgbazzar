@@ -19,16 +19,18 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:bgbazzar/common/utils/utils.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:path/path.dart';
 
+import '../../common/abstracts/data_result.dart';
 import '../../common/models/bg_name.dart';
 import '../../common/models/boardgame.dart';
+import '../../common/utils/utils.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 
 class PSBoardgameRepository {
-  static Future<BoardgameModel?> save(BoardgameModel bg) async {
+  static Future<DataResult<BoardgameModel?>> save(BoardgameModel bg) async {
     try {
       final parse = ParseObject(keyBgTable);
 
@@ -37,11 +39,15 @@ class PSBoardgameRepository {
         throw Exception('Current user access error');
       }
 
-      final parseImage = await _saveImage(
+      final result = await _saveImage(
         path: bg.image,
         parseUser: parseUser,
         fileName: '${Utils.normalizeFileName(bg.name)}_${bg.publishYear}.jpg',
       );
+      if (result.isFailure) {
+        throw Exception(result.error);
+      }
+      final parseImage = result.data!;
 
       final parseAcl = ParseACL(owner: parseUser);
       parseAcl.setPublicReadAccess(allowed: true);
@@ -68,15 +74,15 @@ class PSBoardgameRepository {
         throw Exception(response.error);
       }
 
-      return ParseToModel.boardgameModel(parse);
+      return DataResult.success(ParseToModel.boardgameModel(parse));
     } catch (err) {
       final message = 'AdRepository.save: $err';
       log(message);
-      return null;
+      return DataResult.failure(APIFailure(message));
     }
   }
 
-  static Future<BoardgameModel?> update(BoardgameModel bg) async {
+  static Future<DataResult<BoardgameModel?>> update(BoardgameModel bg) async {
     try {
       final parse = ParseObject(keyBgTable);
 
@@ -85,11 +91,15 @@ class PSBoardgameRepository {
         throw Exception('Current user access error');
       }
 
-      final parseImage = await _saveImage(
+      final result = await _saveImage(
         path: bg.image,
         parseUser: parseUser,
         fileName: '${Utils.normalizeFileName(bg.name)}_${bg.publishYear}.jpg',
       );
+      if (result.isFailure) {
+        throw Exception(result.error);
+      }
+      final parseImage = result.data!;
 
       final parseAcl = ParseACL(owner: parseUser);
       parseAcl.setPublicReadAccess(allowed: true);
@@ -117,15 +127,15 @@ class PSBoardgameRepository {
         throw Exception(response.error);
       }
 
-      return ParseToModel.boardgameModel(parse);
+      return DataResult.success(ParseToModel.boardgameModel(parse));
     } catch (err) {
       final message = 'AdRepository.save: $err';
       log(message);
-      return null;
+      return DataResult.failure(APIFailure(message));
     }
   }
 
-  static Future<BoardgameModel?> getById(String bgId) async {
+  static Future<DataResult<BoardgameModel?>> getById(String bgId) async {
     try {
       final parse = ParseObject(keyBgTable);
 
@@ -138,15 +148,15 @@ class PSBoardgameRepository {
 
       final resultParse = response.results!.first as ParseObject;
 
-      return ParseToModel.boardgameModel(resultParse);
+      return DataResult.success(ParseToModel.boardgameModel(resultParse));
     } catch (err) {
       final message = 'BgRepository.getById: $err';
       log(message);
-      rethrow;
+      return DataResult.failure(APIFailure(message));
     }
   }
 
-  static Future<List<BGNameModel>> getNames() async {
+  static Future<DataResult<List<BGNameModel>>> getNames() async {
     try {
       final query = QueryBuilder<ParseObject>(ParseObject(keyBgTable));
 
@@ -158,7 +168,7 @@ class PSBoardgameRepository {
       }
 
       if (response.results == null) {
-        return [];
+        return DataResult.success([]);
       }
 
       List<BGNameModel> bgs = [];
@@ -166,15 +176,15 @@ class PSBoardgameRepository {
         final bg = ParseToModel.bgNameModel(p);
         bgs.add(bg);
       }
-      return bgs;
+      return DataResult.success(bgs);
     } catch (err) {
       final message = 'BgRepository.getNames: $err';
       log(message);
-      rethrow;
+      return DataResult.failure(APIFailure(message));
     }
   }
 
-  static Future<ParseFile> _saveImage({
+  static Future<DataResult<ParseFile>> _saveImage({
     required String path,
     required ParseUser parseUser,
     required String fileName,
@@ -202,14 +212,15 @@ class PSBoardgameRepository {
           throw Exception('failed to get URL after saving the file');
         }
       } else {
-        parseFile = ParseFile(null, name: fileName, url: path);
+        final oldName = basename(path);
+        parseFile = ParseFile(null, name: oldName, url: path);
       }
 
-      return parseFile;
+      return DataResult.success(parseFile);
     } catch (err) {
       final message = 'exception in _saveImages: $err';
       log(message);
-      throw Exception(message);
+      return DataResult.failure(APIFailure(message));
     }
   }
 }

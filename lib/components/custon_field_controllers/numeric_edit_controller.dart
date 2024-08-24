@@ -28,6 +28,7 @@ class NumericEditController<T extends num> extends TextEditingController {
   }
 
   set numericValue(T value) {
+    text = value.toString();
     oldValue = value.toString();
     _setControllerText();
   }

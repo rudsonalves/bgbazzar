@@ -146,7 +146,11 @@ class EditAdController extends ChangeNotifier {
   Future<void> setBgInfo(String bgId) async {
     try {
       _changeState(EditAdStateLoading());
-      final bg = await bgManager.getBoardgameId(bgId);
+      final result = await bgManager.getBoardgameId(bgId);
+      if (result.isFailure) {
+        throw Exception(result.error);
+      }
+      final bg = result.data;
       if (bg != null) {
         setMechanicsPsIds(bg.mechsPsIds);
         nameController.text = bg.name;

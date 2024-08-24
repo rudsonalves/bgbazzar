@@ -51,13 +51,17 @@ class MyAdsController extends BasicController {
   }
 
   Future<void> _getAds() async {
-    final newAds = await PSAdRepository.getMyAds(
+    final result = await PSAdRepository.getMyAds(
       currentUser.user!,
       _productStatus.index,
     );
+    if (result.isFailure) {
+      throw Exception(result.error);
+    }
+    final newAds = result.data!;
     _adPage = 0;
     ads.clear();
-    if (newAds != null && newAds.isNotEmpty) {
+    if (newAds.isNotEmpty) {
       ads.addAll(newAds);
       _getMorePages = maxAdsPerList == newAds.length;
     } else {
@@ -85,12 +89,16 @@ class MyAdsController extends BasicController {
 
   Future<void> _getMoreAds() async {
     _adPage++;
-    final newAds = await PSAdRepository.get(
+    final result = await PSAdRepository.get(
       filter: FilterModel(),
       search: '',
       page: _adPage,
     );
-    if (newAds != null && newAds.isNotEmpty) {
+    if (result.isFailure) {
+      throw Exception(result.error);
+    }
+    final newAds = result.data!;
+    if (newAds.isNotEmpty) {
       ads.addAll(newAds);
       _getMorePages = maxAdsPerList == newAds.length;
     } else {
@@ -104,13 +112,16 @@ class MyAdsController extends BasicController {
     try {
       changeState(BasicStateLoading());
       final result = await PSAdRepository.updateStatus(ad);
+      if (result.isFailure) {
+        throw Exception(result.error);
+      }
       await _getAds();
       while (atePage > 0) {
         await _getMoreAds();
         atePage--;
       }
       changeState(BasicStateSuccess());
-      return result;
+      return true;
     } catch (err) {
       log(err.toString());
       changeState(BasicStateError());

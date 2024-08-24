@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../common/abstracts/data_result.dart';
 import '../../common/models/bg_name.dart';
 import '../../common/models/boardgame.dart';
 import '../../common/singletons/current_user.dart';
@@ -89,8 +90,10 @@ class BoardgameController extends ChangeNotifier {
     _changeState(BoardgameStateSuccess());
   }
 
-  Future<BoardgameModel?> getBoardgameSelected() async {
-    if (_selectedBGId == null) return null;
+  Future<DataResult<BoardgameModel?>> getBoardgameSelected() async {
+    if (_selectedBGId == null) {
+      return DataResult.failure(const GenericFailure());
+    }
 
     return await bgManager.getBoardgameId(_selectedBGId!);
   }

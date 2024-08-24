@@ -9,6 +9,102 @@
 
 # ChangeLog
 
+## 2024/08/24 - version: 0.6.18+47
+
+In this commit, we introduced several new assets and made significant improvements to error handling and data management across the application. The primary objective was to enhance user experience by providing more robust error handling, consistent image loading, and better structured error messages. The changes include adding new image assets, refactoring image handling logic into a new ImageView widget, and updating various controllers and repositories to utilize the DataResult type for improved error management. These updates are essential for increasing the stability, maintainability, and scalability of the application.
+
+1. assets/images/image_not_found.png
+   - Added a new image file to represent missing images.
+
+2. assets/images/image_witout.png
+   - Added a new image file to represent images without a specific designation.
+
+3. assets/svg/image_error.svg
+   - Added a new SVG file for an error image.
+   - Defined SVG properties such as height, width, fill color, and style attributes.
+
+4. assets/svg/image_not_found.svg
+   - Added a new SVG file to represent the "image not found" scenario.
+   - Defined SVG properties similar to the `image_error.svg`.
+
+5. assets/svg/image_without.svg
+   - Added a new SVG file for a generic "image without" representation.
+   - Defined SVG properties like height, width, fill color, and style attributes.
+
+6. lib/common/abstracts/data_result.dart
+   - Modified the `Failure` class to include an optional `message` parameter.
+   - Updated `GenericFailure` and `APIFailure` classes to handle the `message` parameter.
+
+7. lib/components/custon_field_controllers/numeric_edit_controller.dart
+   - Added a line to set the text representation of the numeric value in the setter `numericValue`.
+
+8. lib/components/others_widgets/image_view.dart
+   - Added a new widget `ImageView` to handle image display with support for assets, network images, and files.
+
+9. lib/features/address/address_screen.dart
+   - Updated the `_removeAddress` method to handle error scenarios more gracefully using `DataResult`.
+
+10. lib/features/boardgame/boardgame_controller.dart
+    - Refactored `getBoardgameSelected` method to return a `DataResult` type for more structured error handling.
+
+11. lib/features/boardgame/boardgame_screen.dart
+    - Updated methods `_editBoardgame` and `_viewBoardgame` to handle failures properly using exceptions.
+
+12. lib/features/boardgame/widgets/bg_info_card.dart
+    - Replaced direct image loading with the new `ImageView` widget for consistent error handling.
+
+13. lib/features/edit_ad/edit_ad_controller.dart
+    - Refactored the `setBgInfo` method to handle potential failures with structured error messages.
+
+14. lib/features/edit_boardgame/edit_boardgame_controller.dart
+    - Updated `getBgInfo` and `saveBoardgame` methods to return `DataResult` types, ensuring better error management.
+
+15. lib/features/edit_boardgame/edit_boardgame_screen.dart
+    - Replaced manual image loading logic with the new `ImageView` widget.
+
+16. lib/features/my_ads/my_ads_controller.dart
+    - Improved error handling by using `DataResult` types in methods like `_getAds`, `_getMoreAds`, and `updateStatus`.
+
+17. lib/features/shop/shop_controller.dart
+    - Enhanced error handling in methods `_getAds` and `_getMoreAds` using the `DataResult` type.
+
+18. lib/manager/boardgames_manager.dart
+    - Refactored methods such as `getBGNames`, `save`, and `update` to utilize `DataResult` for more robust error handling.
+
+19. lib/repository/parse_server/ps_ad_repository.dart
+    - Updated various methods (`moveAdsAddressTo`, `adsInAddress`, `updateStatus`, etc.) to return `DataResult` types for improved error management.
+
+20. lib/repository/parse_server/ps_boardgame_repository.dart
+    - Refactored methods like `save`, `update`, `getById`, and `getNames` to use `DataResult` for better error control.
+
+21. pubspec.yaml
+    - Added new asset paths for `assets/images/`.
+
+22. test/common/abstracts/data_result_test.dart
+    - Updated unit tests to accommodate changes in `DataResult` handling and ensure tests cover both success and failure scenarios.
+
+23. Improved Error Handling and Messaging
+    - Enhanced several methods across different classes to return `DataResult` types instead of raw data or void, allowing for structured error management and more informative error messages. This approach improves the application's stability and makes debugging more straightforward.
+
+24. Refactor of Image Handling
+    - Introduced the `ImageView` widget to centralize and standardize image loading across the app. This widget accommodates different image sources (assets, network, and file) and provides a fallback mechanism using placeholder images when the desired image is not found or fails to load.
+
+25. Asset Management
+    - Added several new assets, including SVG and PNG images, to handle scenarios where images are not found or an error occurs. This addition aims to enhance the visual feedback for users, ensuring they understand when an image fails to load or is missing.
+
+26. DataResult Implementation
+    - Implemented a consistent `DataResult` type across multiple repositories and managers to encapsulate both success and failure states. This implementation allows for more predictable function outputs and enables developers to handle errors uniformly.
+
+27. Test Coverage Updates
+    - Modified the unit tests in `data_result_test.dart` to reflect the changes made to the `DataResult` class and its usage across the application. These updates ensure that the test cases validate both the success and failure paths correctly, maintaining high test coverage and reliability.
+
+28. Bug Fixes and Minor Tweaks
+    - Fixed minor bugs related to the old image handling logic by replacing it with the new `ImageView` component.
+    - Adjusted import paths and removed redundant imports to streamline codebase organization and reduce compile-time dependencies.
+
+These comprehensive updates significantly improve the application's overall stability and user experience by providing better error management and consistent asset handling. The refactoring efforts, particularly around the use of the DataResult type and the introduction of a centralized ImageView widget, ensure more predictable behavior and easier debugging. Moving forward, adopting these patterns across the codebase will help maintain consistency and reduce the likelihood of errors. This commit sets the stage for further enhancements, ensuring a robust foundation for future development.
+
+
 ## 2024/08/22 - version: 0.6.18+46
 
 Update ShoppingHooks with FavoritesScreen integration and minor visual enhancements. Files Modified:
@@ -173,7 +269,6 @@ This commit introduces significant changes to the handling of mechanics and boar
 
 
 ## 2024/08/20 - version: 0.6.17+43
-
 
 Update: Android Manifest, Database Management, and Various Model Enhancements. Files and Changes:
 

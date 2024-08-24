@@ -118,13 +118,17 @@ class ShopController extends BasicController {
   }
 
   Future<void> _getAds() async {
-    final newAds = await PSAdRepository.get(
+    final result = await PSAdRepository.get(
       filter: filter,
       search: searchFilter.searchString,
     );
+    if (result.isFailure) {
+      throw Exception(result.error);
+    }
+    final newAds = result.data!;
     _adsPage = 0;
     ads.clear();
-    if (newAds != null && newAds.isNotEmpty) {
+    if (newAds.isNotEmpty) {
       ads.addAll(newAds);
       _getMorePages = maxAdsPerList == newAds.length;
     } else {
@@ -148,12 +152,16 @@ class ShopController extends BasicController {
   }
 
   Future<void> _getMoreAds() async {
-    final newAds = await PSAdRepository.get(
+    final result = await PSAdRepository.get(
       filter: filter,
       search: searchFilter.searchString,
       page: _adsPage,
     );
-    if (newAds != null && newAds.isNotEmpty) {
+    if (result.isFailure) {
+      throw Exception(result.error);
+    }
+    final newAds = result.data!;
+    if (newAds.isNotEmpty) {
       ads.addAll(newAds);
       _getMorePages = maxAdsPerList == newAds.length;
     } else {

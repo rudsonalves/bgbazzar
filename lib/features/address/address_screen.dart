@@ -55,7 +55,11 @@ class _AddressScreenState extends State<AddressScreen> {
   Future<void> _removeAddress() async {
     final addressId = ctrl.selectesAddresId;
     if (addressId != null) {
-      final adsList = await PSAdRepository.adsInAddress(addressId);
+      final result = await PSAdRepository.adsInAddress(addressId);
+      if (result.isFailure) {
+        throw Exception('XXXXXXXXXX');
+      }
+      final adsList = result.data!;
 
       if (adsList.isNotEmpty) {
         if (mounted) {

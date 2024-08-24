@@ -21,6 +21,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
+import '../../common/abstracts/data_result.dart';
 import '../../common/models/ad.dart';
 import '../../common/models/filter.dart';
 import '../../common/models/user.dart';
@@ -32,7 +33,7 @@ import 'common/parse_to_model.dart';
 class PSAdRepository {
   PSAdRepository._();
 
-  static Future<void> moveAdsAddressTo(
+  static Future<DataResult<void>> moveAdsAddressTo(
     List<String> adsIdList,
     String moveToId,
   ) async {
@@ -49,14 +50,15 @@ class PSAdRepository {
           throw Exception(response.error ?? 'update ad table error');
         }
       }
+      return DataResult.success(null);
     } catch (err) {
       final message = 'PSAdRepository.moveAdsAddressTo: $err';
       log(message);
-      throw Exception(message);
+      return DataResult.failure(GenericFailure(err.toString()));
     }
   }
 
-  static Future<List<String>> adsInAddress(String addressId) async {
+  static Future<DataResult<List<String>>> adsInAddress(String addressId) async {
     final List<String> adsId = [];
     try {
       final query = QueryBuilder<ParseObject>(ParseObject(keyAdTable));
@@ -67,22 +69,22 @@ class PSAdRepository {
       final response = await query.query();
 
       if (!response.success) {
-        return [];
+        return DataResult.failure(APIFailure(response.error.toString()));
       }
 
       for (final ParseObject parse in response.results!) {
         adsId.add(parse.objectId as String);
       }
 
-      return adsId;
+      return DataResult.success(adsId);
     } catch (err) {
       final message = 'PSAddressRepository.adsInAddress: $err';
       log(message);
-      return [];
+      return DataResult.failure(GenericFailure(err.toString()));
     }
   }
 
-  static Future<bool> updateStatus(AdModel ad) async {
+  static Future<DataResult<bool>> updateStatus(AdModel ad) async {
     try {
       final parse = ParseObject(keyAdTable)
         ..objectId = ad.id!
@@ -94,11 +96,11 @@ class PSAdRepository {
         throw Exception(response.error ?? 'update ad table error');
       }
 
-      return true;
+      return DataResult.success(true);
     } catch (err) {
       final message = 'PSAdRepository.updateStatus: $err';
       log(message);
-      return false;
+      return DataResult.failure(GenericFailure(err.toString()));
     }
   }
 
@@ -107,7 +109,8 @@ class PSAdRepository {
   /// [user] - The user to apply to the search.
   /// Returns a list of `AdvertModel` if the query is successful, otherwise
   /// returns `null`.
-  static Future<List<AdModel>?> getMyAds(UserModel usr, int status) async {
+  static Future<DataResult<List<AdModel>?>> getMyAds(
+      UserModel usr, int status) async {
     try {
       final query = QueryBuilder<ParseObject>(ParseObject(keyAdTable));
 
@@ -138,11 +141,11 @@ class PSAdRepository {
         if (adModel != null) ads.add(adModel);
       }
 
-      return ads;
+      return DataResult.success(ads);
     } catch (err) {
       final message = 'PSAdRepository.getMyAds: $err';
       log(message);
-      return null;
+      return DataResult.failure(GenericFailure(err.toString()));
     }
   }
 
@@ -154,7 +157,7 @@ class PSAdRepository {
   /// [page] - The page number to retrieve, used for pagination.
   /// Returns a list of `AdModel` if the query is successful, otherwise
   /// returns `null`.
-  static Future<List<AdModel>?> get({
+  static Future<DataResult<List<AdModel>?>> get({
     required FilterModel filter,
     required String search,
     int page = 0,
@@ -219,7 +222,7 @@ class PSAdRepository {
       }
 
       if (response.results == null) {
-        return [];
+        return DataResult.success([]);
       }
 
       final List<AdModel> ads = [];
@@ -228,11 +231,11 @@ class PSAdRepository {
         if (adModel != null) ads.add(adModel);
       }
 
-      return ads;
+      return DataResult.success(ads);
     } catch (err) {
       final message = 'PSAdRepository.get: $err';
       log(message);
-      return null;
+      return DataResult.failure(APIFailure(message));
     }
   }
 
@@ -241,14 +244,18 @@ class PSAdRepository {
   /// [ad] - The advertisement model to save.
   /// Returns the saved `AdModel` if successful, otherwise throws an
   /// exception.
-  static Future<AdModel?> save(AdModel ad) async {
+  static Future<DataResult<AdModel?>> save(AdModel ad) async {
     try {
       final parseUser = await ParseUser.currentUser() as ParseUser?;
       if (parseUser == null) {
         throw Exception('Current user access error');
       }
 
-      List<ParseFile> parseImages = await _saveImages(ad.images, parseUser);
+      final result = await _saveImages(ad.images, parseUser);
+      if (result.isFailure) {
+        throw Exception('save images error: ${result.error}');
+      }
+      List<ParseFile> parseImages = result.data!;
 
       final parseAddress = ParseObject(keyAddressTable);
       parseAddress.objectId = ad.address!.id;
@@ -295,22 +302,26 @@ class PSAdRepository {
         throw Exception(response.error);
       }
 
-      return ParseToModel.ad(parseAd);
+      return DataResult.success(ParseToModel.ad(parseAd));
     } catch (err) {
       final message = 'PSAdRepository.save: $err';
       log(message);
-      rethrow;
+      return DataResult.failure(APIFailure(message));
     }
   }
 
-  static Future<AdModel?> update(AdModel ad) async {
+  static Future<DataResult<AdModel?>> update(AdModel ad) async {
     try {
       final parseUser = await ParseUser.currentUser() as ParseUser?;
       if (parseUser == null) {
         throw Exception('Current user access error');
       }
 
-      List<ParseFile> parseImages = await _saveImages(ad.images, parseUser);
+      final result = await _saveImages(ad.images, parseUser);
+      if (result.isFailure) {
+        throw Exception('save images error: ${result.error}');
+      }
+      List<ParseFile> parseImages = result.data!;
 
       final parseAddress = ParseObject(keyAddressTable);
       parseAddress.objectId = ad.address!.id;
@@ -352,11 +363,11 @@ class PSAdRepository {
         throw Exception(response.error);
       }
 
-      return ad;
+      return DataResult.success(ad);
     } catch (err) {
       final message = 'PSAdRepository.update: $err';
       log(message);
-      rethrow;
+      return DataResult.failure(APIFailure(message));
     }
   }
 
@@ -366,7 +377,7 @@ class PSAdRepository {
   /// [parseUser] - The current Parse user.
   /// Returns a list of `ParseFile` representing the saved images.
   /// Throws an exception if the save operation fails.
-  static Future<List<ParseFile>> _saveImages(
+  static Future<DataResult<List<ParseFile>>> _saveImages(
     List<String> imagesPaths,
     ParseUser parseUser,
   ) async {
@@ -401,14 +412,15 @@ class PSAdRepository {
         }
       }
 
-      return parseImages;
+      return DataResult.success(parseImages);
     } catch (err) {
-      log('PSAdRepository._saveImages: $err');
-      rethrow;
+      final message = 'PSAdRepository._saveImages: $err';
+      log(message);
+      return DataResult.failure(APIFailure(message));
     }
   }
 
-  static Future<void> delete(String ad) async {
+  static Future<DataResult<void>> delete(String ad) async {
     try {
       final parse = ParseObject(keyAdTable)..objectId = ad;
 
@@ -416,10 +428,11 @@ class PSAdRepository {
       if (!response.success) {
         throw Exception(response.error ?? 'delete ad table error');
       }
-      return;
+      return DataResult.success(null);
     } catch (err) {
       final message = 'PSAdRepository.delete: $err';
       log(message);
+      return DataResult.failure(APIFailure(message));
     }
   }
 }

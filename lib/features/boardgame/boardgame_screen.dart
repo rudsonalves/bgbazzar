@@ -59,7 +59,11 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
   }
 
   Future<void> _editBoardgame() async {
-    final bg = await ctrl.getBoardgameSelected();
+    final result = await ctrl.getBoardgameSelected();
+    if (result.isFailure) {
+      throw Exception(result.error);
+    }
+    final bg = result.data;
     if (bg != null) {
       if (mounted) {
         Navigator.pushNamed(
@@ -85,7 +89,11 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
   }
 
   Future<void> _viewBoardgame() async {
-    final bg = await ctrl.getBoardgameSelected();
+    final result = await ctrl.getBoardgameSelected();
+    if (result.isFailure) {
+      throw Exception(result.error);
+    }
+    final bg = result.data;
     if (bg == null) return;
     if (mounted) {
       Navigator.pushNamed(context, ViewBoardgame.routeName, arguments: bg);

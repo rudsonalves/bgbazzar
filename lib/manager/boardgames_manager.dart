@@ -23,6 +23,7 @@ import 'package:image/image.dart' as img;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../common/abstracts/data_result.dart';
 import '../common/models/bg_name.dart';
 import '../common/models/boardgame.dart';
 import '../common/settings/local_server.dart';
@@ -40,11 +41,16 @@ class BoardgamesManager {
     await getBGNames();
   }
 
-  Future<void> getBGNames() async {
+  Future<DataResult<void>> getBGNames() async {
     _getLocalBgNames();
     // FIXME: Check is have news bgNames
     // get news bgNames from Parse Server
-    final newsBGNames = await _getParseBgNames();
+    final result = await _getParseBgNames();
+    if (result.isFailure) {
+      return DataResult.failure(GenericFailure(result.error.toString()));
+    }
+    final newsBGNames = result.data!;
+
     final psBGIds = _bgs.map((bg) => bg.bgId!).toList();
     for (final bg in newsBGNames) {
       if (!psBGIds.contains(bg.bgId!)) {
@@ -54,9 +60,10 @@ class BoardgamesManager {
     }
 
     _sortingBGNames();
+    return DataResult.success(null);
   }
 
-  Future<List<BGNameModel>> _getParseBgNames() async {
+  Future<DataResult<List<BGNameModel>>> _getParseBgNames() async {
     final bgs = await PSBoardgameRepository.getNames();
     return bgs;
   }
@@ -82,7 +89,7 @@ class BoardgamesManager {
     return result.toList();
   }
 
-  Future<void> save(BoardgameModel bg) async {
+  Future<DataResult<void>> save(BoardgameModel bg) async {
     try {
       String localImagePath = '';
       String convertedImagePath = '';
@@ -102,7 +109,12 @@ class BoardgamesManager {
         bg.image = convertedImagePath;
       }
 
-      final newBg = await PSBoardgameRepository.save(bg);
+      final result = await PSBoardgameRepository.save(bg);
+      if (result.isFailure) {
+        throw Exception(result.error);
+      }
+      final newBg = result.data;
+
       if (newBg == null) {
         throw Exception('new bg creating error');
       }
@@ -121,12 +133,15 @@ class BoardgamesManager {
       BGNamesRepository.add(bgName);
       _bgs.add(bgName);
       _sortingBGNames();
+      return DataResult.success(null);
     } catch (err) {
-      log(err.toString());
+      final message = 'BoardgameManager.save: $err';
+      log(message);
+      return DataResult.failure(GenericFailure(message));
     }
   }
 
-  Future<void> update(BoardgameModel bg) async {
+  Future<DataResult<void>> update(BoardgameModel bg) async {
     try {
       String localImagePath = '';
       String convertedImagePath = '';
@@ -145,7 +160,11 @@ class BoardgamesManager {
         bg.image = convertedImagePath;
       }
 
-      final newBg = await PSBoardgameRepository.update(bg);
+      final result = await PSBoardgameRepository.update(bg);
+      if (result.isFailure) {
+        throw Exception(result.error);
+      }
+      final newBg = result.data;
       if (newBg == null) {
         throw Exception('new bg creating error');
       }
@@ -164,7 +183,10 @@ class BoardgamesManager {
       }
 
       final name = '${newBg.name} (${newBg.publishYear})';
-      if (bgName.name == name) return;
+      if (bgName.name == name) {
+        // No need to update the local boardgame list
+        return DataResult.success(null);
+      }
 
       bgName.name = name;
 
@@ -176,10 +198,11 @@ class BoardgamesManager {
       }
       _bgs[index].name = bgName.name;
       _sortingBGNames();
+      return DataResult.success(null);
     } catch (err) {
       final message = 'BoardgamesManager.update: $err';
       log(message);
-      throw Exception(message);
+      return DataResult.failure(GenericFailure(message));
     }
   }
 
@@ -219,7 +242,7 @@ class BoardgamesManager {
     }
   }
 
-  Future<BoardgameModel?> getBoardgameId(String bgId) async {
+  Future<DataResult<BoardgameModel?>> getBoardgameId(String bgId) async {
     return await PSBoardgameRepository.getById(bgId);
   }
 

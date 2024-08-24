@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../../common/models/boardgame.dart';
@@ -24,6 +22,7 @@ import '../../common/theme/app_text_style.dart';
 import '../../components/form_fields/custom_form_field.dart';
 import '../../components/form_fields/custom_long_form_field.dart';
 import '../../components/form_fields/custom_names_form_field.dart';
+import '../../components/others_widgets/image_view.dart';
 import '../../components/others_widgets/spin_box_field.dart';
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
@@ -211,16 +210,9 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
                           builder: (context, _) {
                             return InkWell(
                               onTap: _setImage,
-                              child: (ctrl.imageController.text.isNotEmpty)
-                                  ? (ctrl.imageController.text.contains('http'))
-                                      ? Image.network(ctrl.imageController.text)
-                                      : Image.file(
-                                          File(ctrl.imageController.text))
-                                  : Icon(
-                                      Icons.image_not_supported_rounded,
-                                      size: width,
-                                      color: colorScheme.tertiaryContainer,
-                                    ),
+                              child: ImageView(
+                                image: ctrl.imageController.text,
+                              ),
                             );
                           },
                         ),

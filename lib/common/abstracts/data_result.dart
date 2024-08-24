@@ -6,17 +6,26 @@
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable implements Exception {
-  @override
-  String toString() => '$runtimeType Exception';
+  final String? message;
+
+  const Failure([this.message]);
 
   @override
-  List<Object> get props => [];
+  String toString() =>
+      '$runtimeType Exception${message != null ? ': $message' : ''}';
+
+  @override
+  List<Object?> get props => [message];
 }
 
 // General failures
-class GenericFailure extends Failure {}
+class GenericFailure extends Failure {
+  const GenericFailure([super.message]);
+}
 
-class APIFailure extends Failure {}
+class APIFailure extends Failure {
+  const APIFailure([super.message]);
+}
 
 /// This abstraction contains either a success data of generic type `S` or a
 /// failure error of type `Failure` as its result.
