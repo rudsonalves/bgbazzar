@@ -57,7 +57,8 @@ class _AddressScreenState extends State<AddressScreen> {
     if (addressId != null) {
       final result = await PSAdRepository.adsInAddress(addressId);
       if (result.isFailure) {
-        throw Exception('XXXXXXXXXX');
+        // FIXME: complete this error handling
+        throw Exception('AddressScreen._removeAddress err: ${result.error}');
       }
       final adsList = result.data!;
 
@@ -110,22 +111,28 @@ class _AddressScreenState extends State<AddressScreen> {
           onPressed: _backPage,
         ),
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterFloat,
       floatingActionButton: OverflowBar(
         children: [
-          FloatingActionButton.extended(
+          FloatingActionButton(
+            onPressed: _backPage,
+            heroTag: 'fab0',
+            tooltip: 'Retornar',
+            // label: const Text('Selecionar'),
+            child: const Icon(Icons.arrow_back_ios_new_rounded),
+          ),
+          const SizedBox(width: 20),
+          FloatingActionButton(
             onPressed: _addAddress,
             heroTag: 'fab1',
-            label: const Text('Adicionar'),
-            icon: const Icon(Icons.contact_mail),
+            tooltip: 'Adicionar Endereço',
+            child: const Icon(Icons.contact_mail),
           ),
-          const SizedBox(width: 12),
-          FloatingActionButton.extended(
+          const SizedBox(width: 20),
+          FloatingActionButton(
             onPressed: _removeAddress,
             heroTag: 'fab2',
-            icon: const Icon(Icons.unsubscribe),
-            label: const Text('Remover'),
+            tooltip: 'Remover Endereço',
+            child: const Icon(Icons.unsubscribe),
           ),
         ],
       ),
@@ -136,21 +143,29 @@ class _AddressScreenState extends State<AddressScreen> {
           builder: (context, _) {
             return Stack(
               children: [
-                ListView.builder(
-                  itemCount: ctrl.addressNames.length,
-                  itemBuilder: (context, index) {
-                    final address = ctrl.addresses[index];
-                    return Card(
-                      color: address.name == ctrl.selectedAddressName.value
-                          ? colorScheme.primaryContainer
-                          : colorScheme.primaryContainer.withOpacity(0.4),
-                      child: ListTile(
-                        title: Text(address.name),
-                        subtitle: Text(address.addressString()),
-                        onTap: () => ctrl.selectAddress(address.name),
+                Column(
+                  children: [
+                    const Text('Selecione um endereço abaixo:'),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: ctrl.addressNames.length,
+                        itemBuilder: (context, index) {
+                          final address = ctrl.addresses[index];
+                          return Card(
+                            color: address.name ==
+                                    ctrl.selectedAddressName.value
+                                ? colorScheme.primaryContainer
+                                : colorScheme.primaryContainer.withOpacity(0.4),
+                            child: ListTile(
+                              title: Text(address.name),
+                              subtitle: Text(address.addressString()),
+                              onTap: () => ctrl.selectAddress(address.name),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
                 if (ctrl.state is AddressStateLoading)
                   const StateLoadingMessage(),

@@ -9,6 +9,93 @@
 
 # ChangeLog
 
+## 2024/08/26 - version: 0.6.19+48
+
+Updated Database and Error Handling Improvements
+
+1. assets/data/bgBazzar.db
+   - Updated the binary file `bgBazzar.db` to the latest version.
+
+2. lib/common/singletons/app_settings.dart
+   - Updated `_localDBVersion` from `1000` to `1001` to match the new database version.
+
+3. lib/components/others_widgets/bottom_message.dart
+   - Created a new widget `BottomMessage` to display messages at the bottom of the screen, compatible with both Android and iOS platforms.
+
+4. lib/features/address/address_controller.dart
+   - Modified the `moveAdsAddressTo` method to handle errors using `DataResult`.
+   - Added error handling to check for failures and throw appropriate exceptions with detailed error messages.
+
+5. lib/features/address/address_screen.dart
+   - Improved error handling in `_removeAddress` method by replacing a placeholder exception with a more descriptive error message.
+   - Updated UI elements such as `FloatingActionButton` to improve user experience and make the interface more intuitive.
+
+6. lib/features/boardgame/boardgame_screen.dart
+   - Added additional `FloatingActionButton` options for better navigation and action handling within the board game screen.
+
+7. lib/features/boardgame/widgets/bg_info_card.dart
+   - Updated the `BGInfoCard` widget to display additional game mechanics using data from `MechanicsManager`.
+
+8. lib/features/edit_ad/edit_ad_controller.dart
+   - Enhanced error handling for `update` and `save` methods by implementing `DataResult` to handle potential failures.
+   - Updated methods to include descriptive error messages for logging and debugging purposes.
+
+9. lib/features/edit_ad/edit_ad_screen.dart
+   - Added a new `IconButton` to the AppBar to allow for printing or debugging ads directly from the UI.
+   - Updated UI texts to be more user-friendly.
+
+10. lib/features/edit_ad/widgets/horizontal_image_gallery.dart
+    - Added error handling for unsupported platforms when capturing images from the camera.
+    - Updated to use the new `BottomMessage` widget to display error messages when necessary.
+
+11. lib/features/mechanics/mechanics_screen.dart
+    - Simplified UI by replacing the `PopupMenuButton` with individual `IconButton`s for toggling descriptions and selections.
+    - Streamlined user interactions for a cleaner and more intuitive experience.
+
+12. lib/features/my_ads/my_ads_controller.dart
+    - Improved error handling in `_getAds` and `_getMoreAds` methods by checking for failures and adding descriptive exceptions.
+    - Updated methods to ensure data integrity and better error reporting.
+
+13. lib/features/my_ads/my_ads_screen.dart
+    - Updated the icon and text display when no ads are found to improve user feedback.
+
+14. lib/features/product/product_screen.dart
+    - Refactored to use a local variable `ad` for easier access and code readability.
+    - Integrated a new `GameData` widget to display detailed game information.
+
+15. lib/features/product/widgets/description_product.dart
+    - Updated subtitle text to provide a more descriptive label for the product description.
+
+16. lib/features/product/widgets/game_data.dart
+    - Added a new widget `GameData` to display detailed information about board games, such as player count, playtime, recommended age, designers, and artists.
+
+17. lib/features/shop/shop_controller.dart
+    - Enhanced error handling in `_getAds` and `_getMoreAds` methods by implementing `DataResult` and descriptive error messages.
+
+18. lib/manager/mechanics_manager.dart
+    - Added logic to handle missing mechanics by fetching them from the server and adding them to the local repository.
+    - Improved logging messages for better traceability.
+
+19. lib/repository/parse_server/ps_ad_repository.dart
+    - Fixed the method to return an empty list instead of throwing an exception when no ads are found, improving the flow and error handling.
+
+20. lib/repository/parse_server/ps_mechanics_repository.dart
+    - Added a new method `getById` to fetch a mechanic by its ID, improving data retrieval and management capabilities.
+    - Improved error handling to provide more specific exceptions and logs.
+
+21. lib/repository/sqlite/mechanic_repository.dart
+    - Updated the `add` method to return `null` instead of throwing an exception when adding a mechanic fails, improving error handling and resilience.
+
+22. lib/store/constants/migration_sql_scripts.dart
+    - Added a new constant `localDBVersion` set to `1001` to reflect the updated database schema.
+    - Added a `FIXME` comment to check database version consistency.
+
+23. pubspec.yaml
+    - Updated the project version from `0.6.18+47` to `0.6.19+48` to reflect the new changes and improvements.
+
+These changes aim to enhance the application's error handling, improve user experience, and ensure data consistency and reliability. Feel free to provide additional diffs or specify further adjustments if needed!
+
+
 ## 2024/08/24 - version: 0.6.18+47
 
 In this commit, we introduced several new assets and made significant improvements to error handling and data management across the application. The primary objective was to enhance user experience by providing more robust error handling, consistent image loading, and better structured error messages. The changes include adding new image assets, refactoring image handling logic into a new ImageView widget, and updating various controllers and repositories to utilize the DataResult type for improved error management. These updates are essential for increasing the stability, maintainability, and scalability of the application.

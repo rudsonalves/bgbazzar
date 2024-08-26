@@ -56,12 +56,13 @@ class MyAdsController extends BasicController {
       _productStatus.index,
     );
     if (result.isFailure) {
-      throw Exception(result.error);
+      // FIXME: Complete this error handling
+      throw Exception('MyAdsController.getAds error: ${result.error}');
     }
-    final newAds = result.data!;
+    final newAds = result.data;
     _adPage = 0;
     ads.clear();
-    if (newAds.isNotEmpty) {
+    if (newAds != null && newAds.isNotEmpty) {
       ads.addAll(newAds);
       _getMorePages = maxAdsPerList == newAds.length;
     } else {
@@ -95,10 +96,11 @@ class MyAdsController extends BasicController {
       page: _adPage,
     );
     if (result.isFailure) {
-      throw Exception(result.error);
+      // FIXME: Complete this error handling
+      throw Exception('MyAdsController._getMoreAds error: ${result.error}');
     }
-    final newAds = result.data!;
-    if (newAds.isNotEmpty) {
+    final newAds = result.data;
+    if (newAds != null && newAds.isNotEmpty) {
       ads.addAll(newAds);
       _getMorePages = maxAdsPerList == newAds.length;
     } else {
@@ -123,7 +125,8 @@ class MyAdsController extends BasicController {
       changeState(BasicStateSuccess());
       return true;
     } catch (err) {
-      log(err.toString());
+      final message = 'MyAdsController.updateAdStatus error: $err';
+      log(message);
       changeState(BasicStateError());
       return false;
     }

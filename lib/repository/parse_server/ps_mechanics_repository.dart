@@ -66,9 +66,7 @@ class PSMechanicsRepository {
     try {
       final response = await query.query();
       if (!response.success) {
-        final message = 'parse.get error: ${response.error?.message}';
-        log(message);
-        throw Exception(message);
+        throw Exception(response.error);
       }
 
       final List<MechanicModel> mechs = [];
@@ -81,6 +79,26 @@ class PSMechanicsRepository {
       final message = 'AdRepository.get: $err';
       log(message);
       return [];
+    }
+  }
+
+  static Future<MechanicModel?> getById(String psId) async {
+    final query =
+        QueryBuilder<ParseObject>(ParseObject(keyMechTable)..objectId = psId);
+
+    try {
+      final response = await query.query();
+      if (!response.success) {
+        throw Exception(response.error);
+      }
+      if (response.results == null || response.results!.isEmpty) {
+        throw Exception('not found mech.id: $psId');
+      }
+      return ParseToModel.mechanic(response.results!.first as ParseObject);
+    } catch (err) {
+      final message = 'AdRepository.get: $err';
+      log(message);
+      return null;
     }
   }
 

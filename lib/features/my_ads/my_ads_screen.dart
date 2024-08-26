@@ -140,7 +140,10 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                           padding: EdgeInsets.all(12),
                           child: Column(
                             children: [
-                              Icon(Icons.cloud_off),
+                              Icon(
+                                Icons.cloud_done,
+                                size: 48,
+                              ),
                               Text('Nenhum anúncio encontrado.'),
                             ],
                           ),

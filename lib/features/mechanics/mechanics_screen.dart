@@ -101,50 +101,26 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                     },
                     icon: const Icon(Icons.search),
                   ),
-                  PopupMenuButton(
-                    icon: const Icon(Icons.more_vert),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: 0,
-                        child: ListTile(
-                          leading: Icon(
-                            ctrl.hideDescription
-                                ? Icons.description_outlined
-                                : Icons.insert_drive_file_outlined,
-                          ),
-                          title: Text(
-                            ctrl.hideDescription
-                                ? 'Mostrar Descrição'
-                                : 'Ocultar Descrição',
-                          ),
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: 1,
-                        child: ListTile(
-                          leading: Icon(
-                            ctrl.showSelected
-                                ? Icons.ballot_rounded
-                                : Icons.ballot_outlined,
-                          ),
-                          title: Text(
-                            ctrl.showSelected
-                                ? 'Mostrar Todos'
-                                : 'Mostrar Seleção',
-                          ),
-                        ),
-                      ),
-                    ],
-                    onSelected: (value) {
-                      switch (value) {
-                        case 0:
-                          ctrl.toogleDescription();
-                          break;
-                        case 1:
-                          ctrl.toogleShowSelection();
-                          break;
-                      }
-                    },
+                  IconButton(
+                    onPressed: ctrl.toogleDescription,
+                    tooltip: ctrl.hideDescription
+                        ? 'Mostrar Descrição'
+                        : 'Ocultar Descrição',
+                    icon: Icon(
+                      ctrl.hideDescription
+                          ? Icons.description_outlined
+                          : Icons.insert_drive_file_outlined,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: ctrl.toogleShowSelection,
+                    tooltip:
+                        ctrl.showSelected ? 'Mostrar Todos' : 'Mostrar Seleção',
+                    icon: Icon(
+                      ctrl.showSelected
+                          ? Icons.ballot_rounded
+                          : Icons.ballot_outlined,
+                    ),
                   ),
                 ],
               ),
