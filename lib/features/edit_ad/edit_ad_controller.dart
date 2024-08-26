@@ -164,7 +164,7 @@ class EditAdController extends ChangeNotifier {
         ad.designer = bg.designer;
         ad.artist = bg.artist;
         ad.mechanicsId = bg.mechsPsIds;
-        ad.images.add(bg.image);
+        addImage(bg.image);
       }
       log(ad.toString());
       _changeState(EditAdStateSuccess());
@@ -207,11 +207,16 @@ class EditAdController extends ChangeNotifier {
       ad.condition = _condition;
       ad.status = _adStatus;
 
-      await PSAdRepository.update(ad);
+      final result = await PSAdRepository.update(ad);
+      if (result.isFailure) {
+        // FIXME: Complete this error handling
+        throw Exception(result.error);
+      }
       _changeState(EditAdStateSuccess());
       return ad;
     } catch (err) {
-      log(err.toString());
+      final message = 'ShopController.updateAds error: $err';
+      log(message);
       _changeState(EditAdStateError());
       return null;
     }
@@ -234,11 +239,16 @@ class EditAdController extends ChangeNotifier {
       ad.condition = _condition;
       ad.status = _adStatus;
 
-      await PSAdRepository.save(ad);
+      final result = await PSAdRepository.save(ad);
+      if (result.isFailure) {
+        // FIXME: Complete this error handling
+        throw Exception(result.error);
+      }
       _changeState(EditAdStateSuccess());
       return ad;
     } catch (err) {
-      log(err.toString());
+      final message = 'EditAdController.createAds error: $err';
+      log(message);
       _changeState(EditAdStateError());
       return null;
     }

@@ -123,12 +123,13 @@ class ShopController extends BasicController {
       search: searchFilter.searchString,
     );
     if (result.isFailure) {
-      throw Exception(result.error);
+      // FIXME: Complete this error handling
+      throw Exception('ShopController._getAds error: ${result.error}');
     }
-    final newAds = result.data!;
+    final newAds = result.data;
     _adsPage = 0;
     ads.clear();
-    if (newAds.isNotEmpty) {
+    if (newAds != null && newAds.isNotEmpty) {
       ads.addAll(newAds);
       _getMorePages = maxAdsPerList == newAds.length;
     } else {
@@ -158,10 +159,11 @@ class ShopController extends BasicController {
       page: _adsPage,
     );
     if (result.isFailure) {
-      throw Exception(result.error);
+      // FIXME: Complete this error handling
+      throw Exception('ShopController._getMoreAds error: ${result.error}');
     }
-    final newAds = result.data!;
-    if (newAds.isNotEmpty) {
+    final newAds = result.data;
+    if (newAds != null && newAds.isNotEmpty) {
       ads.addAll(newAds);
       _getMorePages = maxAdsPerList == newAds.length;
     } else {

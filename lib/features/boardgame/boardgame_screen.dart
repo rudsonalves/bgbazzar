@@ -144,11 +144,22 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
                 ),
               ],
             )
-          : FloatingActionButton.extended(
-              heroTag: 'Fab04',
-              onPressed: _viewBoardgame,
-              icon: const Icon(Icons.visibility),
-              label: const Text('Visualizar'),
+          : OverflowBar(
+              children: [
+                FloatingActionButton.extended(
+                  heroTag: 'Fab05',
+                  onPressed: _backPageWithGame,
+                  icon: const Icon(Icons.task_alt_rounded),
+                  label: const Text('Selecionar'),
+                ),
+                const SizedBox(width: 20),
+                FloatingActionButton.extended(
+                  heroTag: 'Fab04',
+                  onPressed: _viewBoardgame,
+                  icon: const Icon(Icons.visibility),
+                  label: const Text('Visualizar'),
+                ),
+              ],
             ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),

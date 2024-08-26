@@ -49,7 +49,16 @@ class MechanicsManager {
 
     for (final id in ids) {
       if (!localIds.contains(id)) {
-        log('need get id$id');
+        log('Loading Mech.$id');
+        final mech = await PSMechanicsRepository.getById(id);
+        if (mech != null) {
+          if (!localIds.contains(mech.psId)) {
+            final newMech = await MechanicRepository.add(mech);
+            if (newMech != null) {
+              _mechanics.add(newMech);
+            }
+          }
+        }
       }
     }
   }

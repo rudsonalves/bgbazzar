@@ -28,6 +28,7 @@ import '../../components/others_widgets/fav_button.dart';
 import '../../get_it.dart';
 import 'widgets/description_product.dart';
 import 'widgets/duo_segmented_button.dart';
+import 'widgets/game_data.dart';
 import 'widgets/image_carousel.dart';
 import 'widgets/location_product.dart';
 import 'widgets/price_product.dart';
@@ -55,6 +56,7 @@ class _ProductScreenState extends State<ProductScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _fabOffsetAnimation;
+  late final AdModel ad;
   final _scrollController = ScrollController();
   Timer? _timer;
 
@@ -63,6 +65,8 @@ class _ProductScreenState extends State<ProductScreen>
   @override
   void initState() {
     super.initState();
+
+    ad = widget.ad;
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -120,7 +124,7 @@ class _ProductScreenState extends State<ProductScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.ad.title),
+        title: Text(ad.title),
         centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -132,12 +136,11 @@ class _ProductScreenState extends State<ProductScreen>
       floatingActionButton: SlideTransition(
         position: _fabOffsetAnimation,
         child: DuoSegmentedButton(
-          hideButton1: widget.ad.hidePhone,
+          hideButton1: ad.hidePhone,
           label1: 'Ligar',
           iconData1: Icons.phone,
           callBack1: () {
-            final phone =
-                widget.ad.owner!.phone!.replaceAll(RegExp(r'[^\d]'), '');
+            final phone = ad.owner!.phone!.replaceAll(RegExp(r'[^\d]'), '');
             launchUrl(Uri.parse('tel:$phone'));
           },
           label2: 'Chat',
@@ -159,8 +162,8 @@ class _ProductScreenState extends State<ProductScreen>
             children: [
               Stack(
                 children: [
-                  ImageCarousel(ad: widget.ad),
-                  if (isLogged) FavStackButton(ad: widget.ad),
+                  ImageCarousel(ad: ad),
+                  if (isLogged) FavStackButton(ad: ad),
                 ],
               ),
               Padding(
@@ -168,17 +171,22 @@ class _ProductScreenState extends State<ProductScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PriceProduct(price: widget.ad.price),
-                    TitleProduct(title: widget.ad.title),
+                    PriceProduct(price: ad.price),
+                    TitleProduct(title: ad.title),
                     const Divider(indent: indent, endIndent: indent),
-                    DescriptionProduct(description: widget.ad.description),
+                    DescriptionProduct(description: ad.description),
+                    if (ad.designer != null)
+                      GameData(
+                        ad: ad,
+                        indent: indent,
+                      ),
                     const Divider(indent: indent, endIndent: indent),
-                    LocationProduct(address: widget.ad.address!),
+                    LocationProduct(address: ad.address!),
                     const Divider(indent: indent, endIndent: indent),
                     const SubTitleProduct(subtile: 'Anunciante'),
                     UserCard(
-                      name: widget.ad.owner!.name!,
-                      createAt: widget.ad.owner!.createAt!,
+                      name: ad.owner!.name!,
+                      createAt: ad.owner!.createAt!,
                     ),
                     const SizedBox(height: 50),
                   ],

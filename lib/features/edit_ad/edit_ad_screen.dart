@@ -80,6 +80,13 @@ class _EditAdScreenState extends State<EditAdScreen> {
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                print(ctrl.ad);
+              },
+              icon: const Icon(Icons.print))
+        ],
       ),
       body: ListenableBuilder(
         listenable: ctrl,
@@ -108,7 +115,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                           return Container();
                         } else {
                           return Text(
-                            'Adicionar algumas imagens.',
+                            'Adicione algumas imagens.',
                             style: TextStyle(
                               color: colorScheme.error,
                             ),

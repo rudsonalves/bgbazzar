@@ -44,7 +44,7 @@ class MechanicRepository {
     }
   }
 
-  static Future<MechanicModel> add(MechanicModel mech) async {
+  static Future<MechanicModel?> add(MechanicModel mech) async {
     try {
       final id = await MechanicsStore.add(mech.toMap());
       if (id < 0) throw Exception('return id $id');
@@ -54,7 +54,7 @@ class MechanicRepository {
     } catch (err) {
       final message = 'MechanicRepository.add: $err';
       log(message);
-      throw Exception(message);
+      return null;
     }
   }
 

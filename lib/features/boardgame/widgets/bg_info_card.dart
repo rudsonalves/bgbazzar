@@ -20,16 +20,21 @@ import 'package:flutter/material.dart';
 import '../../../common/models/boardgame.dart';
 import '../../../common/theme/app_text_style.dart';
 import '../../../components/others_widgets/image_view.dart';
+import '../../../get_it.dart';
+import '../../../manager/mechanics_manager.dart';
 import '../../product/widgets/description_product.dart';
+import '../../product/widgets/sub_title_product.dart';
 import '../../product/widgets/title_product.dart';
 
 class BGInfoCard extends StatelessWidget {
   final BoardgameModel game;
 
-  const BGInfoCard(
+  BGInfoCard(
     this.game, {
     super.key,
   });
+
+  final mechManager = getIt<MechanicsManager>();
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +154,10 @@ class BGInfoCard extends StatelessWidget {
                   ),
                 ],
               ),
+            const SubTitleProduct(
+              subtile: 'Mecânicas:',
+            ),
+            Text(mechManager.namesFromIdListString(game.mechsPsIds)),
             DescriptionProduct(
               description: game.description ?? '- * -',
             ),

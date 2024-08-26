@@ -24,7 +24,7 @@ class AppSettings {
   final ValueNotifier<Brightness> _brightness =
       ValueNotifier<Brightness>(Brightness.dark);
 
-  int _localDBVersion = 1000;
+  int _localDBVersion = 1001;
 
   ValueNotifier<Brightness> get brightness => _brightness;
   bool get isDark => _brightness.value == Brightness.dark;

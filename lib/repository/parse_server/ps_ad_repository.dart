@@ -132,7 +132,7 @@ class PSAdRepository {
       }
 
       if (response.results == null) {
-        throw Exception('search return a empty list');
+        return DataResult.success([]);
       }
 
       List<AdModel> ads = [];

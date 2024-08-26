@@ -80,7 +80,10 @@ class AddressController extends ChangeNotifier {
     try {
       _changeState(AddressStateLoading());
       if (adsList.isNotEmpty && moveToId != null) {
-        await PSAdRepository.moveAdsAddressTo(adsList, moveToId);
+        final result = await PSAdRepository.moveAdsAddressTo(adsList, moveToId);
+        if (result.isFailure) {
+          throw Exception(result.error);
+        }
       }
       await addressManager.deleteById(removeAddressId);
       _changeState(AddressStateSuccess());

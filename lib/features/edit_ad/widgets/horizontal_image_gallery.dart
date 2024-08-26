@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../components/others_widgets/bottom_message.dart';
 import 'photo_origin_bottom_sheet.dart';
 
 const maxImages = 5;
@@ -46,9 +47,21 @@ class HotizontalImageGallery extends StatefulWidget {
 class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
   Future<void> getFromCamera() async {
     Navigator.pop(context);
-    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (Platform.isAndroid || Platform.isIOS) {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
 
-    imageSelected(image);
+      imageSelected(image);
+    } else {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) => const BottomMessage(
+          title: 'Desculpe',
+          message:
+              'Esta funcionalidade não está implementada para este sistema.'
+              ' Importe imagens diretamente do disco ("Galeria").',
+        ),
+      );
+    }
   }
 
   Future<void> getFromGallery() async {
@@ -62,6 +75,11 @@ class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
     final colorScheme = Theme.of(context).colorScheme;
 
     if (image == null) return;
+    if (Platform.isLinux) {
+      widget.addImage(image.path);
+      return;
+    }
+
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: image.path,
       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),

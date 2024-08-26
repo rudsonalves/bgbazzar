@@ -21,6 +21,7 @@ class MigrationSqlScripts {
   MigrationSqlScripts._();
 
   static const localDBVersion = 1001;
+  // FIXME: Check by db version in AppSettoings.localDBVersion!
 
   static const Map<int, List<String>> sqlMigrationsScripts = {
     1000: [],

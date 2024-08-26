@@ -36,7 +36,7 @@ class DescriptionProduct extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SubTitleProduct(subtile: 'Descrição:'),
+        const SubTitleProduct(subtile: 'Descrição do Produto:'),
         ReadMoreText(
           description,
           trimMode: TrimMode.line,
