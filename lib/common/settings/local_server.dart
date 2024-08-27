@@ -15,15 +15,22 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+const bool isLocalServer = false;
+
 class LocalServer {
-  // static get keyApplicationId => 'xIlTzM1zXBa9pwgltnURbNMX2CPXBFQEDRtc0Cxp';
-  // static get keyClientKey => '1EizsYuqYCuEjNE6sxjbaJSzSivnFtCr75o4dM54';
-  // static get keyParseServerUrl => 'http://192.168.0.22:1337/parse';
-
-  // back4app.com definitions
-  static get keyApplicationId => 'IYbf1NRGo31PJbm4SUfibVvBS6XX4LyVfXwb6Vbd';
-  static get keyClientKey => 'UXD8yIPFSaVQ3Wk46gPErwcVkl5c40pp00hH306q';
-  static get keyParseServerUrl => 'https://parseapi.back4app.com';
-
-  static get keyParseServerImageUrl => 'https://parsefiles.back4app.com';
+  // parse serve declarations
+  static String get keyApplicationId => isLocalServer
+      ? (dotenv.env['APPLICATION_ID_LOCAL'] ?? '')
+      : (dotenv.env['APPLICATION_ID'] ?? '');
+  static String get keyClientKey => isLocalServer
+      ? (dotenv.env['CLIENT_KEY_LOCAL'] ?? '')
+      : (dotenv.env['CLIENT_KEY'] ?? '');
+  static String get keyParseServerUrl => isLocalServer
+      ? (dotenv.env['PARSE_SERVER_URL_LOCAL'] ?? '')
+      : (dotenv.env['PARSE_SERVER_URL'] ?? '');
+  static String get keyParseServerImageUrl => isLocalServer
+      ? (dotenv.env['PARSE_SERVER_IMAGE_URL_LOCAL'] ?? '')
+      : (dotenv.env['PARSE_SERVER_IMAGE_URL'] ?? '');
 }
