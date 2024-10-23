@@ -19,7 +19,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 const bool isLocalServer = false;
 
-class LocalServer {
+class ParseServerLocation {
   // parse serve declarations
   static String get keyApplicationId => isLocalServer
       ? (dotenv.env['APPLICATION_ID_LOCAL'] ?? '')

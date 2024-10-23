@@ -24,11 +24,11 @@ docker_down:
 flutter_clean:
 	flutter clean && flutter pub get
 
-git_diff:
+diff:
 	git add .
 	git diff --cached > ~/diff
 
-git_push:
+push:
 	git add .
 	git commit -F ~/commit.txt
 	git push origin HEAD

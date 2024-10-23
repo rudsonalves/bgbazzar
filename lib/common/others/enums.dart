@@ -15,12 +15,4 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-abstract class AddressState {}
-
-class AddressStateInitial extends AddressState {}
-
-class AddressStateLoading extends AddressState {}
-
-class AddressStateSuccess extends AddressState {}
-
-class AddressStateError extends AddressState {}
+enum PageState { initial, loading, success, error }

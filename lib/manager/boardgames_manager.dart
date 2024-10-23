@@ -26,7 +26,7 @@ import 'package:path_provider/path_provider.dart';
 import '../common/abstracts/data_result.dart';
 import '../common/models/bg_name.dart';
 import '../common/models/boardgame.dart';
-import '../common/settings/local_server.dart';
+import '../common/settings/parse_server_location.dart';
 import '../common/utils/utils.dart';
 import '../repository/parse_server/ps_boardgame_repository.dart';
 import '../repository/sqlite/bg_names_repository.dart';
@@ -94,7 +94,7 @@ class BoardgamesManager {
       String localImagePath = '';
       String convertedImagePath = '';
 
-      if (!bg.image.contains(LocalServer.keyParseServerUrl)) {
+      if (!bg.image.contains(ParseServerLocation.keyParseServerUrl)) {
         if (bg.image.contains('http')) {
           localImagePath = await _downloadImage(bg.image);
         } else {
@@ -146,7 +146,7 @@ class BoardgamesManager {
       String localImagePath = '';
       String convertedImagePath = '';
 
-      if (!bg.image.contains(LocalServer.keyParseServerImageUrl)) {
+      if (!bg.image.contains(ParseServerLocation.keyParseServerImageUrl)) {
         if (bg.image.contains('http')) {
           localImagePath = await _downloadImage(bg.image);
         } else {
