@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import 'common/settings/local_server.dart';
+import 'common/settings/parse_server_location.dart';
 import 'common/singletons/search_history.dart';
 import 'get_it.dart';
 import 'manager/boardgames_manager.dart';
@@ -12,9 +12,9 @@ import 'store/database/database_provider.dart';
 
 Future<void> startParseServer() async {
   await Parse().initialize(
-    LocalServer.keyApplicationId,
-    LocalServer.keyParseServerUrl,
-    clientKey: LocalServer.keyClientKey,
+    ParseServerLocation.keyApplicationId,
+    ParseServerLocation.keyParseServerUrl,
+    clientKey: ParseServerLocation.keyClientKey,
     autoSendSessionId: true,
     debug: true,
   );

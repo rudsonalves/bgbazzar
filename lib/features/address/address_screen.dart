@@ -24,7 +24,7 @@ import '../../components/others_widgets/state_loading_message.dart';
 import '../../repository/parse_server/ps_ad_repository.dart';
 import '../new_address/new_address_screen.dart';
 import 'address_controller.dart';
-import 'address_state.dart';
+import 'address_store.dart';
 import 'widgets/destiny_address_dialog.dart';
 
 class AddressScreen extends StatefulWidget {
@@ -38,11 +38,12 @@ class AddressScreen extends StatefulWidget {
 
 class _AddressScreenState extends State<AddressScreen> {
   final ctrl = AddressController();
+  final store = AddressStore();
 
   @override
   void initState() {
     super.initState();
-    ctrl.init();
+    ctrl.init(store);
   }
 
   Future<void> _addAddress() async {
@@ -67,7 +68,7 @@ class _AddressScreenState extends State<AddressScreen> {
           final destiny = await DestinyAddressDialog.open(
             context,
             addressNames: ctrl.addressNames,
-            addressRemoveName: ctrl.selectedAddressName.value,
+            addressRemoveName: store.selectedAddressName.value,
             adsListLength: adsList.length,
           );
 
@@ -95,7 +96,7 @@ class _AddressScreenState extends State<AddressScreen> {
   }
 
   void _backPage() {
-    Navigator.pop(context, ctrl.selectedAddressName.value);
+    Navigator.pop(context, store.selectedAddressName.value);
   }
 
   @override
@@ -139,7 +140,7 @@ class _AddressScreenState extends State<AddressScreen> {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: AnimatedBuilder(
-          animation: Listenable.merge([ctrl.selectedAddressName, ctrl]),
+          animation: Listenable.merge([store.selectedAddressName, store.state]),
           builder: (context, _) {
             return Stack(
               children: [
@@ -153,7 +154,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           final address = ctrl.addresses[index];
                           return Card(
                             color: address.name ==
-                                    ctrl.selectedAddressName.value
+                                    store.selectedAddressName.value
                                 ? colorScheme.primaryContainer
                                 : colorScheme.primaryContainer.withOpacity(0.4),
                             child: ListTile(
@@ -167,10 +168,12 @@ class _AddressScreenState extends State<AddressScreen> {
                     ),
                   ],
                 ),
-                if (ctrl.state is AddressStateLoading)
-                  const StateLoadingMessage(),
-                if (ctrl.state is AddressStateError)
-                  StateErrorMessage(closeDialog: ctrl.closeErroMessage),
+                if (store.isLoading) const StateLoadingMessage(),
+                if (store.isError)
+                  StateErrorMessage(
+                    message: store.errorMessage,
+                    closeDialog: ctrl.closeErroMessage,
+                  ),
               ],
             );
           },

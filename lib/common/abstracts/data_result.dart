@@ -1,7 +1,26 @@
+// Copyright (C) 2024 Rudson Alves
+//
+// This file is part of bgbazzar.
+//
+// bgbazzar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// bgbazzar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
+
 // The code below was inspired by my swift implementation
 // https://gist.github.com/CassiusPacheco/4378d30d69316e4a6ba28a0c3af72628
 // and Avdosev's Dart Either
 // https://github.com/avdosev/either_dart/blob/master/lib/src/either.dart
+// Article:
+// https://cassiuspacheco.com/result-dataerror-wrapper-in-dart-for-flutter
 
 import 'package:equatable/equatable.dart';
 

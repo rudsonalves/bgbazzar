@@ -17,58 +17,46 @@
 
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-
 import '../../common/models/address.dart';
+import '../../common/others/enums.dart';
 import '../../get_it.dart';
 import '../../manager/address_manager.dart';
 import '../../repository/parse_server/ps_ad_repository.dart';
-import 'address_state.dart';
+import 'address_store.dart';
 
-class AddressController extends ChangeNotifier {
+class AddressController {
   final addressManager = getIt<AddressManager>();
+  late final AddressStore store;
+
   List<AddressModel> get addresses => addressManager.addresses;
   List<String> get addressNames => addressManager.addressNames.toList();
 
-  final _selectedAddressName = ValueNotifier<String>('');
-  ValueNotifier<String> get selectedAddressName => _selectedAddressName;
   String? get selectesAddresId {
-    if (_selectedAddressName.value.isNotEmpty) {
-      return addressManager.getAddressIdFromName(_selectedAddressName.value);
+    if (store.selectedAddressName.value.isNotEmpty) {
+      return addressManager.getAddressIdFromName(
+        store.selectedAddressName.value,
+      );
     }
     return null;
   }
 
-  AddressState _state = AddressStateInitial();
-
-  AddressState get state => _state;
-
-  void _changeState(AddressState newState) {
-    _state = newState;
-    notifyListeners();
-  }
-
-  Future<void> init() async {}
-
-  @override
-  void dispose() {
-    _selectedAddressName.dispose();
-    super.dispose();
+  Future<void> init(AddressStore store) async {
+    this.store = store;
   }
 
   void selectAddress(String name) {
     if (addressNames.contains(name)) {
-      _selectedAddressName.value = name;
+      store.seSelectedAddressName(name);
     }
   }
 
   Future<void> removeAddress() async {
-    final name = _selectedAddressName.value;
+    final name = store.selectedAddressName.value;
     if (name.isNotEmpty &&
         addressNames.isNotEmpty &&
         addressNames.contains(name)) {
       await addressManager.deleteByName(name);
-      _selectedAddressName.value = '';
+      store.seSelectedAddressName('');
     }
   }
 
@@ -78,7 +66,7 @@ class AddressController extends ChangeNotifier {
     required String removeAddressId,
   }) async {
     try {
-      _changeState(AddressStateLoading());
+      store.setState(PageState.loading);
       if (adsList.isNotEmpty && moveToId != null) {
         final result = await PSAdRepository.moveAdsAddressTo(adsList, moveToId);
         if (result.isFailure) {
@@ -86,14 +74,14 @@ class AddressController extends ChangeNotifier {
         }
       }
       await addressManager.deleteById(removeAddressId);
-      _changeState(AddressStateSuccess());
+      store.setState(PageState.success);
     } catch (err) {
       log(err.toString());
-      _changeState(AddressStateError());
+      store.setError('Erro ao mover endereço. Tente mais tarde');
     }
   }
 
   void closeErroMessage() {
-    _changeState(AddressStateSuccess());
+    store.setState(PageState.success);
   }
 }

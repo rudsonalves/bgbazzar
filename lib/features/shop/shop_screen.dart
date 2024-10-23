@@ -46,6 +46,7 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen>
     with SingleTickerProviderStateMixin {
   final ctrl = ShopController();
+
   late AnimationController _animationController;
   late Animation<Offset> _fabOffsetAnimation;
   final _scrollController = ScrollController();

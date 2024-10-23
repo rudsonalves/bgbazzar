@@ -9,6 +9,60 @@
 
 # ChangeLog
 
+## 2024/10/23 - version: 0.7.01+50
+
+This commit updates the Android build configurations, refactors existing classes for better maintainability, and improves code consistency across the application. The changes involve upgrading Gradle versions, refactoring server-related settings, and transitioning the state management approach for the address feature.
+
+### Changes made:
+
+1. **android/app/build.gradle**:
+   - Updated `compileSdk`, `minSdk`, and `targetSdk` to version 34 for compatibility with newer Android features.
+
+2. **android/build.gradle**:
+   - Added Kotlin version 1.8.10 and updated the build script dependencies.
+   - Added buildscript configurations to use Android Gradle plugin version 8.0.2.
+
+3. **android/gradle/wrapper/gradle-wrapper.properties**:
+   - Upgraded Gradle distribution to version 8.1.1 for compatibility with the new build script.
+
+4. **lib/common/abstracts/data_result.dart**:
+   - Added copyright and licensing information.
+
+5. **lib/features/address/address_state.dart** → **lib/common/others/enums.dart**:
+   - Refactored `AddressState` classes into a unified `PageState` enum to simplify state management.
+
+6. **lib/common/settings/back4app_server.dart**:
+   - Deleted `back4app_server.dart` as the Back4App configuration has been refactored for better modularity.
+
+7. **lib/common/settings/local_server.dart** → **lib/common/settings/parse_server_location.dart**:
+   - Renamed `LocalServer` to `ParseServerLocation` to improve clarity on the server role.
+
+8. **lib/features/address/address_controller.dart**:
+   - Replaced the `AddressState` usage with the new `PageState` enum.
+   - Removed `ChangeNotifier` inheritance and used `AddressStore` for managing state.
+
+9. **lib/features/address/address_screen.dart**:
+   - Modified to use `AddressStore` for state management instead of relying on `ChangeNotifier` directly.
+
+10. **lib/features/address/address_store.dart**:
+   - Added new `AddressStore` class to manage the state of address operations, including state tracking and error handling.
+
+11. **lib/features/shop/shop_screen.dart**:
+   - Added a spacing line for readability.
+
+12. **lib/main.dart**:
+   - Replaced `LocalServer` references with `ParseServerLocation` to reflect the updated server settings class.
+
+13. **lib/manager/boardgames_manager.dart**:
+   - Updated the server configuration references from `LocalServer` to `ParseServerLocation` to maintain consistency across the codebase.
+
+14. **pubspec.lock**:
+   - Updated the `vm_service` package to version 14.2.5.
+
+### Conclusion:
+This refactor improves the overall code organization, especially around server configurations and state management. The upgrade of Android build settings ensures compatibility with newer Android features, while the use of the `AddressStore` enhances state handling in the address feature, contributing to a more maintainable and consistent codebase.
+
+
 ## 2024/08/26 - version: 0.6.19+48
 
 Updated Database and Error Handling Improvements
