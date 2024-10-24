@@ -30,7 +30,7 @@ import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
 import '../../get_it.dart';
 import '../edit_ad/edit_ad_screen.dart';
-import '../login/login_screen.dart';
+import '../signin/signin_screen.dart';
 import 'shop_controller.dart';
 import 'widgets/search/search_dialog.dart';
 
@@ -145,7 +145,7 @@ class _ShopScreenState extends State<ShopScreen>
 
   Future<void> navToLoginScreen() async {
     if (!ctrl.isLogged) {
-      await Navigator.pushNamed(context, LoginScreen.routeName);
+      await Navigator.pushNamed(context, SignInScreen.routeName);
       ctrl.init();
     } else {
       Navigator.pushNamed(context, MyAccountScreen.routeName);
@@ -210,7 +210,7 @@ class _ShopScreenState extends State<ShopScreen>
                 )
               : FloatingActionButton.extended(
                   onPressed: () async {
-                    await Navigator.pushNamed(context, LoginScreen.routeName);
+                    await Navigator.pushNamed(context, SignInScreen.routeName);
                     ctrl.init();
                   },
                   backgroundColor: colorScheme.tertiaryContainer,

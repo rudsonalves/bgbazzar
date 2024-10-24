@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import '../../common/parse_server/errors_mensages.dart';
 import '../../components/buttons/big_button.dart';
 import '../../components/dialogs/simple_message.dart';
-import '../login/login_screen.dart';
+import '../signin/signin_screen.dart';
 import '../../components/others_widgets/or_row.dart';
 import 'signup_controller.dart';
 import 'signup_store.dart';
@@ -38,8 +38,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final store = SignupStore();
   final ctrl = SignupController();
 
-  final _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();
@@ -55,9 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> signupUser() async {
-    final valid =
-        _formKey.currentState != null && _formKey.currentState!.validate();
-    if (valid) {
+    if (store.isValid()) {
       try {
         final user = await ctrl.signupUser();
         if (user == null || user.id == null) {
@@ -93,7 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Navigator.pop(context);
     Navigator.pushNamed(
       context,
-      LoginScreen.routeName,
+      SignInScreen.routeName,
     );
   }
 
@@ -137,7 +133,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             const OrRow(),
                             SignUpForm(
-                              formKey: _formKey,
                               store: store,
                               signupUser: signupUser,
                               navLogin: _navLogin,

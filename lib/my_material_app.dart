@@ -39,7 +39,7 @@ import 'features/mechanics/mechanics_screen.dart';
 import 'features/chat/chat_screen.dart';
 import 'features/shop/shop_screen.dart';
 import 'features/edit_ad/edit_ad_screen.dart';
-import 'features/login/login_screen.dart';
+import 'features/signin/signin_screen.dart';
 import 'features/new_address/new_address_screen.dart';
 import 'features/signup/signup_screen.dart';
 import 'get_it.dart';
@@ -79,7 +79,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
             routes: {
               ChatScreen.routeName: (_) => const ChatScreen(),
               MyAccountScreen.routeName: (_) => const MyAccountScreen(),
-              LoginScreen.routeName: (_) => const LoginScreen(),
+              SignInScreen.routeName: (_) => const SignInScreen(),
               SignUpScreen.routeName: (_) => const SignUpScreen(),
               AddressScreen.routeName: (_) => const AddressScreen(),
               ShopScreen.routeName: (_) => const ShopScreen(),

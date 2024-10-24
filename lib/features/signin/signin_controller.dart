@@ -15,54 +15,43 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
-
+import '../../common/abstracts/data_result.dart';
 import '../../common/models/user.dart';
 import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
 import '../../repository/parse_server/ps_user_repository.dart';
-import 'login_state.dart';
+import 'signin_store.dart';
 
-class LoginController extends ChangeNotifier {
-  LoginState _state = LoginStateInitial();
+class SignInController {
+  late final SignInStore store;
 
-  LoginState get state => _state;
-
-  void _changeState(LoginState newState) {
-    _state = newState;
-    notifyListeners();
-  }
-
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final passwordFocusNode = FocusNode();
   final app = getIt<AppSettings>();
   final currentUser = getIt<CurrentUser>();
 
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    passwordFocusNode.dispose();
-
-    super.dispose();
+  init(SignInStore store) {
+    this.store = store;
   }
 
-  Future<UserModel?> login(UserModel user) async {
+  Future<DataResult<void>> login() async {
     try {
-      _changeState(LoginStateLoading());
+      store.setStateLoading();
+      final user = UserModel(
+        email: store.email!,
+        password: store.password!,
+      );
       final newUser = await PSUserRepository.loginWithEmail(user);
       currentUser.init(newUser);
-      _changeState(LoginStateSuccess());
-      return newUser;
+      store.setStateSuccess();
+      return DataResult.success(null);
     } catch (err) {
-      _changeState(LoginStateError());
-      throw Exception(err);
+      const message = 'Ocorreu um erro. Tente mais tarde.';
+      store.setError(message);
+      return DataResult.failure(const GenericFailure(message));
     }
   }
 
   void closeErroMessage() {
-    _changeState(LoginStateSuccess());
+    store.setStateSuccess();
   }
 }

@@ -15,11 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
-
 import '../../common/models/user.dart';
 import '../../common/singletons/app_settings.dart';
-import '../../components/custon_field_controllers/masked_text_controller.dart';
 import '../../get_it.dart';
 import '../../repository/parse_server/ps_user_repository.dart';
 import 'signup_store.dart';
@@ -27,44 +24,22 @@ import 'signup_store.dart';
 class SignupController {
   late final SignupStore store;
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final checkPasswordController = TextEditingController();
-  final nameController = TextEditingController();
-  final phoneController = MaskedTextController(mask: '(##) ####-#####');
-
   final app = getIt<AppSettings>();
-
-  final emailFocusNode = FocusNode();
-  final phoneFocusNode = FocusNode();
-  final passwordFocusNode = FocusNode();
-  final checkPassFocusNode = FocusNode();
 
   void init(SignupStore store) {
     this.store = store;
   }
 
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    checkPasswordController.dispose();
-    nameController.dispose();
-    phoneController.dispose();
-
-    emailFocusNode.dispose();
-    phoneFocusNode.dispose();
-    passwordFocusNode.dispose();
-    checkPassFocusNode.dispose();
-  }
+  void dispose() {}
 
   Future<UserModel?> signupUser() async {
     try {
       store.setStateLoading();
       final user = UserModel(
-        name: nameController.text,
-        email: emailController.text,
-        phone: phoneController.text,
-        password: passwordController.text,
+        name: store.name!,
+        email: store.email!,
+        phone: store.phone!,
+        password: store.password!,
       );
       final newUser = await PSUserRepository.signUp(user);
       store.setStateSuccess();

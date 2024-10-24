@@ -9,6 +9,43 @@
 
 # ChangeLog
 
+## 2024/10/24 - version: 0.7.03+52
+
+**Refactor: Rename Login Feature to SignIn and Implement SignInStore for State Management**
+
+This commit introduces major refactoring by renaming the existing login feature to signin, in order to align naming conventions with other features. The changes include modifications in controllers, screens, widgets, and routes. The state management previously handled by ChangeNotifier has also been migrated to use SignInStore, enhancing separation of concerns and improving maintainability.
+
+### Changes Overview:
+
+1. **Renaming Files and Classes: Login to SignIn**
+   - Renamed the login feature directory and relevant files (e.g., `login_controller.dart` to `signin_controller.dart`, `login_screen.dart` to `signin_screen.dart`).
+   - Updated class names and imports across the application to reflect the new naming scheme (e.g., `LoginController` to `SignInController`, `LoginScreen` to `SignInScreen`).
+
+2. **Deleted Legacy State Management Classes**
+   - Removed `login_state.dart` that contained old state definitions like `LoginStateInitial`, `LoginStateLoading`, etc.
+   - Updated state handling from using abstract classes to using the new store-based approach.
+
+3. **Introduction of `SignInStore`**
+   - Created a new `signin_store.dart` file for state management.
+   - Implemented `SignInStore` using `ValueNotifier` to manage state (`PageState`) and validation errors (e.g., `errorEmail`, `errorPassword`).
+   - Integrated `SignInStore` within `SignInController` for streamlined state management.
+
+4. **Simplified Form Widgets**
+   - Removed `LoginForm` widget and created `SignInForm` which now uses `SignInStore` for validation and state handling.
+   - `SignInForm` is now directly responsible for managing the user input fields (`email` and `password`) through `ValueListenableBuilder` for reactive UI updates.
+
+5. **Route Updates**
+   - Replaced all references to `LoginScreen.routeName` with `SignInScreen.routeName` throughout the application.
+   - Updated the navigation logic in `shop_screen.dart` and `my_material_app.dart` accordingly.
+
+6. **Miscellaneous Cleanup**
+   - Removed redundant focus nodes and controllers from `SignupController`, simplifying the code by directly leveraging the `SignupStore`.
+   - Adjusted the signup workflow to ensure a smoother user experience, reflecting the new store-based state management paradigm.
+
+### Conclusion:
+This refactoring aligns the feature names, improves readability, and introduces a more scalable state management approach using stores. The change also unifies the naming convention with other parts of the project, thereby improving code consistency and maintainability moving forward.
+
+
 ## 2024/10/24 - version: 0.7.02+51
 
 This commit introduces several changes across multiple files, focusing on improvements in code organization, modularity, and state management. Notable updates include the implementation of a new state management approach with stores replacing old states, and adjustments to enhance the maintainability and consistency of the codebase.
