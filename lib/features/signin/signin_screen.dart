@@ -17,69 +17,46 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/models/user.dart';
-import '../../common/parse_server/errors_mensages.dart';
 import '../../components/buttons/big_button.dart';
-import '../../components/dialogs/simple_message.dart';
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
 import '../signup/signup_screen.dart';
-import 'login_controller.dart';
-import 'login_state.dart';
-import 'widgets/login_form.dart';
+import 'signin_controller.dart';
+import 'signin_store.dart';
+import 'widgets/signin_form.dart';
 import '../../components/others_widgets/or_row.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   static const routeName = '/login';
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final ctrl = LoginController();
-  final _formKey = GlobalKey<FormState>();
+class _SignInScreenState extends State<SignInScreen> {
+  final ctrl = SignInController();
+  final store = SignInStore();
+
+  @override
+  void initState() {
+    super.initState();
+
+    ctrl.init(store);
+  }
 
   @override
   void dispose() {
-    ctrl.dispose();
+    store.dispose();
 
     super.dispose();
   }
 
   Future<void> _userLogin() async {
-    FocusScope.of(context).unfocus();
-    final valid =
-        _formKey.currentState != null && _formKey.currentState!.validate();
-
-    if (valid) {
-      try {
-        final user = await ctrl.login(
-          UserModel(
-            email: ctrl.emailController.text,
-            password: ctrl.passwordController.text,
-          ),
-        );
-
-        if (user == null || user.id == null) {
-          throw Exception(
-              '-1	error code indicating that an unknown error or an error'
-              ' unrelated to Parse occurred.');
-        }
-
+    if (store.isValid()) {
+      final result = await ctrl.login();
+      if (result.isSuccess) {
         if (mounted) Navigator.pop(context);
-        return;
-      } catch (err) {
-        if (!mounted) return;
-        await SimpleMessage.open(
-          context,
-          title: 'Ocorreu um Error',
-          message: ParserServerErrors.message(err.toString()),
-          type: MessageType.error,
-        );
-
-        return;
       }
     }
   }
@@ -111,9 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
       ),
-      body: ListenableBuilder(
-        listenable: ctrl,
-        builder: (context, _) {
+      body: ValueListenableBuilder(
+        valueListenable: store.state,
+        builder: (context, state, _) {
           return Stack(
             children: [
               Positioned.fill(
@@ -137,9 +114,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                             const OrRow(),
-                            LoginForm(
-                              formKey: _formKey,
-                              controller: ctrl,
+                            SignInForm(
+                              store: store,
                               userLogin: _userLogin,
                               navSignUp: _navSignUp,
                               navLostPassword: _navLostPassword,
@@ -151,13 +127,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              if (ctrl.state is LoginStateLoading)
+              if (store.isLoading)
                 const Positioned.fill(
                   child: StateLoadingMessage(),
                 ),
-              if (ctrl.state is LoginStateError)
+              if (store.isError)
                 Positioned.fill(
                   child: StateErrorMessage(
+                    message: store.errorMessage,
                     closeDialog: ctrl.closeErroMessage,
                   ),
                 ),
