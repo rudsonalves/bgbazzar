@@ -16,21 +16,40 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-const bool isLocalServer = false;
+class ParseServerService {
+  late final bool isLocalServer;
+  bool isStarted = false;
 
-class ParseServerLocation {
+  Future<void> init(bool isLocalServer) async {
+    if (isStarted) return;
+    isStarted = true;
+    this.isLocalServer = isLocalServer;
+    await _start();
+  }
+
   // parse serve declarations
-  static String get keyApplicationId => isLocalServer
+  String get keyApplicationId => isLocalServer
       ? (dotenv.env['APPLICATION_ID_LOCAL'] ?? '')
       : (dotenv.env['APPLICATION_ID'] ?? '');
-  static String get keyClientKey => isLocalServer
+  String get keyClientKey => isLocalServer
       ? (dotenv.env['CLIENT_KEY_LOCAL'] ?? '')
       : (dotenv.env['CLIENT_KEY'] ?? '');
-  static String get keyParseServerUrl => isLocalServer
+  String get keyParseServerUrl => isLocalServer
       ? (dotenv.env['PARSE_SERVER_URL_LOCAL'] ?? '')
       : (dotenv.env['PARSE_SERVER_URL'] ?? '');
-  static String get keyParseServerImageUrl => isLocalServer
+  String get keyParseServerImageUrl => isLocalServer
       ? (dotenv.env['PARSE_SERVER_IMAGE_URL_LOCAL'] ?? '')
       : (dotenv.env['PARSE_SERVER_IMAGE_URL'] ?? '');
+
+  Future<void> _start() async {
+    await Parse().initialize(
+      keyApplicationId,
+      keyParseServerUrl,
+      clientKey: keyClientKey,
+      autoSendSessionId: true,
+      debug: true,
+    );
+  }
 }

@@ -12,6 +12,13 @@ services:
     container_name: parse-server
     env_file:
       - .env
+    environment:
+      - PARSE_SERVER_APPLICATION_ID=${APPLICATION_ID_LOCAL}
+      - PARSE_SERVER_MASTER_KEY=${CLIENT_KEY_LOCAL}
+      - PARSE_SERVER_DATABASE_URI=mongodb://mongo:27017/dev
+      - PARSE_SERVER_PORT=${PARSE_PORT}
+      - PARSE_SERVER_URL=${PARSE_SERVER_URL_LOCAL}
+      - PARSE_SERVER_MASTER_KEY_IPS=0.0.0.0/0
     ports:
       - "${PARSE_PORT}:${PARSE_PORT}"
     depends_on:

@@ -19,10 +19,13 @@ import 'package:flutter/material.dart';
 
 import '../../../common/models/ad.dart';
 import '../edit_ad_controller.dart';
+import '../edit_ad_store.dart';
 import 'horizontal_image_gallery.dart';
 
 class ImagesListView extends StatelessWidget {
   final EditAdController ctrl;
+  EditAdStore get store => ctrl.store;
+
   final bool validator;
   final Function(AdModel ad)? editAd;
   final Function(AdModel ad)? deleteAd;
@@ -49,7 +52,7 @@ class ImagesListView extends StatelessWidget {
       ),
       height: 120,
       child: ValueListenableBuilder(
-        valueListenable: ctrl.imagesLength,
+        valueListenable: store.imagesLength,
         builder: (context, length, _) => HotizontalImageGallery(
           length: length,
           images: ctrl.images,

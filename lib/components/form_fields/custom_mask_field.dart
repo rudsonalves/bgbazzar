@@ -15,13 +15,14 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:bgbazzar/components/custon_field_controllers/masked_text_controller.dart';
 import 'package:flutter/material.dart';
 
-class CustomFormField extends StatelessWidget {
+class CustomMaskField extends StatefulWidget {
   final String? labelText;
   final TextStyle? labelStyle;
   final String? hintText;
-  final TextEditingController? controller;
+  final String mask;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final void Function(String)? onFieldSubmitted;
@@ -40,12 +41,12 @@ class CustomFormField extends StatelessWidget {
   final String? suffixText;
   final String? prefixText;
 
-  CustomFormField({
+  const CustomMaskField({
     super.key,
     this.labelText,
     this.labelStyle,
+    required this.mask,
     this.hintText,
-    this.controller,
     this.validator,
     this.onChanged,
     this.onFieldSubmitted,
@@ -65,7 +66,26 @@ class CustomFormField extends StatelessWidget {
     this.prefixText,
   });
 
+  @override
+  State<CustomMaskField> createState() => _CustomMaskFieldState();
+}
+
+class _CustomMaskFieldState extends State<CustomMaskField> {
   final errorString = ValueNotifier<String?>(null);
+  late final MaskedTextController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = MaskedTextController(mask: widget.mask);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,31 +93,32 @@ class CustomFormField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: TextFormField(
         controller: controller,
-        validator: validator,
-        focusNode: focusNode,
-        keyboardType: keyboardType,
-        textInputAction: textInputAction ?? TextInputAction.next,
-        minLines: minLines,
-        maxLines: maxLines,
-        readOnly: readOnly,
-        textCapitalization: textCapitalization ?? TextCapitalization.none,
+        validator: widget.validator,
+        focusNode: widget.focusNode,
+        keyboardType: widget.keyboardType,
+        textInputAction: widget.textInputAction ?? TextInputAction.next,
+        minLines: widget.minLines,
+        maxLines: widget.maxLines,
+        readOnly: widget.readOnly,
+        textCapitalization:
+            widget.textCapitalization ?? TextCapitalization.none,
         decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: labelStyle,
-          hintText: hintText,
-          errorText: errorText,
-          suffixIcon: suffixIcon,
-          suffixText: suffixText,
-          prefixText: prefixText,
-          border: fullBorder
+          labelText: widget.labelText,
+          labelStyle: widget.labelStyle,
+          hintText: widget.hintText,
+          errorText: widget.errorText,
+          suffixIcon: widget.suffixIcon,
+          suffixText: widget.suffixText,
+          prefixText: widget.prefixText,
+          border: widget.fullBorder
               ? OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 )
               : null,
-          floatingLabelBehavior: floatingLabelBehavior,
+          floatingLabelBehavior: widget.floatingLabelBehavior,
         ),
-        onChanged: onChanged,
-        onFieldSubmitted: onFieldSubmitted,
+        onChanged: widget.onChanged,
+        onFieldSubmitted: widget.onFieldSubmitted,
       ),
     );
   }

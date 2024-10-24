@@ -19,13 +19,14 @@ import 'package:flutter/material.dart';
 
 import '../../../components/buttons/big_button.dart';
 import '../../../common/models/ad.dart';
-import '../../../common/validators/validators.dart';
+import '../../../common/others/validators.dart';
 import '../../../components/form_fields/custom_form_field.dart';
 import '../../../components/others_widgets/fitted_button_segment.dart';
 import '../../address/address_screen.dart';
 import '../../boardgame/boardgame_screen.dart';
 import '../../mechanics/mechanics_screen.dart';
 import '../edit_ad_controller.dart';
+import '../edit_ad_store.dart';
 
 class AdForm extends StatefulWidget {
   final EditAdController controller;
@@ -41,6 +42,7 @@ class AdForm extends StatefulWidget {
 
 class _AdFormState extends State<AdForm> {
   EditAdController get ctrl => widget.controller;
+  EditAdStore get store => widget.controller.store;
 
   @override
   void initState() {
@@ -179,13 +181,13 @@ class _AdFormState extends State<AdForm> {
           Row(
             children: [
               ValueListenableBuilder(
-                valueListenable: ctrl.hidePhone,
+                valueListenable: store.hidePhone,
                 builder: (context, value, _) {
                   return Checkbox(
                     value: value,
                     onChanged: (value) {
                       if (value != null) {
-                        ctrl.hidePhone.value = value;
+                        store.hidePhone.value = value;
                       }
                     },
                   );

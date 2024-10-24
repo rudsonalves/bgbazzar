@@ -9,6 +9,75 @@
 
 # ChangeLog
 
+## 2024/10/24 - version: 0.7.02+51
+
+This commit introduces several changes across multiple files, focusing on improvements in code organization, modularity, and state management. Notable updates include the implementation of a new state management approach with stores replacing old states, and adjustments to enhance the maintainability and consistency of the codebase.
+
+### Changes made:
+
+1. **docker-compose.yml**:
+   - Added environment variables to support Parse Server configuration, enabling better parameter control for local and remote setups.
+
+2. **lib/common/validators/validators.dart**:
+   - Renamed to `lib/common/others/validators.dart` to better organize utility files.
+   - Made `Validator` constructor private to prevent instantiation.
+
+3. **lib/components/form_fields/custom_form_field.dart**:
+   - Added `onChanged` and `onFieldSubmitted` callbacks to allow more flexible interactions with the form fields.
+   - Updated the implementation to use these new callbacks for cleaner code.
+
+4. **lib/components/form_fields/custom_mask_field.dart** (new file):
+   - Introduced a new `CustomMaskField` widget to handle input fields with masked text, supporting better user input control.
+
+5. **lib/components/form_fields/password_form_field.dart**:
+   - Updated to use optional controllers and new callbacks (`onChanged`, `onFieldSubmitted`) for more modular code.
+   - Replaced `AnimatedBuilder` with `ValueListenableBuilder` for better performance and readability.
+
+6. **lib/features/boardgame/boardgame_controller.dart**:
+   - Replaced `BoardgameState` with `BoardgameStore` for state management.
+   - Removed the `ChangeNotifier` inheritance to delegate state handling to `BoardgameStore`.
+
+7. **lib/features/boardgame/boardgame_screen.dart**:
+   - Updated to use `BoardgameStore` for managing UI state instead of `BoardgameState`.
+
+8. **lib/features/boardgame/boardgame_state.dart** (deleted file):
+   - Removed obsolete state class in favor of a new store-based state management approach.
+
+9. **lib/features/boardgame/boardgame_store.dart** (new file):
+   - Introduced `BoardgameStore` to replace the previous state-based approach, leveraging `ValueNotifier` for state handling.
+
+10. **lib/features/edit_ad/edit_ad_controller.dart**:
+    - Transitioned to use `EditAdStore` for state management, removing the need for `ChangeNotifier`.
+    - Removed redundant `ValueNotifier` properties and replaced them with corresponding store methods.
+
+11. **lib/features/edit_ad/edit_ad_state.dart** (deleted file):
+    - Deleted the obsolete state file, consolidating all state handling in the new `EditAdStore`.
+
+12. **lib/features/edit_ad/edit_ad_store.dart** (new file):
+    - Added `EditAdStore` for better separation of concerns and modular state management.
+
+13. **lib/features/signup/signup_controller.dart**:
+    - Updated to use `SignupStore` instead of `SignUpState` for handling UI and data states.
+
+14. **lib/features/signup/signup_state.dart** (deleted file):
+    - Removed `SignUpState` in favor of `SignupStore`.
+
+15. **lib/features/signup/signup_store.dart** (new file):
+    - Introduced `SignupStore` for more effective state handling in the signup flow, with specific error fields for better user feedback.
+
+16. **lib/get_it.dart**:
+    - Added `ParseServerService` to the service locator for better control over Parse Server initialization.
+
+17. **lib/main.dart**:
+    - Replaced direct Parse Server initialization with a call to `ParseServerService` for a more modular and testable setup.
+
+18. **lib/services/parse_server_server.dart**:
+    - Refactored from `parse_server_location.dart` to include the initialization logic of Parse Server, enhancing modularity.
+
+### Conclusion:
+These changes improve the overall modularity and maintainability of the codebase by adopting store-based state management, reducing redundancy, and enhancing the organization of components and services. The new approach simplifies future updates and makes the application more scalable.
+
+
 ## 2024/10/23 - version: 0.7.01+50
 
 This commit updates the Android build configurations, refactors existing classes for better maintainability, and improves code consistency across the application. The changes involve upgrading Gradle versions, refactoring server-related settings, and transitioning the state management approach for the address feature.

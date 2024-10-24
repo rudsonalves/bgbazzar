@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../common/validators/validators.dart';
+import '../../../common/others/validators.dart';
 import '../../../components/buttons/big_button.dart';
 import '../../../components/form_fields/custom_form_field.dart';
 import '../../../components/form_fields/password_form_field.dart';

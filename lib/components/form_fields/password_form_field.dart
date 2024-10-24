@@ -20,8 +20,11 @@ import 'package:flutter/material.dart';
 class PasswordFormField extends StatelessWidget {
   final String labelText;
   final String? hintText;
-  final TextEditingController passwordController;
+  final TextEditingController? passwordController;
   final String? Function(String?)? validator;
+  final String? errorText;
+  final void Function(String)? onChanged;
+  final void Function(String)? onFieldSubmitted;
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final FocusNode? nextFocusNode;
@@ -31,7 +34,10 @@ class PasswordFormField extends StatelessWidget {
     super.key,
     required this.labelText,
     this.hintText,
-    required this.passwordController,
+    this.passwordController,
+    this.errorText,
+    this.onChanged,
+    this.onFieldSubmitted,
     this.validator,
     this.textInputAction,
     this.focusNode,
@@ -40,25 +46,24 @@ class PasswordFormField extends StatelessWidget {
   });
 
   final notVisible = ValueNotifier<bool>(true);
-  final errorString = ValueNotifier<String?>(null);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: AnimatedBuilder(
-        animation: Listenable.merge([notVisible, errorString]),
-        builder: (context, _) {
+      child: ValueListenableBuilder(
+        valueListenable: notVisible,
+        builder: (context, value, _) {
           return TextFormField(
             controller: passwordController,
             validator: validator,
             focusNode: focusNode,
-            obscureText: notVisible.value,
+            obscureText: value,
             textInputAction: textInputAction ?? TextInputAction.done,
             decoration: InputDecoration(
               labelText: labelText,
               hintText: hintText,
-              errorText: errorString.value,
+              errorText: errorText,
               border: fullBorder
                   ? OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -74,16 +79,8 @@ class PasswordFormField extends StatelessWidget {
                 ),
               ),
             ),
-            onChanged: (value) {
-              if (value.length > 2 && validator != null) {
-                errorString.value = validator!(value);
-              }
-            },
-            onFieldSubmitted: (value) {
-              if (nextFocusNode != null) {
-                FocusScope.of(context).requestFocus(nextFocusNode);
-              }
-            },
+            onChanged: onChanged,
+            onFieldSubmitted: onFieldSubmitted,
           );
         },
       ),

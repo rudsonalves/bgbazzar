@@ -17,22 +17,23 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../common/validators/validators.dart';
+import '../../../common/others/validators.dart';
 import '../../../components/buttons/big_button.dart';
 import '../../../components/form_fields/custom_form_field.dart';
+import '../../../components/form_fields/custom_mask_field.dart';
 import '../../../components/form_fields/password_form_field.dart';
-import '../signup_controller.dart';
+import '../signup_store.dart';
 
 class SignUpForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
-  final SignupController controller;
+  final SignupStore store;
   final void Function() signupUser;
   final void Function() navLogin;
 
   const SignUpForm({
     super.key,
     required this.formKey,
-    required this.controller,
+    required this.store,
     required this.signupUser,
     required this.navLogin,
   });
@@ -44,50 +45,70 @@ class SignUpForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CustomFormField(
-            labelText: 'Nome',
-            hintText: 'Como aparecerá em seus anúncios',
-            controller: controller.nameController,
-            validator: Validator.name,
-            nextFocusNode: controller.emailFocusNode,
-          ),
-          CustomFormField(
-            labelText: 'E-mail',
-            hintText: 'seu-email@provedor.com',
-            controller: controller.emailController,
-            validator: Validator.email,
-            keyboardType: TextInputType.emailAddress,
-            focusNode: controller.emailFocusNode,
-            nextFocusNode: controller.phoneFocusNode,
-          ),
-          CustomFormField(
-            labelText: 'Celular',
-            hintText: '(19) 9999-9999',
-            controller: controller.phoneController,
-            validator: Validator.phone,
-            keyboardType: TextInputType.phone,
-            focusNode: controller.phoneFocusNode,
-            nextFocusNode: controller.passwordFocusNode,
-          ),
-          PasswordFormField(
-            labelText: 'Senha',
-            hintText: '6+ letras e números',
-            passwordController: controller.passwordController,
-            validator: Validator.password,
-            focusNode: controller.passwordFocusNode,
-            textInputAction: TextInputAction.next,
-            nextFocusNode: controller.checkPassFocusNode,
-          ),
-          PasswordFormField(
-            labelText: 'Confirmar senha',
-            hintText: '6+ letras e números',
-            passwordController: controller.checkPasswordController,
-            focusNode: controller.checkPassFocusNode,
-            validator: (value) => Validator.checkPassword(
-              controller.passwordController.text,
-              value,
-            ),
-          ),
+          ValueListenableBuilder(
+              valueListenable: store.errorName,
+              builder: (context, errorName, _) {
+                return CustomFormField(
+                  labelText: 'Nome',
+                  hintText: 'Como aparecerá em seus anúncios',
+                  errorText: errorName,
+                  onChanged: store.setName,
+                  validator: Validator.name,
+                  textCapitalization: TextCapitalization.words,
+                  // nextFocusNode: controller.emailFocusNode,
+                );
+              }),
+          ValueListenableBuilder(
+              valueListenable: store.errorEmail,
+              builder: (context, errorEmail, _) {
+                return CustomFormField(
+                  labelText: 'E-mail',
+                  hintText: 'seu-email@provedor.com',
+                  errorText: errorEmail,
+                  onChanged: store.setEmail,
+                  validator: Validator.email,
+                  keyboardType: TextInputType.emailAddress,
+                  // focusNode: controller.emailFocusNode,
+                  // nextFocusNode: controller.phoneFocusNode,
+                );
+              }),
+          ValueListenableBuilder(
+              valueListenable: store.errorPhone,
+              builder: (context, errorPhone, _) {
+                return CustomMaskField(
+                  labelText: 'Celular',
+                  hintText: '(19) 9999-9999',
+                  mask: '(##) #####-####',
+                  errorText: errorPhone,
+                  onChanged: store.setPhone,
+
+                  keyboardType: TextInputType.phone,
+                  // focusNode: controller.phoneFocusNode,
+                  // nextFocusNode: controller.passwordFocusNode,
+                );
+              }),
+          ValueListenableBuilder(
+              valueListenable: store.errorPassword,
+              builder: (context, errorPassword, _) {
+                return PasswordFormField(
+                  labelText: 'Senha',
+                  hintText: '6+ letras e números',
+                  errorText: errorPassword,
+                  onChanged: store.setPassword,
+                  textInputAction: TextInputAction.next,
+                  // nextFocusNode: controller.checkPassFocusNode,
+                );
+              }),
+          ValueListenableBuilder(
+              valueListenable: store.errorCheckPassword,
+              builder: (context, errorCheckPassword, _) {
+                return PasswordFormField(
+                  labelText: 'Confirmar senha',
+                  hintText: '6+ letras e números',
+                  errorText: errorCheckPassword,
+                  onChanged: store.setCheckPassword,
+                );
+              }),
           BigButton(
             color: Colors.amber,
             label: 'Registrar',
