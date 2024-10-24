@@ -28,6 +28,7 @@ import 'manager/address_manager.dart';
 import 'manager/boardgames_manager.dart';
 import 'manager/favorites_manager.dart';
 import 'manager/mechanics_manager.dart';
+import 'services/parse_server_server.dart';
 import 'store/database/database_manager.dart';
 
 final getIt = GetIt.instance;
@@ -35,6 +36,8 @@ final getIt = GetIt.instance;
 void setupDependencies() {
   try {
     getIt.registerSingleton<AppSettings>(AppSettings());
+
+    getIt.registerLazySingleton<ParseServerService>(() => ParseServerService());
 
     getIt.registerLazySingleton<MechanicsManager>(() => MechanicsManager());
 

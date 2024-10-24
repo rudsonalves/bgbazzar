@@ -18,6 +18,8 @@
 import '../utils/extensions.dart';
 
 class Validator {
+  Validator._();
+
   static String? email(String? value) {
     if (value == null || value.isEmpty) {
       return 'E-mail é obrigatório!';

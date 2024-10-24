@@ -23,7 +23,7 @@ import '../../components/dialogs/simple_message.dart';
 import '../login/login_screen.dart';
 import '../../components/others_widgets/or_row.dart';
 import 'signup_controller.dart';
-import 'signup_state.dart';
+import 'signup_store.dart';
 import 'widgets/signup_form.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -35,12 +35,21 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final store = SignupStore();
+  final ctrl = SignupController();
+
   final _formKey = GlobalKey<FormState>();
-  final _controller = SignupController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    ctrl.init(store);
+  }
 
   @override
   void dispose() {
-    _controller.dispose();
+    ctrl.dispose();
 
     super.dispose();
   }
@@ -50,7 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _formKey.currentState != null && _formKey.currentState!.validate();
     if (valid) {
       try {
-        final user = await _controller.signupUser();
+        final user = await ctrl.signupUser();
         if (user == null || user.id == null) {
           throw Exception('-1	Error code indicating that an unknown error or an'
               ' error unrelated to Parse occurred.');
@@ -93,9 +102,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: _controller.app.isDark
-          ? null
-          : colorScheme.onPrimary.withOpacity(0.85),
+      backgroundColor:
+          ctrl.app.isDark ? null : colorScheme.onPrimary.withOpacity(0.85),
       appBar: AppBar(
         title: const Text('Cadastrar'),
         centerTitle: true,
@@ -105,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
       body: ListenableBuilder(
-        listenable: _controller,
+        listenable: store.state,
         builder: (context, _) {
           return Stack(
             children: [
@@ -113,7 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Center(
                   child: SingleChildScrollView(
                     child: Card(
-                      color: _controller.app.isDark
+                      color: ctrl.app.isDark
                           ? colorScheme.primary.withOpacity(.15)
                           : null,
                       margin: const EdgeInsets.all(20),
@@ -130,7 +138,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             const OrRow(),
                             SignUpForm(
                               formKey: _formKey,
-                              controller: _controller,
+                              store: store,
                               signupUser: signupUser,
                               navLogin: _navLogin,
                             ),
@@ -141,10 +149,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-              if (_controller.state is SignUpStateLoading)
+              if (store.isLoading)
                 const Positioned.fill(
                   child: Center(
                     child: CircularProgressIndicator(),
+                  ),
+                ),
+              if (store.isError)
+                Positioned.fill(
+                  child: Center(
+                    child: Text(store.errorMessage.toString()),
                   ),
                 ),
             ],

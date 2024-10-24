@@ -29,12 +29,10 @@ import '../../get_it.dart';
 import '../../manager/boardgames_manager.dart';
 import '../../manager/mechanics_manager.dart';
 import '../../repository/parse_server/ps_ad_repository.dart';
-import 'edit_ad_state.dart';
+import 'edit_ad_store.dart';
 
-class EditAdController extends ChangeNotifier {
-  EditAdState _state = EditAdStateInitial();
-
-  EditAdState get state => _state;
+class EditAdController {
+  late final EditAdStore store;
 
   final app = getIt<AppSettings>();
   final currentUser = getIt<CurrentUser>();
@@ -48,7 +46,7 @@ class EditAdController extends ChangeNotifier {
   final mechanicsController = TextEditingController();
   final addressController = TextEditingController();
   final priceController = CurrencyTextController();
-  final hidePhone = ValueNotifier<bool>(false);
+
   String? errorMessage;
 
   AdModel ad = AdModel(
@@ -60,7 +58,7 @@ class EditAdController extends ChangeNotifier {
   );
 
   final _images = <String>[];
-  final _imagesLength = ValueNotifier<int>(0);
+
   final List<String> _selectedMechPsIds = [];
 
   String _selectedAddressId = '';
@@ -79,18 +77,16 @@ class EditAdController extends ChangeNotifier {
       .map((c) => c.name)
       .toList();
 
-  ValueNotifier<int> get imagesLength => _imagesLength;
   List<String> get images => _images;
 
-  final _valit = ValueNotifier<bool?>(null);
-  ValueNotifier<bool?> get valit => _valit;
+  void init(AdModel? editAd, EditAdStore store) {
+    this.store = store;
 
-  void init(AdModel? editAd) {
     if (editAd != null) {
       ad = editAd;
       nameController.text = editAd.title;
       descriptionController.text = editAd.description;
-      hidePhone.value = editAd.hidePhone;
+      store.setHidePhone(editAd.hidePhone);
       priceController.currencyValue = editAd.price;
       setAdStatus(editAd.status);
       setMechanicsPsIds(editAd.mechanicsId);
@@ -100,32 +96,23 @@ class EditAdController extends ChangeNotifier {
     }
   }
 
-  @override
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
     mechanicsController.dispose();
     addressController.dispose();
     priceController.dispose();
-    _imagesLength.dispose();
-    hidePhone.dispose();
-    super.dispose();
-  }
-
-  void _changeState(EditAdState newState) {
-    _state = newState;
-    notifyListeners();
   }
 
   void addImage(String path) {
     _images.add(path);
-    _imagesLength.value = _images.length;
+    store.setImagesLength(_images.length);
   }
 
   void setImages(List<String> images) {
     _images.clear();
     _images.addAll(images);
-    _imagesLength.value = _images.length;
+    store.setImagesLength(_images.length);
   }
 
   void removeImage(int index) {
@@ -133,11 +120,11 @@ class EditAdController extends ChangeNotifier {
     if (index < images.length) {
       if (image.contains(RegExp(r'^http'))) {
         _images.removeAt(index);
-        _imagesLength.value = _images.length;
+        store.setImagesLength(_images.length);
       } else {
         final file = File(image);
         _images.removeAt(index);
-        _imagesLength.value = _images.length;
+        store.setImagesLength(_images.length);
         file.delete();
       }
     }
@@ -145,7 +132,7 @@ class EditAdController extends ChangeNotifier {
 
   Future<void> setBgInfo(String bgId) async {
     try {
-      _changeState(EditAdStateLoading());
+      store.setStateLoading();
       final result = await bgManager.getBoardgameId(bgId);
       if (result.isFailure) {
         throw Exception(result.error);
@@ -167,12 +154,12 @@ class EditAdController extends ChangeNotifier {
         addImage(bg.image);
       }
       log(ad.toString());
-      _changeState(EditAdStateSuccess());
+      store.setStateSuccess();
     } catch (err) {
       log(err.toString());
-      errorMessage = 'Estamos tendo algum problema com a conexão.'
+      const message = 'Estamos tendo algum problema com a conexão.'
           ' Tente novamente mais tarde.';
-      _changeState(EditAdStateError());
+      store.setError(message);
     }
   }
 
@@ -183,16 +170,16 @@ class EditAdController extends ChangeNotifier {
   }
 
   bool get formValit {
-    _valit.value = formKey.currentState != null &&
+    store.setValit(formKey.currentState != null &&
         formKey.currentState!.validate() &&
-        imagesLength.value > 0;
-    return _valit.value!;
+        store.imagesLength.value > 0);
+    return store.valit.value!;
   }
 
   Future<AdModel?> updateAds(String id) async {
     if (!formValit) return null;
     try {
-      _changeState(EditAdStateLoading());
+      store.setStateLoading();
 
       ad.id = id;
       ad.owner = currentUser.user!;
@@ -203,7 +190,7 @@ class EditAdController extends ChangeNotifier {
       ad.address = currentUser.addresses
           .firstWhere((address) => address.id == _selectedAddressId);
       ad.price = priceController.currencyValue;
-      ad.hidePhone = hidePhone.value;
+      ad.hidePhone = store.hidePhone.value;
       ad.condition = _condition;
       ad.status = _adStatus;
 
@@ -212,12 +199,12 @@ class EditAdController extends ChangeNotifier {
         // FIXME: Complete this error handling
         throw Exception(result.error);
       }
-      _changeState(EditAdStateSuccess());
+      store.setStateSuccess();
       return ad;
     } catch (err) {
       final message = 'ShopController.updateAds error: $err';
       log(message);
-      _changeState(EditAdStateError());
+      store.setError(message);
       return null;
     }
   }
@@ -225,7 +212,7 @@ class EditAdController extends ChangeNotifier {
   Future<AdModel?> createAds() async {
     if (!formValit) return null;
     try {
-      _changeState(EditAdStateLoading());
+      store.setStateLoading();
 
       ad.owner = currentUser.user!;
       ad.images = _images;
@@ -235,7 +222,7 @@ class EditAdController extends ChangeNotifier {
       ad.address = currentUser.addresses
           .firstWhere((address) => address.id == _selectedAddressId);
       ad.price = priceController.currencyValue;
-      ad.hidePhone = hidePhone.value;
+      ad.hidePhone = store.hidePhone.value;
       ad.condition = _condition;
       ad.status = _adStatus;
 
@@ -244,12 +231,12 @@ class EditAdController extends ChangeNotifier {
         // FIXME: Complete this error handling
         throw Exception(result.error);
       }
-      _changeState(EditAdStateSuccess());
+      store.setStateSuccess();
       return ad;
     } catch (err) {
       final message = 'EditAdController.createAds error: $err';
       log(message);
-      _changeState(EditAdStateError());
+      store.setError(message);
       return null;
     }
   }
@@ -272,6 +259,6 @@ class EditAdController extends ChangeNotifier {
   }
 
   void gotoSuccess() {
-    _changeState(EditAdStateSuccess());
+    store.setStateSuccess();
   }
 }

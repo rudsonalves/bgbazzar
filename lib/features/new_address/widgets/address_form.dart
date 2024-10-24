@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../common/validators/validators.dart';
+import '../../../common/others/validators.dart';
 import '../../../components/form_fields/custom_form_field.dart';
 import '../new_address_controller.dart';
 

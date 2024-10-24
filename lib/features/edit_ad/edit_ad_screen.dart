@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with xlo_mobx.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../../common/models/ad.dart';
@@ -22,7 +24,7 @@ import '../../components/buttons/big_button.dart';
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
 import 'edit_ad_controller.dart';
-import 'edit_ad_state.dart';
+import 'edit_ad_store.dart';
 import 'widgets/ad_form.dart';
 import 'widgets/image_list_view.dart';
 
@@ -42,17 +44,20 @@ class EditAdScreen extends StatefulWidget {
 
 class _EditAdScreenState extends State<EditAdScreen> {
   final ctrl = EditAdController();
+  final store = EditAdStore();
 
   @override
   void initState() {
     super.initState();
 
-    ctrl.init(widget.ad);
+    ctrl.init(widget.ad, store);
   }
 
   @override
   void dispose() {
     ctrl.dispose();
+    store.dispose();
+
     super.dispose();
   }
 
@@ -83,13 +88,13 @@ class _EditAdScreenState extends State<EditAdScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                print(ctrl.ad);
+                log(ctrl.ad.toString());
               },
               icon: const Icon(Icons.print))
         ],
       ),
       body: ListenableBuilder(
-        listenable: ctrl,
+        listenable: store.state,
         builder: (context, _) => Stack(
           children: [
             SingleChildScrollView(
@@ -105,13 +110,13 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       ctrl: ctrl,
                       validator: true,
                     ),
-                    AnimatedBuilder(
-                      animation:
-                          Listenable.merge([ctrl.valit, ctrl.imagesLength]),
+                    ListenableBuilder(
+                      listenable:
+                          Listenable.merge([store.valit, store.imagesLength]),
                       builder: (context, _) {
-                        if ((ctrl.imagesLength.value == 0 &&
-                                ctrl.valit.value == null) ||
-                            ctrl.imagesLength.value > 0) {
+                        if ((store.imagesLength.value == 0 &&
+                                store.valit.value == null) ||
+                            store.imagesLength.value > 0) {
                           return Container();
                         } else {
                           return Text(
@@ -139,8 +144,8 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 ),
               ),
             ),
-            if (ctrl.state is EditAdStateLoading) const StateLoadingMessage(),
-            if (ctrl.state is EditAdStateError)
+            if (store.isLoading) const StateLoadingMessage(),
+            if (store.isError)
               StateErrorMessage(
                 message: ctrl.errorMessage,
                 closeDialog: ctrl.gotoSuccess,

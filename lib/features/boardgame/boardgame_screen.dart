@@ -23,7 +23,7 @@ import '../../components/others_widgets/state_loading_message.dart';
 import '../edit_boardgame/edit_boardgame_screen.dart';
 import '../shop/widgets/search/search_dialog.dart';
 import 'boardgame_controller.dart';
-import 'boardgame_state.dart';
+import 'boardgame_store.dart';
 import 'widgets/view_boardgame.dart';
 
 class BoardgameScreen extends StatefulWidget {
@@ -37,16 +37,17 @@ class BoardgameScreen extends StatefulWidget {
 
 class _BoardgameScreenState extends State<BoardgameScreen> {
   final ctrl = BoardgameController();
+  final store = BoardgameStore();
 
   @override
   void initState() {
     super.initState();
-    ctrl.init();
+    ctrl.init(store);
   }
 
   @override
   void dispose() {
-    ctrl.dispose();
+    store.dispose();
 
     super.dispose();
   }
@@ -163,9 +164,9 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
             ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        child: ListenableBuilder(
-          listenable: ctrl,
-          builder: (context, _) {
+        child: ValueListenableBuilder(
+          valueListenable: store.state,
+          builder: (context, state, _) {
             return Stack(
               children: [
                 ListView.builder(
@@ -183,11 +184,11 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
                     ),
                   ),
                 ),
-                if (ctrl.state is BoardgameStateLoading)
+                if (store.isLoading)
                   const Positioned.fill(
                     child: StateLoadingMessage(),
                   ),
-                if (ctrl.state is BoardgameStateError)
+                if (store.isError)
                   Positioned.fill(
                     child: StateErrorMessage(
                       closeDialog: ctrl.closeError,

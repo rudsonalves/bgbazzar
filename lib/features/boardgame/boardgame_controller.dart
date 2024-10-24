@@ -15,18 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
-
 import '../../common/abstracts/data_result.dart';
 import '../../common/models/bg_name.dart';
 import '../../common/models/boardgame.dart';
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
 import '../../manager/boardgames_manager.dart';
-import 'boardgame_state.dart';
+import 'boardgame_store.dart';
 
-class BoardgameController extends ChangeNotifier {
-  BoardgameState _state = BoardgameStateInitial();
+class BoardgameController {
+  late final BoardgameStore store;
 
   final bgManager = getIt<BoardgamesManager>();
   final user = getIt<CurrentUser>();
@@ -34,31 +32,27 @@ class BoardgameController extends ChangeNotifier {
   String _search = '';
   String? _selectedBGId;
 
-  BoardgameState get state => _state;
   bool get isAdmin => user.isAdmin;
   List<BGNameModel> get bgs => bgManager.bgs;
   String get search => _search;
   List<BGNameModel> get filteredBGs => _filteredBGs;
   String? get selectedBGId => _selectedBGId;
 
-  void _changeState(BoardgameState newState) {
-    _state = newState;
-    notifyListeners();
-  }
+  void init(BoardgameStore store) {
+    this.store = store;
 
-  void init() {
     _updateSearchFilter('');
   }
 
   closeError() {
-    _changeState(BoardgameStateSuccess());
+    store.setStateSuccess();
   }
 
   Future<void> changeSearchName(String fsearch) async {
-    _changeState(BoardgameStateLoading());
+    store.setStateLoading();
     _updateSearchFilter(fsearch);
     await Future.delayed(const Duration(milliseconds: 50));
-    _changeState(BoardgameStateSuccess());
+    store.setStateSuccess();
   }
 
   bool isSelected(BGNameModel bg) => bg.bgId == _selectedBGId;
@@ -85,9 +79,9 @@ class BoardgameController extends ChangeNotifier {
   }
 
   Future<void> selectBGId(BGNameModel bg) async {
-    _changeState(BoardgameStateLoading());
+    store.setStateLoading();
     _selectedBGId = (_selectedBGId == bg.bgId) ? null : bg.bgId;
-    _changeState(BoardgameStateSuccess());
+    store.setStateSuccess();
   }
 
   Future<DataResult<BoardgameModel?>> getBoardgameSelected() async {

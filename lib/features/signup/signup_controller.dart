@@ -22,12 +22,10 @@ import '../../common/singletons/app_settings.dart';
 import '../../components/custon_field_controllers/masked_text_controller.dart';
 import '../../get_it.dart';
 import '../../repository/parse_server/ps_user_repository.dart';
-import 'signup_state.dart';
+import 'signup_store.dart';
 
-class SignupController extends ChangeNotifier {
-  SignUpState _state = SignUpStateInitial();
-
-  SignUpState get state => _state;
+class SignupController {
+  late final SignupStore store;
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -42,9 +40,11 @@ class SignupController extends ChangeNotifier {
   final passwordFocusNode = FocusNode();
   final checkPassFocusNode = FocusNode();
 
-  @override
+  void init(SignupStore store) {
+    this.store = store;
+  }
+
   void dispose() {
-    super.dispose();
     emailController.dispose();
     passwordController.dispose();
     checkPasswordController.dispose();
@@ -57,14 +57,9 @@ class SignupController extends ChangeNotifier {
     checkPassFocusNode.dispose();
   }
 
-  void _changeState(SignUpState newState) {
-    _state = newState;
-    notifyListeners();
-  }
-
   Future<UserModel?> signupUser() async {
     try {
-      _changeState(SignUpStateLoading());
+      store.setStateLoading();
       final user = UserModel(
         name: nameController.text,
         email: emailController.text,
@@ -72,10 +67,10 @@ class SignupController extends ChangeNotifier {
         password: passwordController.text,
       );
       final newUser = await PSUserRepository.signUp(user);
-      _changeState(SignUpStateSuccess());
+      store.setStateSuccess();
       return newUser;
     } catch (err) {
-      _changeState(SignUpStateError());
+      store.setError('Ocorreu um erro. Tente mais tarde.');
       throw Exception(err);
     }
   }
