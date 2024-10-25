@@ -10,7 +10,7 @@ import 'my_material_app.dart';
 import 'store/database/database_provider.dart';
 
 void main() async {
-  const isLocalServer = true;
+  const isLocalServer = false;
 
   await dotenv.load(fileName: '.env');
   WidgetsFlutterBinding.ensureInitialized();

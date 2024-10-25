@@ -69,8 +69,24 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void _navLostPassword() {
-    throw Exception('Has not yet been implemented');
+  Future<void> _navLostPassword() async {
+    final result = await ctrl.recoverPassword();
+    if (result == RecoverStatus.success) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => StateErrorMessage(
+          message: 'Uma mensagem foi enviada para a sua caixa de email'
+              ' ${store.email}. Acesse para alterar sua senha',
+          icon: const Icon(
+            Icons.warning,
+            color: Colors.green,
+            size: 60,
+          ),
+          closeDialog: Navigator.of(context).pop,
+        ),
+      );
+    }
   }
 
   @override

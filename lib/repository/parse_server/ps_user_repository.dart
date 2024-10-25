@@ -67,7 +67,7 @@ class ParseServerUserRepository implements IUserRepository {
       return DataResult.success(newUser);
     } catch (err) {
       // Handle any error that occurs during the sign up process.
-      return _handleError<UserModel>('UserRepository.signUp', err);
+      return _handleError<UserModel>('signUp', err);
     }
   }
 
@@ -95,7 +95,7 @@ class ParseServerUserRepository implements IUserRepository {
       return DataResult.success(ParseToModel.user(parseUser));
     } catch (err) {
       // Handle any error that occurs during the login process.
-      return _handleError<UserModel>('UserRepository.loginWithEmail', err);
+      return _handleError<UserModel>('loginWithEmail', err);
     }
   }
 
@@ -108,7 +108,7 @@ class ParseServerUserRepository implements IUserRepository {
       return DataResult.success(null);
     } catch (err) {
       // Handle any error that occurs during the sign out process.
-      return _handleError<void>('UserRepository.loginWithEmail', err);
+      return _handleError<void>('loginWithEmail', err);
     }
   }
 
@@ -137,7 +137,7 @@ class ParseServerUserRepository implements IUserRepository {
       }
     } catch (err) {
       // Handle any error that occurs while retrieving the current user.
-      return _handleError<UserModel>('UserRepository.getCurrentUser', err);
+      return _handleError<UserModel>('getCurrentUser', err);
     }
   }
 
@@ -203,12 +203,30 @@ class ParseServerUserRepository implements IUserRepository {
       return DataResult.success(null);
     } catch (err) {
       // Handle any error that occurs during the update process.
-      return _handleError<void>('UserRepository.update', err);
+      return _handleError<void>('update', err);
+    }
+  }
+
+  @override
+  Future<DataResult<void>> resetPassword(String email) async {
+    try {
+      final user = ParseUser(null, null, email.trim());
+      final ParseResponse response = await user.requestPasswordReset();
+      if (!response.success) {
+        final code = response.error!.code;
+        return DataResult.failure(GenericFailure(
+          message: ParserServerErrors.message(code),
+          code: code,
+        ));
+      }
+      return DataResult.success(null);
+    } catch (err) {
+      return _handleError<void>('resetPassword', err);
     }
   }
 
   DataResult<T> _handleError<T>(String message, Object error) {
-    final fullMessage = '$message: $error';
+    final fullMessage = 'UserRepository.$message: $error';
     log(fullMessage);
     return DataResult.failure(GenericFailure(message: fullMessage));
   }
