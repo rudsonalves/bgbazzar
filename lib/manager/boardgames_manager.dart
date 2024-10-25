@@ -50,7 +50,9 @@ class BoardgamesManager {
     // get news bgNames from Parse Server
     final result = await _getParseBgNames();
     if (result.isFailure) {
-      return DataResult.failure(GenericFailure(result.error.toString()));
+      return DataResult.failure(GenericFailure(
+        message: result.error.toString(),
+      ));
     }
     final newsBGNames = result.data!;
 
@@ -140,7 +142,7 @@ class BoardgamesManager {
     } catch (err) {
       final message = 'BoardgameManager.save: $err';
       log(message);
-      return DataResult.failure(GenericFailure(message));
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 
@@ -205,7 +207,7 @@ class BoardgamesManager {
     } catch (err) {
       final message = 'BoardgamesManager.update: $err';
       log(message);
-      return DataResult.failure(GenericFailure(message));
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 

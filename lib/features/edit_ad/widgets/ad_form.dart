@@ -19,7 +19,6 @@ import 'package:flutter/material.dart';
 
 import '../../../components/buttons/big_button.dart';
 import '../../../common/models/ad.dart';
-import '../../../common/others/validators.dart';
 import '../../../components/form_fields/custom_form_field.dart';
 import '../../../components/others_widgets/fitted_button_segment.dart';
 import '../../address/address_screen.dart';
@@ -82,19 +81,22 @@ class _AdFormState extends State<AdForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: ctrl.formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomFormField(
-            controller: ctrl.nameController,
-            labelText: 'Nome do Jogo *',
-            fullBorder: false,
-            maxLines: null,
-            floatingLabelBehavior: null,
-            textCapitalization: TextCapitalization.sentences,
-            validator: Validator.title,
-          ),
+          ValueListenableBuilder(
+              valueListenable: store.errorName,
+              builder: (context, erroName, _) {
+                return CustomFormField(
+                  labelText: 'Nome do Jogo *',
+                  fullBorder: false,
+                  maxLines: null,
+                  floatingLabelBehavior: null,
+                  textCapitalization: TextCapitalization.sentences,
+                  errorText: erroName,
+                  onChanged: store.setName,
+                );
+              }),
           Center(
             child: BigButton(
               color: Colors.cyan,
@@ -103,15 +105,19 @@ class _AdFormState extends State<AdForm> {
               iconData: Icons.info_outline_rounded,
             ),
           ),
-          CustomFormField(
-            controller: ctrl.descriptionController,
-            labelText: 'Descreva o estado do Jogo *',
-            fullBorder: false,
-            maxLines: null,
-            floatingLabelBehavior: null,
-            textCapitalization: TextCapitalization.sentences,
-            validator: Validator.description,
-          ),
+          ValueListenableBuilder(
+              valueListenable: store.errorDescription,
+              builder: (context, errorDescription, _) {
+                return CustomFormField(
+                  labelText: 'Descreva o estado do Jogo *',
+                  fullBorder: false,
+                  maxLines: null,
+                  floatingLabelBehavior: null,
+                  textCapitalization: TextCapitalization.sentences,
+                  errorText: errorDescription,
+                  onChanged: store.setDescription,
+                );
+              }),
           const Text('Produto'),
           Row(
             children: [
@@ -144,39 +150,40 @@ class _AdFormState extends State<AdForm> {
             child: AbsorbPointer(
               child: CustomFormField(
                 labelText: 'Mecânicas *',
-                controller: ctrl.mechanicsController,
                 fullBorder: false,
                 maxLines: null,
                 floatingLabelBehavior: null,
                 readOnly: true,
                 suffixIcon: const Icon(Icons.ads_click),
-                validator: Validator.mechanics,
+                onChanged: store.setMechanics,
               ),
             ),
           ),
-          InkWell(
-            onTap: _addAddress,
-            child: AbsorbPointer(
-              child: CustomFormField(
-                labelText: 'Endereço *',
-                controller: ctrl.addressController,
-                fullBorder: false,
-                maxLines: null,
-                floatingLabelBehavior: null,
-                readOnly: true,
-                suffixIcon: const Icon(Icons.ads_click),
-                validator: Validator.address,
-              ),
-            ),
-          ),
+          ValueListenableBuilder(
+              valueListenable: store.errorAddress,
+              builder: (context, errorAddress, _) {
+                return InkWell(
+                  onTap: _addAddress,
+                  child: AbsorbPointer(
+                    child: CustomFormField(
+                      labelText: 'Endereço *',
+                      fullBorder: false,
+                      maxLines: null,
+                      floatingLabelBehavior: null,
+                      readOnly: true,
+                      suffixIcon: const Icon(Icons.ads_click),
+                      errorText: errorAddress,
+                      onChanged: store.setAddress,
+                    ),
+                  ),
+                );
+              }),
           CustomFormField(
             labelText: 'Preço *',
-            controller: ctrl.priceController,
             fullBorder: false,
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
             floatingLabelBehavior: null,
-            validator: Validator.cust,
           ),
           Row(
             children: [

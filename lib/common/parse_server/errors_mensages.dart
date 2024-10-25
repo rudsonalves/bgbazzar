@@ -16,12 +16,10 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 class ParserServerErrors {
-  static String message(String err) {
-    final code = _getErroCode(err);
-
+  static String message(int code) {
     switch (code) {
       case 101:
-        return 'Usuário e senha inválidos. Por favor, tente novamente.';
+        return 'Usuário/senha inválidos. Por favor, tente novamente.';
       case 202:
         return 'Este usuário já possui cadastro. Tente '
             'um outro usuário ou recupere a senha na página de login.';
@@ -33,27 +31,5 @@ class ParserServerErrors {
       default:
         return 'Desculpe. Ocorreu um erro. Por favor, tente mais tarde.';
     }
-  }
-
-  static int _getErroCode(String errStr) {
-    String code = '';
-    for (final line in errStr.split('\n')) {
-      if (line.contains(':')) {
-        final value = line.trim().split(':');
-        final key = value[0];
-        code = value[1].trim();
-        if (key.trim() == 'Code') break;
-      }
-    }
-
-    int icode = int.tryParse(code.trim()) ?? -1;
-
-    if (icode == -1) {
-      if (errStr.contains('Account already exists for this username.')) {
-        icode = 203;
-      }
-    }
-
-    return icode;
   }
 }

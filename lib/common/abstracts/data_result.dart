@@ -26,8 +26,12 @@ import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable implements Exception {
   final String? message;
+  final int code;
 
-  const Failure([this.message]);
+  const Failure({
+    this.message,
+    this.code = 0,
+  });
 
   @override
   String toString() =>
@@ -39,11 +43,11 @@ abstract class Failure extends Equatable implements Exception {
 
 // General failures
 class GenericFailure extends Failure {
-  const GenericFailure([super.message]);
+  const GenericFailure({super.message, super.code});
 }
 
 class APIFailure extends Failure {
-  const APIFailure([super.message]);
+  const APIFailure({super.message, super.code});
 }
 
 /// This abstraction contains either a success data of generic type `S` or a

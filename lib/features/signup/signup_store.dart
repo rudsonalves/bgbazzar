@@ -17,11 +17,10 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/others/enums.dart';
 import '../../common/others/validators.dart';
+import '../../common/state_store/state_store.dart';
 
-class SignupStore {
-  final state = ValueNotifier<PageState>(PageState.initial);
+class SignupStore extends StateStore {
   final errorName = ValueNotifier<String?>(null);
   final errorEmail = ValueNotifier<String?>(null);
   final errorPhone = ValueNotifier<String?>(null);
@@ -34,25 +33,9 @@ class SignupStore {
   String? password;
   String? checkPassword;
 
-  String? errorMessage;
-
-  bool get isInitial => state.value == PageState.initial;
-  bool get isLoading => state.value == PageState.loading;
-  bool get isSuccess => state.value == PageState.success;
-  bool get isError => state.value == PageState.error;
-
-  void setStateInitial() => state.value = PageState.initial;
-  void setStateLoading() => state.value = PageState.loading;
-  void setStateSuccess() => state.value = PageState.success;
-  void setStateError() => state.value = PageState.error;
-
-  setError(String message) {
-    errorMessage = message;
-    setStateError();
-  }
-
+  @override
   void dispose() {
-    state.dispose();
+    super.dispose();
     errorName.dispose();
     errorEmail.dispose();
     errorPhone.dispose();

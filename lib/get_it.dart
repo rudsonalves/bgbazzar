@@ -28,6 +28,8 @@ import 'manager/address_manager.dart';
 import 'manager/boardgames_manager.dart';
 import 'manager/favorites_manager.dart';
 import 'manager/mechanics_manager.dart';
+import 'repository/interfaces/iuser_repository.dart';
+import 'repository/parse_server/ps_user_repository.dart';
 import 'services/parse_server_server.dart';
 import 'store/database/database_manager.dart';
 
@@ -57,6 +59,8 @@ void setupDependencies() {
 
     // Pages controllers
     getIt.registerLazySingleton<ShopController>(() => ShopController());
+
+    getIt.registerFactory<IUserRepository>(() => ParseServerUserRepository());
   } catch (err) {
     log('GetIt Locator Error: $err');
   }

@@ -15,16 +15,17 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import '/repository/interfaces/iuser_repository.dart';
 import '../../common/models/user.dart';
 import '../../common/singletons/app_settings.dart';
 import '../../get_it.dart';
-import '../../repository/parse_server/ps_user_repository.dart';
 import 'signup_store.dart';
 
 class SignupController {
   late final SignupStore store;
 
   final app = getIt<AppSettings>();
+  final userRepository = getIt<IUserRepository>();
 
   void init(SignupStore store) {
     this.store = store;
@@ -41,7 +42,12 @@ class SignupController {
         phone: store.phone!,
         password: store.password!,
       );
-      final newUser = await PSUserRepository.signUp(user);
+
+      final result = await userRepository.signUp(user);
+      if (result.isFailure) {
+        throw Exception(result.error!.message);
+      }
+      final newUser = result.data;
       store.setStateSuccess();
       return newUser;
     } catch (err) {

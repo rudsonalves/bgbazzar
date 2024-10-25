@@ -54,7 +54,7 @@ class PSAdRepository {
     } catch (err) {
       final message = 'PSAdRepository.moveAdsAddressTo: $err';
       log(message);
-      return DataResult.failure(GenericFailure(err.toString()));
+      return DataResult.failure(GenericFailure(message: err.toString()));
     }
   }
 
@@ -69,7 +69,8 @@ class PSAdRepository {
       final response = await query.query();
 
       if (!response.success) {
-        return DataResult.failure(APIFailure(response.error.toString()));
+        return DataResult.failure(
+            APIFailure(message: response.error.toString()));
       }
 
       for (final ParseObject parse in response.results!) {
@@ -80,7 +81,7 @@ class PSAdRepository {
     } catch (err) {
       final message = 'PSAddressRepository.adsInAddress: $err';
       log(message);
-      return DataResult.failure(GenericFailure(err.toString()));
+      return DataResult.failure(GenericFailure(message: err.toString()));
     }
   }
 
@@ -100,7 +101,7 @@ class PSAdRepository {
     } catch (err) {
       final message = 'PSAdRepository.updateStatus: $err';
       log(message);
-      return DataResult.failure(GenericFailure(err.toString()));
+      return DataResult.failure(GenericFailure(message: err.toString()));
     }
   }
 
@@ -145,7 +146,7 @@ class PSAdRepository {
     } catch (err) {
       final message = 'PSAdRepository.getMyAds: $err';
       log(message);
-      return DataResult.failure(GenericFailure(err.toString()));
+      return DataResult.failure(GenericFailure(message: err.toString()));
     }
   }
 
@@ -235,7 +236,7 @@ class PSAdRepository {
     } catch (err) {
       final message = 'PSAdRepository.get: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 
@@ -306,7 +307,7 @@ class PSAdRepository {
     } catch (err) {
       final message = 'PSAdRepository.save: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 
@@ -367,7 +368,7 @@ class PSAdRepository {
     } catch (err) {
       final message = 'PSAdRepository.update: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 
@@ -416,7 +417,7 @@ class PSAdRepository {
     } catch (err) {
       final message = 'PSAdRepository._saveImages: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 
@@ -432,7 +433,7 @@ class PSAdRepository {
     } catch (err) {
       final message = 'PSAdRepository.delete: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 }

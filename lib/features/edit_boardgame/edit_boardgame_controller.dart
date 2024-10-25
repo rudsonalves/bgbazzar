@@ -127,7 +127,7 @@ class EditBoardgameController extends ChangeNotifier {
     } catch (err) {
       _changeState(EditBoardgameStateError());
       final message = 'EditBoardgameController.getBgInfo: $err';
-      return DataResult.failure(GenericFailure(message));
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 
@@ -196,7 +196,7 @@ class EditBoardgameController extends ChangeNotifier {
       _changeState(EditBoardgameStateError());
       final message = 'EditBoardController.saveBoardgame: $err';
       log(message);
-      return DataResult.failure(GenericFailure(message));
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 

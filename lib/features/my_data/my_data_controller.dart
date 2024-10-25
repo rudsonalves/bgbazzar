@@ -19,6 +19,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+import '/repository/interfaces/iuser_repository.dart';
 import '../../common/models/user.dart';
 import '../../common/utils/extensions.dart';
 import '../../common/models/address.dart';
@@ -26,7 +27,6 @@ import '../../common/singletons/current_user.dart';
 import '../../components/custon_field_controllers/masked_text_controller.dart';
 import '../../get_it.dart';
 import '../../manager/address_manager.dart';
-import '../../repository/parse_server/ps_user_repository.dart';
 
 class MyDataController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -38,6 +38,7 @@ class MyDataController extends ChangeNotifier {
   final passwordFocusNode = FocusNode();
 
   final user = getIt<CurrentUser>().user!;
+  final userRepository = getIt<IUserRepository>();
 
   final addressManager = getIt<AddressManager>();
   List<AddressModel> get addresses => addressManager.addresses;
@@ -91,7 +92,10 @@ class MyDataController extends ChangeNotifier {
             : null;
         newUser.password = newPass.isNotEmpty ? newPass : null;
 
-        await PSUserRepository.update(newUser);
+        final result = await userRepository.update(newUser);
+        if (result.isFailure) {
+          throw Exception(result.error!.message);
+        }
 
         user.name = newUser.name ?? user.name;
         user.phone = newUser.phone ?? user.phone;

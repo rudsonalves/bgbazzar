@@ -17,35 +17,18 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/others/enums.dart';
+import '../../common/state_store/state_store.dart';
 
-class AddressStore {
-  final state = ValueNotifier<PageState>(PageState.initial);
-
-  String? errorMessage;
-
+class AddressStore extends StateStore {
   final selectedAddressName = ValueNotifier<String>('');
-
-  void setState(PageState state) {
-    this.state.value = state;
-  }
-
-  bool get isInitial => state.value == PageState.initial;
-  bool get isLoading => state.value == PageState.loading;
-  bool get isSuccess => state.value == PageState.success;
-  bool get isError => state.value == PageState.error;
-
-  setError(String message) {
-    errorMessage = message;
-    setState(PageState.error);
-  }
 
   void seSelectedAddressName(String addressName) {
     selectedAddressName.value = addressName;
   }
 
+  @override
   void dispose() {
-    state.dispose();
+    super.dispose();
     selectedAddressName.dispose();
   }
 }
