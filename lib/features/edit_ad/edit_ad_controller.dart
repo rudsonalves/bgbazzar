@@ -18,13 +18,10 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-
 import '../../common/models/ad.dart';
 import '../../common/models/mechanic.dart';
 import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
-import '../../components/custon_field_controllers/currency_text_controller.dart';
 import '../../get_it.dart';
 import '../../manager/boardgames_manager.dart';
 import '../../manager/mechanics_manager.dart';
@@ -39,13 +36,7 @@ class EditAdController {
   final mechanicsManager = getIt<MechanicsManager>();
   final bgManager = getIt<BoardgamesManager>();
 
-  final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
   String? bggName;
-  final descriptionController = TextEditingController();
-  final mechanicsController = TextEditingController();
-  final addressController = TextEditingController();
-  final priceController = CurrencyTextController();
 
   String? errorMessage;
 
@@ -84,10 +75,10 @@ class EditAdController {
 
     if (editAd != null) {
       ad = editAd;
-      nameController.text = editAd.title;
-      descriptionController.text = editAd.description;
+      store.name = editAd.title;
+      store.description = editAd.description;
       store.setHidePhone(editAd.hidePhone);
-      priceController.currencyValue = editAd.price;
+      store.price = editAd.price;
       setAdStatus(editAd.status);
       setMechanicsPsIds(editAd.mechanicsId);
       setSelectedAddress(editAd.address!.name);
@@ -96,13 +87,7 @@ class EditAdController {
     }
   }
 
-  void dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
-    mechanicsController.dispose();
-    addressController.dispose();
-    priceController.dispose();
-  }
+  void dispose() {}
 
   void addImage(String path) {
     _images.add(path);
@@ -140,7 +125,7 @@ class EditAdController {
       final bg = result.data;
       if (bg != null) {
         setMechanicsPsIds(bg.mechsPsIds);
-        nameController.text = bg.name;
+        store.setName(bg.name);
         ad.title = bg.name;
         ad.yearpublished = bg.publishYear;
         ad.minplayers = bg.minPlayers;
@@ -166,30 +151,23 @@ class EditAdController {
   void setMechanicsPsIds(List<String> mechPsIds) {
     _selectedMechPsIds.clear();
     _selectedMechPsIds.addAll(mechPsIds);
-    mechanicsController.text = selectedMachNames.join(', ');
-  }
-
-  bool get formValit {
-    store.setValit(formKey.currentState != null &&
-        formKey.currentState!.validate() &&
-        store.imagesLength.value > 0);
-    return store.valit.value!;
+    store.setMechanics(selectedMachNames.join(', '));
   }
 
   Future<AdModel?> updateAds(String id) async {
-    if (!formValit) return null;
+    if (store.isValid) return null;
     try {
       store.setStateLoading();
 
       ad.id = id;
       ad.owner = currentUser.user!;
       ad.images = _images;
-      ad.title = nameController.text;
-      ad.description = descriptionController.text;
+      ad.title = store.name!;
+      ad.description = store.description!;
       ad.mechanicsId = _selectedMechPsIds;
       ad.address = currentUser.addresses
           .firstWhere((address) => address.id == _selectedAddressId);
-      ad.price = priceController.currencyValue;
+      ad.price = store.price!;
       ad.hidePhone = store.hidePhone.value;
       ad.condition = _condition;
       ad.status = _adStatus;
@@ -210,18 +188,18 @@ class EditAdController {
   }
 
   Future<AdModel?> createAds() async {
-    if (!formValit) return null;
+    if (store.isValid) return null;
     try {
       store.setStateLoading();
 
       ad.owner = currentUser.user!;
       ad.images = _images;
-      ad.title = nameController.text;
-      ad.description = descriptionController.text;
+      ad.title = store.name!;
+      ad.description = store.description!;
       ad.mechanicsId = _selectedMechPsIds;
       ad.address = currentUser.addresses
           .firstWhere((address) => address.id == _selectedAddressId);
-      ad.price = priceController.currencyValue;
+      ad.price = store.price!;
       ad.hidePhone = store.hidePhone.value;
       ad.condition = _condition;
       ad.status = _adStatus;
@@ -253,7 +231,7 @@ class EditAdController {
     final addressNames = currentUser.addressNames;
     if (addressNames.contains(addressName)) {
       final address = currentUser.addressByName(addressName)!;
-      addressController.text = address.addressString();
+      store.setAddress(address.addressString());
       _selectedAddressId = address.id!;
     }
   }

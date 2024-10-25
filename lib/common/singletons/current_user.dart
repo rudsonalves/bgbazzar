@@ -16,12 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:bgbazzar/repository/interfaces/iuser_repository.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../get_it.dart';
 import '../../manager/address_manager.dart';
 import '../../manager/favorites_manager.dart';
-import '../../repository/parse_server/ps_user_repository.dart';
 import '../models/address.dart';
 import '../models/user.dart';
 
@@ -33,6 +33,7 @@ class CurrentUser {
 
   final addressManager = getIt<AddressManager>();
   final favoritesManager = getIt<FavoritesManager>();
+  final userRepository = getIt<IUserRepository>();
 
   List<AddressModel> get addresses => addressManager.addresses;
   Iterable<String> get addressNames => addressManager.addressNames;
@@ -49,7 +50,12 @@ class CurrentUser {
   }
 
   Future<void> init([UserModel? user]) async {
-    user ??= await PSUserRepository.getCurrentUser();
+    if (user == null) {
+      final result = await userRepository.getCurrentUser();
+      if (result.isSuccess) {
+        user = result.data;
+      }
+    }
     if (user == null) return;
     await login(user);
   }
@@ -68,7 +74,7 @@ class CurrentUser {
       addressManager.save(address);
 
   Future<void> logout() async {
-    await PSUserRepository.logout();
+    await userRepository.signOut();
     addressManager.logout();
     favoritesManager.logout();
     _user = null;

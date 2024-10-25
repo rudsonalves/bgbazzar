@@ -15,49 +15,98 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:bgbazzar/common/others/validators.dart';
 import 'package:flutter/material.dart';
 
-import '../../common/others/enums.dart';
+import '../../common/state_store/state_store.dart';
 
-class EditAdStore {
-  final state = ValueNotifier<PageState>(PageState.initial);
+class EditAdStore extends StateStore {
   final imagesLength = ValueNotifier<int>(0);
-  final valit = ValueNotifier<bool?>(null);
   final hidePhone = ValueNotifier<bool>(false);
 
-  String? errorMessage;
+  String? name;
+  String? description;
+  String? mechanics;
+  String? address;
+  double? price;
 
-  bool get isInitial => state.value == PageState.initial;
-  bool get isLoading => state.value == PageState.loading;
-  bool get isSuccess => state.value == PageState.success;
-  bool get isError => state.value == PageState.error;
+  final errorName = ValueNotifier<String?>(null);
+  final errorDescription = ValueNotifier<String?>(null);
+  final errorAddress = ValueNotifier<String?>(null);
+  final errorPrice = ValueNotifier<String?>(null);
 
-  void setStateInitial() => state.value = PageState.initial;
-  void setStateLoading() => state.value = PageState.loading;
-  void setStateSuccess() => state.value = PageState.success;
-  void setStateError() => state.value = PageState.error;
-
-  setError(String message) {
-    errorMessage = message;
-    setStateError();
-  }
-
+  @override
   void dispose() {
-    state.dispose();
+    super.dispose();
     imagesLength.dispose();
-    valit.dispose();
     hidePhone.dispose();
+    errorName.dispose();
+    errorDescription.dispose();
+    errorAddress.dispose();
+    errorPrice.dispose();
   }
 
   setImagesLength(int value) {
     imagesLength.value = value;
   }
 
-  setValit(bool value) {
-    valit.value = value;
-  }
-
   setHidePhone(bool value) {
     hidePhone.value = value;
+  }
+
+  void setName(String value) {
+    name = value;
+    _validateName();
+  }
+
+  void _validateName() {
+    errorName.value = Validator.name(name);
+  }
+
+  void setDescription(String value) {
+    description = value;
+    _validateDescription();
+  }
+
+  void _validateDescription() {
+    errorDescription.value = description!.length > 12
+        ? null
+        : 'Dê uma descrição melhor sobre o estado do produto.';
+  }
+
+  void setAddress(String value) {
+    address = value;
+    _validateAddress();
+  }
+
+  void _validateAddress() {
+    errorAddress.value =
+        address!.length > 5 ? null : 'Selecione um endereço valido.';
+  }
+
+  void setPrice(double value) {
+    price = value;
+    _validatePrice();
+  }
+
+  void _validatePrice() {
+    errorPrice.value = price! > 0 ? null : 'Preencha o valor de seu produto.';
+  }
+
+  void setMechanics(String value) {
+    mechanics = value;
+  }
+
+  bool get isValid {
+    _validateName();
+    _validateDescription();
+    _validateAddress();
+    _validatePrice();
+
+    return imagesLength.value > 0 &&
+        errorName.value == null &&
+        errorDescription.value == null &&
+        errorAddress.value == null &&
+        errorPrice.value == null;
   }
 }

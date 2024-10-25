@@ -19,111 +19,129 @@ import 'dart:developer';
 
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
+import '/repository/interfaces/iuser_repository.dart';
+import '../../common/abstracts/data_result.dart';
 import '../../common/models/user.dart';
+import '../../common/parse_server/errors_mensages.dart';
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 
-/// This class manages user-related operations in the Parse Server,
-/// such as signing up, logging in, logging out, and getting the current user.
-class PSUserRepository {
-  /// Signs up a new user in the Parse Server.
-  ///
-  /// [user] - A `UserModel` containing the user details for signing up.
-  /// Returns a `UserModel` representing the newly created user if the signup
-  /// is successful, otherwise returns `null`.
-  static Future<UserModel> signUp(UserModel user) async {
+class UserRepositoryException implements Exception {
+  final String message;
+  UserRepositoryException(this.message);
+
+  @override
+  String toString() => 'UserRepositoryException: $message';
+}
+
+class ParseServerUserRepository implements IUserRepository {
+  @override
+  Future<DataResult<UserModel>> signUp(UserModel user) async {
     try {
+      // Create a new ParseUser using the provided user details.
       final parseUser = ParseUser(user.email, user.password, user.email);
 
+      // Set additional user details, such as nickname, phone, and user type.
       parseUser
         ..set<String>(keyUserName, user.email)
         ..set<String>(keyUserNickname, user.name!)
         ..set<String>(keyUserPhone, user.phone!)
         ..set<int>(keyUserType, user.userType.index);
 
+      // Attempt to sign up the user on the Parse Server.
       final response = await parseUser.signUp();
       if (!response.success) {
-        throw Exception(response.error?.message ?? 'unknown error');
+        // Throw a custom exception if the sign up fails.
+        throw UserRepositoryException(
+            response.error?.message ?? 'unknown error');
       }
 
+      // Convert the ParseUser to UserModel and return it as a success result.
       final newUser = ParseToModel.user(parseUser);
 
+      // Logout the newly created user session.
       parseUser.logout();
 
-      return newUser;
+      return DataResult.success(newUser);
     } catch (err) {
-      final message = 'UserRepository.signUp: $err';
-      log(message);
-      throw Exception(message);
+      // Handle any error that occurs during the sign up process.
+      return _handleError<UserModel>('UserRepository.signUp', err);
     }
   }
 
-  /// Logs in a user with email and password.
-  ///
-  /// [user] - A `UserModel` containing the user details for login.
-  /// Returns a `UserModel` representing the logged-in user if the login
-  /// is successful, otherwise returns create an error.
-  static Future<UserModel> loginWithEmail(UserModel user) async {
+  @override
+  Future<DataResult<UserModel>> signInWithEmail(UserModel user) async {
     try {
+      // Create a ParseUser using the provided email and password for sign in.
       final parseUser = ParseUser(user.email, user.password, null);
-
       final response = await parseUser.login();
 
+      // If the login fails, handle the error.
       if (!response.success) {
-        throw Exception(response.error?.message ?? 'unknown error');
+        if (response.error == null) {
+          throw UserRepositoryException('Error desconhecido!');
+        }
+        int code = response.error!.code;
+        return DataResult.failure(GenericFailure(
+          message: ParserServerErrors.message(code),
+          code: code,
+        ));
       }
 
+      // Check and update user permissions if needed.
       await _checksPermissions(parseUser);
-      return ParseToModel.user(parseUser);
+      return DataResult.success(ParseToModel.user(parseUser));
     } catch (err) {
-      final message = 'UserRepository.loginWithEmail: $err';
-      log(message);
-      throw Exception(message);
+      // Handle any error that occurs during the login process.
+      return _handleError<UserModel>('UserRepository.loginWithEmail', err);
     }
   }
 
-  /// Logs out the current user.
-  static Future<void> logout() async {
+  @override
+  Future<DataResult<void>> signOut() async {
     try {
+      // Get the current user from the Parse Server and log out.
       final user = await ParseUser.currentUser() as ParseUser;
       await user.logout();
+      return DataResult.success(null);
     } catch (err) {
-      log('UserRepository.loginWithEmail: $err');
+      // Handle any error that occurs during the sign out process.
+      return _handleError<void>('UserRepository.loginWithEmail', err);
     }
   }
 
-  /// Gets the current logged-in user.
-  ///
-  /// Returns a `UserModel` representing the current user if the session token
-  /// is valid, otherwise returns `null`.
-  static Future<UserModel?> getCurrentUser() async {
+  @override
+  Future<DataResult<UserModel>> getCurrentUser() async {
     try {
+      // Retrieve the currently authenticated user.
       ParseUser? parseCurrentUser = await ParseUser.currentUser() as ParseUser?;
       if (parseCurrentUser == null) {
-        throw Exception('user token is invalid');
+        throw UserRepositoryException('user token is invalid');
       }
 
-      // Checks whether the user's session token is valid
+      // Check whether the user's session token is valid.
       final response = await ParseUser.getCurrentUserFromServer(
           parseCurrentUser.sessionToken!);
 
       if (response != null && response.success) {
+        // Update user permissions if necessary.
         await _checksPermissions(response.result as ParseUser);
-        return ParseToModel.user(parseCurrentUser);
+        return DataResult.success(ParseToModel.user(parseCurrentUser));
       } else {
-        // Invalid session. Logout
+        // Logout the user if the session is invalid.
         await parseCurrentUser.logout();
-        throw Exception(response?.error.toString() ?? 'unknown error');
+        throw UserRepositoryException(
+            response?.error.toString() ?? 'unknown error');
       }
     } catch (err) {
-      log('UserRepository.getCurrentUser: $err');
-      return null;
+      // Handle any error that occurs while retrieving the current user.
+      return _handleError<UserModel>('UserRepository.getCurrentUser', err);
     }
   }
 
-  static Future<void> _checksPermissions(ParseUser parseUser) async {
+  Future<void> _checksPermissions(ParseUser parseUser) async {
     final parseAcl = parseUser.getACL();
     if (parseAcl.getPublicReadAccess() == true) return;
 
@@ -133,52 +151,65 @@ class PSUserRepository {
     parseUser.setACL(parseAcl);
     final aclResponse = await parseUser.save();
     if (!aclResponse.success) {
-      throw Exception(
+      throw UserRepositoryException(
           'error setting ACL permissions: ${aclResponse.error?.message ?? 'unknown error'}');
     }
   }
 
-  static Future<void> update(UserModel userUpdates) async {
+  @override
+  Future<DataResult<void>> update(UserModel user) async {
     try {
-      final parseUser = ParseUser(null, null, null)..objectId = userUpdates.id;
+      // Create a new ParseUser with the user ID to update.
+      final parseUser = ParseUser(null, null, null)..objectId = user.id;
 
-      if (userUpdates.name != null) {
-        parseUser.set(keyUserNickname, userUpdates.name);
+      // Update the user details if they are provided.
+      if (user.name != null) {
+        parseUser.set(keyUserNickname, user.name);
       }
 
-      if (userUpdates.phone != null) {
-        parseUser.set(keyUserPhone, userUpdates.phone);
+      if (user.phone != null) {
+        parseUser.set(keyUserPhone, user.phone);
       }
 
-      if (userUpdates.password != null) {
-        parseUser.set(keyUserPassword, userUpdates.password);
+      if (user.password != null) {
+        parseUser.set(keyUserPassword, user.password);
       }
 
+      // Attempt to update the user information on the Parse Server.
       final response = await parseUser.update();
 
       if (!response.success) {
-        throw Exception(response.error.toString());
+        throw UserRepositoryException(response.error.toString());
       }
 
-      if (userUpdates.password != null) {
-        parseUser.set(keyUserPassword, userUpdates.password);
+      // If the password was updated, the user must re-login.
+      if (user.password != null) {
+        parseUser.set(keyUserPassword, user.password);
 
-        final user = getIt<CurrentUser>().user;
-        if (user == null) return;
+        final updatedUser = getIt<CurrentUser>().user;
+        if (updatedUser == null) {
+          return DataResult.failure(const GenericFailure());
+        }
 
         await parseUser.logout();
         final loginResponse =
-            await ParseUser(user.email, userUpdates.password, user.email)
+            await ParseUser(updatedUser.email, user.password, updatedUser.email)
                 .login();
 
         if (!loginResponse.success) {
-          throw Exception(response.error.toString());
+          throw UserRepositoryException(loginResponse.error.toString());
         }
       }
+      return DataResult.success(null);
     } catch (err) {
-      final message = 'UserRepository.update: $err';
-      log(message);
-      throw Exception(message);
+      // Handle any error that occurs during the update process.
+      return _handleError<void>('UserRepository.update', err);
     }
+  }
+
+  DataResult<T> _handleError<T>(String message, Object error) {
+    final fullMessage = '$message: $error';
+    log(fullMessage);
+    return DataResult.failure(GenericFailure(message: fullMessage));
   }
 }

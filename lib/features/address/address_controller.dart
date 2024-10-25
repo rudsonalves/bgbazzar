@@ -18,7 +18,6 @@
 import 'dart:developer';
 
 import '../../common/models/address.dart';
-import '../../common/others/enums.dart';
 import '../../get_it.dart';
 import '../../manager/address_manager.dart';
 import '../../repository/parse_server/ps_ad_repository.dart';
@@ -66,7 +65,7 @@ class AddressController {
     required String removeAddressId,
   }) async {
     try {
-      store.setState(PageState.loading);
+      store.setStateLoading();
       if (adsList.isNotEmpty && moveToId != null) {
         final result = await PSAdRepository.moveAdsAddressTo(adsList, moveToId);
         if (result.isFailure) {
@@ -74,7 +73,7 @@ class AddressController {
         }
       }
       await addressManager.deleteById(removeAddressId);
-      store.setState(PageState.success);
+      store.setStateSuccess();
     } catch (err) {
       log(err.toString());
       store.setError('Erro ao mover endereço. Tente mais tarde');
@@ -82,6 +81,6 @@ class AddressController {
   }
 
   void closeErroMessage() {
-    store.setState(PageState.success);
+    store.setStateSuccess();
   }
 }

@@ -17,7 +17,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/parse_server/errors_mensages.dart';
 import '../../components/buttons/big_button.dart';
 import '../../components/dialogs/simple_message.dart';
 import '../signin/signin_screen.dart';
@@ -76,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await SimpleMessage.open(
           context,
           title: 'Ocorreu um Error',
-          message: ParserServerErrors.message(err.toString()),
+          message: 'ParserServerErrors.message(err.toString())',
           type: MessageType.error,
         );
 

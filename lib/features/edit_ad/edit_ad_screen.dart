@@ -63,7 +63,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
 
   Future<void> _createAnnounce() async {
     AdModel? ad;
-    if (!ctrl.formValit) return;
+    if (store.isValid) return;
     FocusScope.of(context).unfocus();
     if (widget.ad != null) {
       ad = await ctrl.updateAds(widget.ad!.id!);
@@ -110,13 +110,11 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       ctrl: ctrl,
                       validator: true,
                     ),
-                    ListenableBuilder(
-                      listenable:
-                          Listenable.merge([store.valit, store.imagesLength]),
-                      builder: (context, _) {
-                        if ((store.imagesLength.value == 0 &&
-                                store.valit.value == null) ||
-                            store.imagesLength.value > 0) {
+                    ValueListenableBuilder(
+                      valueListenable: store.imagesLength,
+                      builder: (context, imagesLength, _) {
+                        if ((imagesLength == 0 && store.isValid) ||
+                            imagesLength > 0) {
                           return Container();
                         } else {
                           return Text(

@@ -15,31 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
+import '../../common/state_store/state_store.dart';
 
-import '../../common/others/enums.dart';
-
-class BoardgameStore {
-  final state = ValueNotifier<PageState>(PageState.initial);
-
-  String? errorMessage;
-
-  bool get isInitial => state.value == PageState.initial;
-  bool get isLoading => state.value == PageState.loading;
-  bool get isSuccess => state.value == PageState.success;
-  bool get isError => state.value == PageState.error;
-
-  void setStateInitial() => state.value = PageState.initial;
-  void setStateLoading() => state.value = PageState.loading;
-  void setStateSuccess() => state.value = PageState.success;
-  void setStateError() => state.value = PageState.error;
-
-  setError(String message) {
-    errorMessage = message;
-    setStateError();
-  }
-
-  void dispose() {
-    state.dispose();
-  }
+class BoardgameStore extends StateStore {
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 }

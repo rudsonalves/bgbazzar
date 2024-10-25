@@ -9,7 +9,65 @@
 
 # ChangeLog
 
-## 2024/10/24 - version: 0.7.03+52
+## 2024/10/25 - version: 0.7.04+53
+
+This commit introduces significant changes across various parts of the codebase, primarily focusing on refactoring the user management logic, implementing a new repository interface, and improving error handling for user operations. These changes enhance code modularity, testability, and readability by decoupling user-related operations from their Parse Server-specific implementations.
+
+### Changes made:
+
+1. **lib/common/abstracts/data_result.dart**:
+   - Updated the `Failure` abstract class to include a new `code` field to represent error codes.
+   - Modified `GenericFailure` and `APIFailure` classes to use named parameters for `message` and `code`.
+
+2. **lib/common/parse_server/errors_mensages.dart**:
+   - Refactored the `ParserServerErrors` class to use an integer error code instead of parsing a string.
+   - Removed the `_getErroCode` function, simplifying error message handling.
+
+3. **lib/common/singletons/current_user.dart**:
+   - Added dependency injection for `IUserRepository` to manage user-related actions.
+   - Updated `init` and `logout` methods to use `userRepository` instead of `PSUserRepository`.
+
+4. **lib/common/others/enums.dart** renamed to **lib/common/state_store/state_store.dart**:
+   - Added a new `StateStore` class to encapsulate the logic for managing state changes with `ValueNotifier`.
+
+5. **lib/features/address/address_controller.dart**:
+   - Updated methods to use the `StateStore` class instead of setting `PageState` directly.
+
+6. **lib/features/address/address_store.dart**:
+   - Refactored `AddressStore` to extend `StateStore`, inheriting its state management logic.
+
+7. **lib/features/boardgame/boardgame_store.dart**:
+   - Refactored `BoardgameStore` to extend `StateStore`, simplifying state management.
+
+8. **lib/features/edit_ad/edit_ad_controller.dart**:
+   - Replaced individual controllers (e.g., `nameController`, `descriptionController`) with fields in the `store` object for better encapsulation.
+
+9. **lib/features/edit_ad/edit_ad_screen.dart**:
+   - Refactored validation checks to use `store.isValid` instead of form validation logic.
+   - Replaced `ListenableBuilder` with `ValueListenableBuilder` for `imagesLength` and validation state.
+
+10. **lib/features/edit_ad/edit_ad_store.dart**:
+    - Refactored `EditAdStore` to use new validation and state management fields, including `errorName`, `errorDescription`, etc., to handle error messages.
+
+11. **lib/features/signup/signup_controller.dart** and **lib/features/signup/signup_store.dart**:
+    - Integrated `IUserRepository` for signing up users, replacing the direct dependency on `PSUserRepository`.
+
+12. **lib/get_it.dart**:
+    - Registered `IUserRepository` as a dependency using `ParseServerUserRepository`.
+
+13. **lib/repository/interfaces/iuser_repository.dart** (new file):
+    - Created an interface for user-related operations to abstract the data source, allowing for easier future changes.
+
+14. **lib/repository/parse_server/ps_user_repository.dart**:
+    - Implemented `IUserRepository` in `ParseServerUserRepository`.
+    - Added detailed error handling with the new `ParserServerErrors` class.
+    - Added `_handleError` function to centralize error handling and logging.
+
+### Conclusion:
+These changes decouple user management from the specific implementation of Parse Server, making the code more modular and maintainable. The use of `IUserRepository` improves testability and flexibility for future backend changes, while the enhanced state management ensures better user experience and error handling.
+
+
+## 2024/10/25 - version: 0.7.03+52
 
 **Refactor: Rename Login Feature to SignIn and Implement SignInStore for State Management**
 

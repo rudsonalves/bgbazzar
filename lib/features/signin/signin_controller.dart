@@ -15,16 +15,17 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import '/repository/interfaces/iuser_repository.dart';
 import '../../common/abstracts/data_result.dart';
 import '../../common/models/user.dart';
 import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
-import '../../repository/parse_server/ps_user_repository.dart';
 import 'signin_store.dart';
 
 class SignInController {
   late final SignInStore store;
+  final userRepository = getIt<IUserRepository>();
 
   final app = getIt<AppSettings>();
   final currentUser = getIt<CurrentUser>();
@@ -34,21 +35,20 @@ class SignInController {
   }
 
   Future<DataResult<void>> login() async {
-    try {
-      store.setStateLoading();
-      final user = UserModel(
-        email: store.email!,
-        password: store.password!,
-      );
-      final newUser = await PSUserRepository.loginWithEmail(user);
-      currentUser.init(newUser);
-      store.setStateSuccess();
-      return DataResult.success(null);
-    } catch (err) {
-      const message = 'Ocorreu um erro. Tente mais tarde.';
-      store.setError(message);
-      return DataResult.failure(const GenericFailure(message));
+    store.setStateLoading();
+    final user = UserModel(
+      email: store.email!,
+      password: store.password!,
+    );
+    final result = await userRepository.signInWithEmail(user);
+    if (result.isFailure) {
+      store.setError(result.error!.message!);
+      return DataResult.failure(const GenericFailure());
     }
+    final newUser = result.data;
+    currentUser.init(newUser);
+    store.setStateSuccess();
+    return DataResult.success(null);
   }
 
   void closeErroMessage() {

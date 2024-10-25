@@ -78,7 +78,7 @@ class PSBoardgameRepository {
     } catch (err) {
       final message = 'AdRepository.save: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 
@@ -131,7 +131,7 @@ class PSBoardgameRepository {
     } catch (err) {
       final message = 'AdRepository.save: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 
@@ -152,7 +152,7 @@ class PSBoardgameRepository {
     } catch (err) {
       final message = 'BgRepository.getById: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 
@@ -180,7 +180,7 @@ class PSBoardgameRepository {
     } catch (err) {
       final message = 'BgRepository.getNames: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 
@@ -220,7 +220,7 @@ class PSBoardgameRepository {
     } catch (err) {
       final message = 'exception in _saveImages: $err';
       log(message);
-      return DataResult.failure(APIFailure(message));
+      return DataResult.failure(APIFailure(message: message));
     }
   }
 }
