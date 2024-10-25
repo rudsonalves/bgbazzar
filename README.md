@@ -9,6 +9,38 @@
 
 # ChangeLog
 
+## 2024/10/25 - version: 0.7.05+54
+
+This commit adds new functionalities and enhancements to improve user experience, specifically focused on user password recovery and UI improvements for error handling. Additionally, the logic for managing server settings in the main application has been updated.
+
+### Changes made:
+
+1. **lib/components/others_widgets/state_error_message.dart**:
+   - Added an optional `icon` parameter to the `StateErrorMessage` widget to allow customized icons for different error messages.
+   - Modified the widget layout to make it more flexible, including text alignment and padding adjustments.
+
+2. **lib/features/signin/signin_controller.dart**:
+   - Introduced an enum `RecoverStatus` to represent different outcomes of password recovery operations.
+   - Added a `recoverPassword` method to handle password reset requests using the `userRepository`.
+
+3. **lib/features/signin/signin_screen.dart**:
+   - Updated the `_navLostPassword` method to use the new `recoverPassword` functionality.
+   - Added a dialog to provide feedback to the user when a password recovery email is sent.
+
+4. **lib/main.dart**:
+   - Changed the `isLocalServer` constant from `true` to `false` to switch the server configuration for production use.
+
+5. **lib/repository/interfaces/iuser_repository.dart**:
+   - Added a new method `resetPassword(String email)` to the `IUserRepository` interface for initiating password reset requests.
+
+6. **lib/repository/parse_server/ps_user_repository.dart**:
+   - Implemented the `resetPassword` method in `ParseServerUserRepository` to handle password reset requests via Parse Server.
+   - Updated error handling in multiple methods to improve log messages for easier debugging.
+
+### Conclusion:
+These changes enhance the user experience by adding password recovery functionality and allowing customized error messages. Additionally, the application has been prepared for production use by switching the server setting. Improved error handling provides better support for debugging issues.
+
+
 ## 2024/10/25 - version: 0.7.04+53
 
 This commit introduces significant changes across various parts of the codebase, primarily focusing on refactoring the user management logic, implementing a new repository interface, and improving error handling for user operations. These changes enhance code modularity, testability, and readability by decoupling user-related operations from their Parse Server-specific implementations.

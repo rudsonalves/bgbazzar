@@ -58,4 +58,6 @@ abstract class IUserRepository {
   /// Returns a [DataResult] that indicates the success or failure of the operation.
   /// Note: Updating the password might require re-authentication.
   Future<DataResult<void>> update(UserModel user);
+
+  Future<DataResult<void>> resetPassword(String email);
 }
