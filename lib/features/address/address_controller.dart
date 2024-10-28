@@ -45,7 +45,11 @@ class AddressController {
 
   void selectAddress(String name) {
     if (addressNames.contains(name)) {
-      store.seSelectedAddressName(name);
+      if (name == store.selectedAddressName.value) {
+        store.setSelectedAddressName('');
+      } else {
+        store.setSelectedAddressName(name);
+      }
     }
   }
 
@@ -55,7 +59,7 @@ class AddressController {
         addressNames.isNotEmpty &&
         addressNames.contains(name)) {
       await addressManager.deleteByName(name);
-      store.seSelectedAddressName('');
+      store.setSelectedAddressName('');
     }
   }
 

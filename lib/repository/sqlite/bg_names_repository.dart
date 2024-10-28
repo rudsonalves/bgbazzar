@@ -20,7 +20,7 @@ import 'dart:developer';
 import '../../store/stores/bg_names_store.dart';
 import '/common/models/bg_name.dart';
 
-class BGNamesRepository {
+class SqliteBGNamesRepository {
   static Future<List<BGNameModel>> get() async {
     try {
       final result = await BGNamesStore.get();

@@ -17,18 +17,38 @@
 
 import 'package:flutter/material.dart';
 
+import '../../common/models/mechanic.dart';
 import '../../common/state_store/state_store.dart';
 
-class AddressStore extends StateStore {
-  final selectedAddressName = ValueNotifier<String>('');
+class CheckMechList {
+  final MechanicModel mech;
+  final bool _checked;
 
-  void setSelectedAddressName(String addressName) {
-    selectedAddressName.value = addressName;
-  }
+  CheckMechList(this.mech, this._checked);
+
+  bool get isChecked => _checked;
+}
+
+class CheckStore extends StateStore {
+  final checkList = ValueNotifier<List<CheckMechList>>([]);
+
+  final count = ValueNotifier<int>(0);
 
   @override
   void dispose() {
+    checkList.dispose();
     super.dispose();
-    selectedAddressName.dispose();
+  }
+
+  void setCheckList(List<CheckMechList> value) {
+    checkList.value = value;
+  }
+
+  void incrementCount() {
+    count.value++;
+  }
+
+  void resetCount() {
+    count.value = 0;
   }
 }

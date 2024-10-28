@@ -33,15 +33,15 @@ class ConfigHooks extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleProduct(title: 'Configurações', color: primary),
+        TitleProduct(title: 'Meus Dados', color: primary),
         ListTile(
           leading: Icon(Icons.person, color: primary),
-          title: Text('Meus Dados', style: TextStyle(color: primary)),
+          title: Text('Dados', style: TextStyle(color: primary)),
           onTap: () => Navigator.pushNamed(context, MyDataScreen.routeName),
         ),
         ListTile(
           leading: Icon(Icons.contact_mail_rounded, color: primary),
-          title: Text('Meus Endereços', style: TextStyle(color: primary)),
+          title: Text('Endereços', style: TextStyle(color: primary)),
           onTap: () => Navigator.pushNamed(context, AddressScreen.routeName),
         ),
       ],

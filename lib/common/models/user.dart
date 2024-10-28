@@ -24,7 +24,7 @@ class UserModel {
   String email;
   String? phone;
   String? password;
-  DateTime? createAt;
+  DateTime? createdAt;
   UserType userType;
 
   UserModel({
@@ -35,7 +35,7 @@ class UserModel {
     this.password,
     DateTime? createdAt,
     this.userType = UserType.client,
-  }) : createAt = createdAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now();
 
   @override
   String toString() {
@@ -44,18 +44,26 @@ class UserModel {
         ' $email, phone: $phone,'
         ' password: $password,'
         ' userType: ${userType.name},'
-        ' createAt: $createAt';
+        ' createdAt: $createdAt';
   }
 
-  UserModel copyFromUsreModel(UserModel user) {
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? phone,
+    String? password,
+    DateTime? createdAt,
+    UserType? userType,
+  }) {
     return UserModel(
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      password: user.password,
-      userType: user.userType,
-      createdAt: user.createAt,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      password: password ?? this.password,
+      createdAt: createdAt ?? this.createdAt,
+      userType: userType ?? this.userType,
     );
   }
 }

@@ -19,14 +19,15 @@ import 'dart:developer';
 
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
+import '../../common/abstracts/data_result.dart';
 import '../../common/models/mechanic.dart';
+import '../interfaces/imechanic_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 
-class PSMechanicsRepository {
-  PSMechanicsRepository._();
-
-  static Future<MechanicModel?> add(MechanicModel mech) async {
+class ParseServerMechanicsRepository implements IMechanicRepository {
+  @override
+  Future<DataResult<MechanicModel>> add(MechanicModel mech) async {
     try {
       final parseUser = await ParseUser.currentUser() as ParseUser?;
       if (parseUser == null) {
@@ -47,20 +48,50 @@ class PSMechanicsRepository {
 
       final response = await parse.save();
       if (!response.success) {
-        final message = 'parse.save error: ${response.error?.message}';
-        log(message);
-        throw Exception(message);
+        throw Exception(response.error?.message);
       }
 
-      return ParseToModel.mechanic(parse);
+      return DataResult.success(ParseToModel.mechanic(parse));
     } catch (err) {
-      final message = 'AdRepository.save: $err';
-      log(message);
-      return null;
+      return _handleError('add', err);
     }
   }
 
-  static Future<List<MechanicModel>> get() async {
+  @override
+  Future<DataResult<MechanicModel>> update(MechanicModel mech) async {
+    try {
+      final parseUser = await ParseUser.currentUser() as ParseUser?;
+      if (parseUser == null) {
+        throw Exception('Current user access error');
+      }
+
+      final parse = ParseObject(keyMechTable)
+        // ..objectId = mech.psId // Definir o objectId antes de criar
+        ..set<String>(keyMechName, mech.name)
+        ..set<String>(keyMechDescription, mech.description!);
+
+      // Definir ACL (opcional, mas recomendado)
+      final parseAcl = ParseACL(owner: parseUser);
+      parseAcl
+        ..setPublicReadAccess(allowed: true)
+        ..setPublicWriteAccess(allowed: false);
+      parse.setACL(parseAcl);
+
+      // Tentar criar o objeto com o objectId fornecido
+      final response = await parse.update();
+
+      if (!response.success) {
+        throw Exception(response.error?.message);
+      }
+
+      return DataResult.success(ParseToModel.mechanic(parse));
+    } catch (err) {
+      return _handleError('update', err);
+    }
+  }
+
+  @override
+  Future<DataResult<List<MechanicModel>>> getAll() async {
     final query = QueryBuilder<ParseObject>(ParseObject(keyMechTable));
 
     try {
@@ -74,35 +105,37 @@ class PSMechanicsRepository {
         final mech = ParseToModel.mechanic(parse);
         mechs.add(mech);
       }
-      return mechs;
+      return DataResult.success(mechs);
     } catch (err) {
-      final message = 'AdRepository.get: $err';
-      log(message);
-      return [];
+      return _handleError('getAll', err);
     }
   }
 
-  static Future<MechanicModel?> getById(String psId) async {
-    final query =
-        QueryBuilder<ParseObject>(ParseObject(keyMechTable)..objectId = psId);
-
+  @override
+  Future<DataResult<MechanicModel>> get(String psId) async {
     try {
-      final response = await query.query();
+      final parse = ParseObject(keyMechTable);
+      final response = await parse.getObject(psId);
+
       if (!response.success) {
         throw Exception(response.error);
       }
-      if (response.results == null || response.results!.isEmpty) {
+      if (response.results == null) {
         throw Exception('not found mech.id: $psId');
       }
-      return ParseToModel.mechanic(response.results!.first as ParseObject);
+
+      final MechanicModel mechanic = ParseToModel.mechanic(
+        response.results!.first as ParseObject,
+      );
+
+      return DataResult.success(mechanic);
     } catch (err) {
-      final message = 'AdRepository.get: $err';
-      log(message);
-      return null;
+      return _handleError('getById', err);
     }
   }
 
-  static Future<List<String>> getPsIds() async {
+  @override
+  Future<DataResult<List<String>>> getIds() async {
     final query = QueryBuilder<ParseObject>(ParseObject(keyMechTable));
 
     try {
@@ -110,9 +143,7 @@ class PSMechanicsRepository {
 
       final response = await query.query();
       if (!response.success) {
-        final message = 'parse.getIds error: ${response.error?.message}';
-        log(message);
-        throw Exception(message);
+        throw Exception(response.error?.message);
       }
 
       final List<String> mechs = [];
@@ -120,11 +151,15 @@ class PSMechanicsRepository {
         final id = parse.objectId;
         mechs.add(id!);
       }
-      return mechs;
+      return DataResult.success(mechs);
     } catch (err) {
-      final message = 'AdRepository.getIds: $err';
-      log(message);
-      return [];
+      return _handleError('getIds', err);
     }
+  }
+
+  DataResult<T> _handleError<T>(String message, Object error) {
+    final fullMessage = 'MechanicsRepository.$message: $error';
+    log(fullMessage);
+    return DataResult.failure(GenericFailure(message: fullMessage));
   }
 }

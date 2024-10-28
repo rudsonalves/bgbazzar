@@ -17,8 +17,11 @@
 
 import 'dart:developer';
 
+import 'package:bgbazzar/get_it.dart';
+
+import '../common/abstracts/data_result.dart';
 import '../common/models/mechanic.dart';
-import '../repository/parse_server/ps_mechanics_repository.dart';
+import '../repository/interfaces/imechanic_repository.dart';
 import '../repository/sqlite/mechanic_repository.dart';
 
 enum ManagerStatus { ok, error, duplicated }
@@ -26,10 +29,11 @@ enum ManagerStatus { ok, error, duplicated }
 /// This class manages the list of mechanics, providing methods to initialize,
 /// retrieve mechanic names, and find mechanic names based on their IDs.
 class MechanicsManager {
+  final mechRepository = getIt<IMechanicRepository>();
+
   final List<MechanicModel> _mechanics = [];
 
   List<MechanicModel> get mechanics => _mechanics;
-
   List<String> get mechanicsNames =>
       _mechanics.map((item) => item.name).toList();
 
@@ -38,22 +42,31 @@ class MechanicsManager {
   }
 
   Future<void> getAllMechanics() async {
-    final mechs = await MechanicRepository.get();
+    final mechs = await SqliteMechanicRepository.get();
     _mechanics.clear();
     if (mechs.isNotEmpty) {
       _mechanics.addAll(mechs);
     }
 
-    final ids = await PSMechanicsRepository.getPsIds();
+    final result = await mechRepository.getIds();
+    if (result.isFailure) return;
+
+    final ids = result.data!;
+
     final localIds = _mechanics.map((m) => m.psId).toList();
 
     for (final id in ids) {
       if (!localIds.contains(id)) {
         log('Loading Mech.$id');
-        final mech = await PSMechanicsRepository.getById(id);
+        final result = await mechRepository.get(id);
+        if (result.isFailure) {
+          throw Exception(result.error);
+        }
+        final mech = result.data;
+
         if (mech != null) {
           if (!localIds.contains(mech.psId)) {
-            final newMech = await MechanicRepository.add(mech);
+            final newMech = await SqliteMechanicRepository.add(mech);
             if (newMech != null) {
               _mechanics.add(newMech);
             }
@@ -124,19 +137,43 @@ class MechanicsManager {
     return ManagerStatus.ok;
   }
 
+  Future<MechanicModel> update(MechanicModel mech) async {
+    final result = await mechRepository.update(mech);
+    if (result.isFailure) {
+      throw Exception(result.error);
+    }
+    final newMech = result.data!;
+    if (newMech.psId != mech.psId) {
+      SqliteMechanicRepository.update(newMech);
+    }
+    int index = _mechanics.indexWhere((m) => m.id == mech.id);
+    log('Indec: $index');
+    _mechanics[index] = newMech;
+
+    return newMech;
+  }
+
+  Future<DataResult<MechanicModel>> get(String psId) async {
+    return await mechRepository.get(psId);
+  }
+
   // Add mechanic in local sqlite database
   Future<MechanicModel?> _localAdd(MechanicModel mech) async {
     if (mechanicsNames.contains(mech.name)) return null;
     if (mech.id != null) return null;
 
-    final newMech = await MechanicRepository.add(mech);
+    final newMech = await SqliteMechanicRepository.add(mech);
 
     return newMech;
   }
 
   // Add mechanic in parse server database
   Future<MechanicModel?> _psAdd(MechanicModel mech) async {
-    return await PSMechanicsRepository.add(mech);
+    final result = await mechRepository.add(mech);
+    if (result.isFailure) {
+      throw Exception(result.error);
+    }
+    return result.data;
   }
 
   void _sortingMechsNames() {

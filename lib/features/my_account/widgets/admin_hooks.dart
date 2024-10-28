@@ -15,7 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:bgbazzar/features/check_mechanics/check_page.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../boardgame/boardgame_screen.dart';
 import '../../mechanics/mechanics_screen.dart';
@@ -65,6 +67,20 @@ class AdminHooks extends StatelessWidget {
           onTap: () => Navigator.pushNamed(
             context,
             BoardgameScreen.routeName,
+          ),
+        ),
+        ListTile(
+          leading: Icon(
+            Symbols.sync_rounded,
+            color: primary,
+          ),
+          title: Text(
+            'Restaurar Mecânicas',
+            style: TextStyle(color: primary),
+          ),
+          onTap: () => Navigator.pushNamed(
+            context,
+            CheckPage.routeName,
           ),
         ),
       ],

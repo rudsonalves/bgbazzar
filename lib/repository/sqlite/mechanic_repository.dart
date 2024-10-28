@@ -22,7 +22,7 @@ import '../../store/stores/mechanics_store.dart';
 
 /// This class provides methods to interact with the Parse Server
 /// to retrieve a list of mechanics.
-class MechanicRepository {
+class SqliteMechanicRepository {
   /// Fetches a list of mechanics from the Parse Server.
   ///
   /// Returns a list of `MechanicModel` if the query is successful,

@@ -9,6 +9,86 @@
 
 # ChangeLog
 
+## 2024/10/28 - version: 0.7.06+55
+
+This commit brings several updates and enhancements to the application, focusing on new features, bug fixes, and improvements to maintainability, UI consistency, and underlying infrastructure changes.
+
+### Changes made:
+
+1. **lib/common/models/user.dart**:
+   - Corrected a typo: renamed `createAt` to `createdAt` for consistency.
+   - Refactored the `UserModel` class, replacing the `copyFromUserModel` method with `copyWith` to make object modifications more flexible and idiomatic.
+
+2. **lib/components/others_widgets/state_count_loading_message.dart**:
+   - Added a new widget called `StateCountLoadingMessage` for displaying loading progress with a counter, improving the user feedback during lengthy operations.
+
+3. **lib/features/address/address_controller.dart**:
+   - Updated the `selectAddress` method to toggle selection when the address is already selected.
+   - Fixed a typo in method name: corrected `seSelectedAddressName` to `setSelectedAddressName`.
+
+4. **lib/features/address/address_screen.dart**:
+   - Replaced some material icons with `MaterialSymbols` for consistency.
+   - Refactored `AnimatedBuilder` to `ListenableBuilder` to simplify state listening.
+   - Updated the background color of selected address cards for better UI distinction.
+
+5. **lib/features/address/address_store.dart**:
+   - Fixed typo in method name: corrected `seSelectedAddressName` to `setSelectedAddressName`.
+
+6. **lib/features/check_mechanics/check_controller.dart**, **lib/features/check_mechanics/check_page.dart**, **lib/features/check_mechanics/check_store.dart**:
+   - Added new classes: `CheckController`, `CheckPage`, and `CheckStore` to manage the process of checking and restoring game mechanics data.
+   - Implemented methods for comparing local mechanics data against the server, providing error handling and progress tracking.
+
+7. **lib/features/my_account/my_account_screen.dart**:
+   - Adjusted the order of widgets: duplicated `AdminHooks` to conditionally render based on user type.
+   - Improved widget alignment for better user experience.
+
+8. **lib/features/my_account/widgets/admin_hooks.dart**:
+   - Added a new option "Restore Mechanics" for admins, linking to the newly added `CheckPage`.
+
+9. **lib/features/my_account/widgets/config_hooks.dart**:
+   - Updated the labels for configuration items to be more concise.
+
+10. **lib/features/product/product_screen.dart**:
+    - Updated property references to match the new naming convention (`createdAt`).
+
+11. **lib/features/signin/signin_screen.dart**:
+    - Changed `routeName` from `/login` to `/signin` to better reflect the purpose of the page.
+
+12. **lib/get_it.dart**:
+    - Registered the `IMechanicRepository` dependency, mapping it to `ParseServerMechanicsRepository`.
+    - Enhanced dependency injection setup to align with new architecture changes.
+
+13. **lib/manager/boardgames_manager.dart**:
+    - Replaced calls to `BGNamesRepository` with `SqliteBGNamesRepository` to enhance repository naming clarity.
+
+14. **lib/manager/mechanics_manager.dart**:
+    - Added support for `IMechanicRepository` using dependency injection via `getIt`.
+    - Implemented additional methods for managing mechanics (`update`, `get`) to handle various CRUD operations.
+
+15. **lib/my_material_app.dart**:
+    - Added route for `CheckPage`.
+
+16. **lib/repository/interfaces/imechanic_repository.dart**:
+    - Created a new interface `IMechanicRepository` defining common methods for mechanic data operations.
+
+17. **lib/repository/parse_server/ps_mechanics_repository.dart**:
+    - Implemented `IMechanicRepository`.
+    - Added more robust error handling and refactored CRUD methods to align with the repository pattern.
+
+18. **lib/repository/sqlite/bg_names_repository.dart**:
+    - Renamed class from `BGNamesRepository` to `SqliteBGNamesRepository` for clarity.
+
+19. **lib/repository/sqlite/mechanic_repository.dart**:
+    - Renamed class from `MechanicRepository` to `SqliteMechanicRepository` to differentiate between repositories more clearly.
+
+20. **pubspec.yaml**, **pubspec.lock**:
+    - Updated dependencies (`get_it`, `flutter_dotenv`, `flutter_lints`) to the latest versions.
+    - Added a new dependency: `material_symbols_icons` for a consistent UI icon set.
+
+### Conclusion:
+This commit significantly enhances the application's functionality by adding new features, improving user experience, and refining the internal architecture for better maintainability and extensibility. Additionally, repository patterns and dependency management were refactored to provide a cleaner and more scalable codebase.
+
+
 ## 2024/10/25 - version: 0.7.05+54
 
 This commit adds new functionalities and enhancements to improve user experience, specifically focused on user password recovery and UI improvements for error handling. Additionally, the logic for managing server settings in the main application has been updated.

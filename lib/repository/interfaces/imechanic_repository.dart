@@ -15,20 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
+import '../../common/abstracts/data_result.dart';
+import '../../common/models/mechanic.dart';
 
-import '../../common/state_store/state_store.dart';
-
-class AddressStore extends StateStore {
-  final selectedAddressName = ValueNotifier<String>('');
-
-  void setSelectedAddressName(String addressName) {
-    selectedAddressName.value = addressName;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    selectedAddressName.dispose();
-  }
+abstract class IMechanicRepository {
+  Future<DataResult<MechanicModel>> add(MechanicModel mech);
+  Future<DataResult<MechanicModel>> update(MechanicModel mech);
+  Future<DataResult<List<MechanicModel>>> getAll();
+  Future<DataResult<MechanicModel>> get(String psId);
+  Future<DataResult<List<String>>> getIds();
 }

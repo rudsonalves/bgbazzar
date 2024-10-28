@@ -29,7 +29,7 @@ import '../../components/others_widgets/or_row.dart';
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
-  static const routeName = '/login';
+  static const routeName = '/signin';
   @override
   State<SignInScreen> createState() => _SignInScreenState();
 }

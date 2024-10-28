@@ -186,7 +186,7 @@ class _ProductScreenState extends State<ProductScreen>
                     const SubTitleProduct(subtile: 'Anunciante'),
                     UserCard(
                       name: ad.owner!.name!,
-                      createAt: ad.owner!.createAt!,
+                      createAt: ad.owner!.createdAt!,
                     ),
                     const SizedBox(height: 50),
                   ],

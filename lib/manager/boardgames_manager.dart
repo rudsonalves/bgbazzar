@@ -59,7 +59,7 @@ class BoardgamesManager {
     final psBGIds = _bgs.map((bg) => bg.bgId!).toList();
     for (final bg in newsBGNames) {
       if (!psBGIds.contains(bg.bgId!)) {
-        final newBg = await BGNamesRepository.add(bg);
+        final newBg = await SqliteBGNamesRepository.add(bg);
         _bgs.add(newBg);
       }
     }
@@ -74,7 +74,7 @@ class BoardgamesManager {
   }
 
   Future<void> _getLocalBgNames() async {
-    final bgs = await BGNamesRepository.get();
+    final bgs = await SqliteBGNamesRepository.get();
     _bgs.clear();
     if (bgs.isEmpty) return;
     _bgs.addAll(bgs);
@@ -135,7 +135,7 @@ class BoardgamesManager {
         bgId: newBg.bgId,
         name: '${newBg.name} (${newBg.publishYear})',
       );
-      BGNamesRepository.add(bgName);
+      SqliteBGNamesRepository.add(bgName);
       _bgs.add(bgName);
       _sortingBGNames();
       return DataResult.success(null);
@@ -195,7 +195,7 @@ class BoardgamesManager {
 
       bgName.name = name;
 
-      BGNamesRepository.update(bgName);
+      SqliteBGNamesRepository.update(bgName);
 
       final index = _bgs.indexWhere((b) => b.bgId == bg.bgId);
       if (index == -1) {

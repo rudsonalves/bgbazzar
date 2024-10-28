@@ -18,6 +18,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
@@ -126,21 +127,22 @@ class _AddressScreenState extends State<AddressScreen> {
             onPressed: _addAddress,
             heroTag: 'fab1',
             tooltip: 'Adicionar Endereço',
-            child: const Icon(Icons.contact_mail),
+            child: const Icon(Symbols.add_home_rounded),
           ),
           const SizedBox(width: 20),
           FloatingActionButton(
             onPressed: _removeAddress,
             heroTag: 'fab2',
             tooltip: 'Remover Endereço',
-            child: const Icon(Icons.unsubscribe),
+            child: const Icon(Symbols.unsubscribe),
           ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
-        child: AnimatedBuilder(
-          animation: Listenable.merge([store.selectedAddressName, store.state]),
+        child: ListenableBuilder(
+          listenable:
+              Listenable.merge([store.selectedAddressName, store.state]),
           builder: (context, _) {
             return Stack(
               children: [
@@ -155,7 +157,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           return Card(
                             color: address.name ==
                                     store.selectedAddressName.value
-                                ? colorScheme.primaryContainer
+                                ? colorScheme.tertiaryContainer
                                 : colorScheme.primaryContainer.withOpacity(0.4),
                             child: ListTile(
                               title: Text(address.name),
