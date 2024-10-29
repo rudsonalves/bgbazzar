@@ -23,13 +23,12 @@ import 'common/singletons/app_settings.dart';
 import 'common/singletons/current_user.dart';
 import 'common/singletons/search_filter.dart';
 import 'common/singletons/search_history.dart';
-import 'features/shop/shop_controller.dart';
 import 'manager/address_manager.dart';
 import 'manager/boardgames_manager.dart';
 import 'manager/favorites_manager.dart';
 import 'manager/mechanics_manager.dart';
-import 'repository/interfaces/imechanic_repository.dart';
-import 'repository/interfaces/iuser_repository.dart';
+import 'repository/interfaces/i_mechanic_repository.dart';
+import 'repository/interfaces/i_user_repository.dart';
 import 'repository/parse_server/ps_mechanics_repository.dart';
 import 'repository/parse_server/ps_user_repository.dart';
 import 'services/parse_server_server.dart';
@@ -39,41 +38,29 @@ final getIt = GetIt.instance;
 
 void setupDependencies() {
   try {
+    // Singletons
     getIt.registerSingleton<AppSettings>(AppSettings());
 
+    // Lazy Singletons
     getIt.registerLazySingleton<ParseServerService>(() => ParseServerService());
-
     getIt.registerLazySingleton<MechanicsManager>(() => MechanicsManager());
-
     getIt.registerLazySingleton<CurrentUser>(() => CurrentUser());
-
     getIt.registerLazySingleton<FavoritesManager>(() => FavoritesManager());
-
     getIt.registerLazySingleton<AddressManager>(() => AddressManager());
-
     getIt.registerLazySingleton<SearchFilter>(() => SearchFilter());
-
     getIt.registerLazySingleton<SearchHistory>(() => SearchHistory());
-
     getIt.registerLazySingleton<DatabaseManager>(() => DatabaseManager());
-
     getIt.registerLazySingleton<BoardgamesManager>(() => BoardgamesManager());
 
-    // Pages controllers
-    getIt.registerLazySingleton<ShopController>(() => ShopController());
-
     // Repositories
-    getIt.registerFactory<IUserRepository>(() => ParseServerUserRepository());
-
-    getIt.registerFactory<IMechanicRepository>(
-        () => ParseServerMechanicsRepository());
+    getIt.registerFactory<IUserRepository>(() => PSUserRepository());
+    getIt.registerFactory<IMechanicRepository>(() => PSMechanicsRepository());
   } catch (err) {
     log('GetIt Locator Error: $err');
   }
 }
 
 void disposeDependencies() {
-  getIt<ShopController>().dispose();
   getIt<SearchFilter>().dispose();
   getIt<SearchFilter>().dispose();
   getIt<FavoritesManager>().dispose();

@@ -21,7 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '/features/my_account/my_account_screen.dart';
-import '../../common/basic_controller/basic_state.dart';
 import '../../common/singletons/current_user.dart';
 import '../../common/theme/app_text_style.dart';
 import '../../components/custom_drawer/custom_drawer.dart';
@@ -32,6 +31,7 @@ import '../../get_it.dart';
 import '../edit_ad/edit_ad_screen.dart';
 import '../signin/signin_screen.dart';
 import 'shop_controller.dart';
+import 'shop_store.dart';
 import 'widgets/search/search_dialog.dart';
 
 class ShopScreen extends StatefulWidget {
@@ -46,6 +46,7 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen>
     with SingleTickerProviderStateMixin {
   final ctrl = ShopController();
+  final store = ShopStore();
 
   late AnimationController _animationController;
   late Animation<Offset> _fabOffsetAnimation;
@@ -57,7 +58,7 @@ class _ShopScreenState extends State<ShopScreen>
   @override
   void initState() {
     super.initState();
-    ctrl.init();
+    ctrl.init(store);
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -107,7 +108,7 @@ class _ShopScreenState extends State<ShopScreen>
     _scrollController.dispose();
     _animationController.dispose();
     _timer?.cancel();
-    ctrl.dispose();
+    store.dispose();
 
     super.dispose();
   }
@@ -140,13 +141,13 @@ class _ShopScreenState extends State<ShopScreen>
               ),
             ),
           )
-        : Text(ctrl.pageTitle.value);
+        : Text(store.pageTitle.value);
   }
 
   Future<void> navToLoginScreen() async {
     if (!ctrl.isLogged) {
       await Navigator.pushNamed(context, SignInScreen.routeName);
-      ctrl.init();
+      ctrl.init(store);
     } else {
       Navigator.pushNamed(context, MyAccountScreen.routeName);
     }
@@ -159,7 +160,7 @@ class _ShopScreenState extends State<ShopScreen>
     return Scaffold(
       appBar: AppBar(
         title: ListenableBuilder(
-          listenable: ctrl.pageTitle,
+          listenable: store.pageTitle,
           builder: (context, _) {
             return titleWidget;
           },
@@ -211,7 +212,7 @@ class _ShopScreenState extends State<ShopScreen>
               : FloatingActionButton.extended(
                   onPressed: () async {
                     await Navigator.pushNamed(context, SignInScreen.routeName);
-                    ctrl.init();
+                    ctrl.init(store);
                   },
                   backgroundColor: colorScheme.tertiaryContainer,
                   icon: const Icon(Icons.login),
@@ -225,12 +226,12 @@ class _ShopScreenState extends State<ShopScreen>
           _resetTimer();
           return false;
         },
-        child: AnimatedBuilder(
-          animation: ctrl,
+        child: ListenableBuilder(
+          listenable: store.state,
           builder: (context, _) => Stack(
             children: [
               // state State Success
-              if (ctrl.ads.isEmpty && ctrl.state is BasicStateSuccess)
+              if (ctrl.ads.isEmpty && store.isSuccess)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -257,7 +258,7 @@ class _ShopScreenState extends State<ShopScreen>
                     ),
                   ],
                 ),
-              if (ctrl.ads.isNotEmpty && ctrl.state is BasicStateSuccess)
+              if (ctrl.ads.isNotEmpty && store.isSuccess)
                 Padding(
                   padding: const EdgeInsets.all(0),
                   child: ShopGridView(
@@ -266,14 +267,14 @@ class _ShopScreenState extends State<ShopScreen>
                   ),
                 ),
               // state State Error
-              if (ctrl.state is BasicStateError)
+              if (store.isError)
                 Positioned.fill(
                   child: StateErrorMessage(
                     closeDialog: ctrl.closeErroMessage,
                   ),
                 ),
               // state State Loading
-              if (ctrl.state is BasicStateLoading)
+              if (store.isLoading)
                 const Positioned.fill(
                   child: StateLoadingMessage(),
                 ),

@@ -19,7 +19,7 @@ import 'dart:developer';
 
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import '/repository/interfaces/iuser_repository.dart';
+import '../interfaces/i_user_repository.dart';
 import '../../common/abstracts/data_result.dart';
 import '../../common/models/user.dart';
 import '../../common/parse_server/errors_mensages.dart';
@@ -36,7 +36,7 @@ class UserRepositoryException implements Exception {
   String toString() => 'UserRepositoryException: $message';
 }
 
-class ParseServerUserRepository implements IUserRepository {
+class PSUserRepository implements IUserRepository {
   @override
   Future<DataResult<UserModel>> signUp(UserModel user) async {
     try {

@@ -17,27 +17,27 @@
 
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 import '../../common/app_constants.dart';
-import '../../common/basic_controller/basic_controller.dart';
-import '../../common/basic_controller/basic_state.dart';
 import '../../common/models/ad.dart';
 import '../../common/models/filter.dart';
 import '../../common/models/user.dart';
 import '../../common/singletons/app_settings.dart';
+import '../../common/singletons/current_user.dart';
 import '../../common/singletons/search_filter.dart';
 import '../../get_it.dart';
 import '../../repository/parse_server/ps_ad_repository.dart';
 import '../../repository/parse_server/common/constants.dart';
+import 'shop_store.dart';
 
-class ShopController extends BasicController {
+class ShopController {
   final app = getIt<AppSettings>();
+  final currentUser = getIt<CurrentUser>();
   final searchFilter = getIt<SearchFilter>();
+  late final ShopStore store;
 
-  final ValueNotifier<String> _pageTitle = ValueNotifier<String>(appTitle);
+  final List<AdModel> _ads = [];
+  List<AdModel> get ads => _ads;
+
   int _adsPage = 0;
   bool _getMorePages = true;
   bool get getMorePages => _getMorePages;
@@ -48,10 +48,6 @@ class ShopController extends BasicController {
   FilterModel get filter => searchFilter.filter;
   String get searchString => searchFilter.searchString;
 
-  ValueNotifier<String> get pageTitle => _pageTitle;
-  ValueNotifier<bool> get filterNotifier => searchFilter.filterNotifier;
-  ValueNotifier<String> get searchNotifier => searchFilter.searchNotifier;
-
   bool get haveSearch => searchFilter.searchString.isNotEmpty;
   bool get haveFilter => searchFilter.haveFilter;
 
@@ -60,10 +56,14 @@ class ShopController extends BasicController {
     _getMorePages = true;
   }
 
-  @override
-  Future<void> init() async {
+  void init(ShopStore store) {
+    this.store = store;
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
     try {
-      changeState(BasicStateLoading());
+      store.setStateLoading();
       await _getAds();
 
       await currentUser.init();
@@ -74,25 +74,22 @@ class ShopController extends BasicController {
       currentUser.isLogedListernable.addListener(getAds);
       currentUser.isLogedListernable.addListener(setPageTitle);
 
-      changeState(BasicStateSuccess());
+      store.setStateSuccess();
     } catch (err) {
-      changeState(BasicStateError());
+      final message = 'ShopController._initialize: $err';
+      log(message);
+      store.setError(message);
     }
   }
 
-  @override
-  void dispose() {
-    _pageTitle.dispose();
-
-    super.dispose();
-  }
-
   void setPageTitle() {
-    _pageTitle.value = searchFilter.searchString.isNotEmpty
-        ? searchFilter.searchString
-        : user == null
-            ? appTitle
-            : user!.name!;
+    store.setPageTitle(
+      searchFilter.searchString.isNotEmpty
+          ? searchFilter.searchString
+          : user == null
+              ? appTitle
+              : user!.name!,
+    );
   }
 
   void setSearch(String value) {
@@ -105,15 +102,15 @@ class ShopController extends BasicController {
     filter = FilterModel();
   }
 
-  @override
   Future<void> getAds() async {
     try {
-      changeState(BasicStateLoading());
+      store.setStateLoading();
       await _getAds();
-      changeState(BasicStateSuccess());
+      store.setStateSuccess();
     } catch (err) {
-      log(err.toString());
-      changeState(BasicStateError());
+      final message = 'ShopController.getAds: $err';
+      log(message);
+      store.setError(message);
     }
   }
 
@@ -137,18 +134,18 @@ class ShopController extends BasicController {
     }
   }
 
-  @override
   Future<void> getMoreAds() async {
     if (!_getMorePages) return;
     _adsPage++;
     try {
-      changeState(BasicStateLoading());
+      store.setStateLoading();
       await _getMoreAds();
       await Future.delayed(const Duration(microseconds: 100));
-      changeState(BasicStateSuccess());
+      store.setStateSuccess();
     } catch (err) {
-      log(err.toString());
-      changeState(BasicStateError());
+      final message = 'ShopController.getMoreAds: $err';
+      log(message);
+      store.setError(message);
     }
   }
 
@@ -171,12 +168,7 @@ class ShopController extends BasicController {
     }
   }
 
-  @override
-  Future<bool> updateAdStatus(AdModel ad) {
-    throw UnimplementedError();
-  }
-
   void closeErroMessage() {
-    changeState(BasicStateSuccess());
+    store.setStateSuccess();
   }
 }

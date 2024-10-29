@@ -19,7 +19,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '/repository/interfaces/iuser_repository.dart';
+import '../../repository/interfaces/i_user_repository.dart';
 import '../../common/models/user.dart';
 import '../../common/utils/extensions.dart';
 import '../../common/models/address.dart';

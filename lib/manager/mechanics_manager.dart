@@ -21,7 +21,7 @@ import 'package:bgbazzar/get_it.dart';
 
 import '../common/abstracts/data_result.dart';
 import '../common/models/mechanic.dart';
-import '../repository/interfaces/imechanic_repository.dart';
+import '../repository/interfaces/i_mechanic_repository.dart';
 import '../repository/sqlite/mechanic_repository.dart';
 
 enum ManagerStatus { ok, error, duplicated }

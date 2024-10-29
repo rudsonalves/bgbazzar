@@ -17,10 +17,10 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/basic_controller/basic_state.dart';
 import '../../components/others_widgets/shop_grid_view/shop_grid_view.dart';
 import '../../components/others_widgets/state_loading_message.dart';
-import 'favorites_controller.dart';
+import '../shop/shop_controller.dart';
+import '../shop/shop_store.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -32,14 +32,15 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  final ctrl = FavoritesController();
+  final ctrl = ShopController();
+  final store = ShopStore();
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
 
-    ctrl.init();
+    ctrl.init(store);
   }
 
   void _backPage() {
@@ -61,7 +62,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: AnimatedBuilder(
-            animation: ctrl,
+            animation: store.state,
             builder: (context, _) {
               return Stack(
                 children: [
@@ -69,8 +70,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     ctrl: ctrl,
                     scrollController: _scrollController,
                   ),
-                  if (ctrl.state is BasicStateLoading)
-                    const StateLoadingMessage()
+                  if (store.isLoading) const StateLoadingMessage()
                 ],
               );
             }),
