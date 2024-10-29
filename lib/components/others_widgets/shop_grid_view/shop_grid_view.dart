@@ -18,15 +18,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/basic_controller/basic_controller.dart';
 import '../../../common/models/ad.dart';
 import '../../../features/product/product_screen.dart';
+import '../../../features/shop/shop_controller.dart';
 import 'widgets/ad_shop_view.dart';
 
 enum ButtonBehavior { edit, delete }
 
 class ShopGridView extends StatefulWidget {
-  final BasicController ctrl;
+  final ShopController ctrl;
   final ScrollController scrollController;
   final ButtonBehavior? buttonBehavior;
   final Function(AdModel ad)? editAd;
@@ -47,7 +47,7 @@ class ShopGridView extends StatefulWidget {
 
 class _ShopGridViewState extends State<ShopGridView> {
   late ScrollController _scrollController;
-  late final BasicController ctrl;
+  late final ShopController ctrl;
   double _scrollPosition = 0;
   bool _isScrolling = false;
 

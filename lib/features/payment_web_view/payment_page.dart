@@ -21,19 +21,21 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'payment_controller.dart';
 import 'payment_store.dart';
 
-class PaymentWebViewPage extends StatefulWidget {
+class PaymentPage extends StatefulWidget {
   final String preferenceId;
 
-  const PaymentWebViewPage({
+  const PaymentPage({
     super.key,
     required this.preferenceId,
   });
 
+  static const routeName = '/payment';
+
   @override
-  State<PaymentWebViewPage> createState() => _PaymentWebViewPageState();
+  State<PaymentPage> createState() => _PaymentPageState();
 }
 
-class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
+class _PaymentPageState extends State<PaymentPage> {
   final ctrl = PaymentController();
   final store = PaymentStore();
 

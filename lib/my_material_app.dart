@@ -33,6 +33,7 @@ import 'features/my_account/my_account_screen.dart';
 import 'features/address/address_screen.dart';
 import 'features/my_ads/my_ads_screen.dart';
 import 'features/my_data/my_data_screen.dart';
+import 'features/payment_web_view/payment_page.dart';
 import 'features/product/product_screen.dart';
 import 'features/filters/filters_screen.dart';
 import 'features/mechanics/mechanics_screen.dart';
@@ -92,6 +93,11 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
             },
             onGenerateRoute: (settings) {
               switch (settings.name) {
+                case PaymentPage.routeName:
+                  return MaterialPageRoute(builder: (context) {
+                    final String preferenceId = settings.arguments as String;
+                    return PaymentPage(preferenceId: preferenceId);
+                  });
                 case EditBoardgamesScreen.routeName:
                   return MaterialPageRoute(builder: (context) {
                     final bg = settings.arguments as BoardgameModel?;

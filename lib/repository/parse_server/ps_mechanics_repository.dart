@@ -21,11 +21,11 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import '../../common/abstracts/data_result.dart';
 import '../../common/models/mechanic.dart';
-import '../interfaces/imechanic_repository.dart';
+import '../interfaces/i_mechanic_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 
-class ParseServerMechanicsRepository implements IMechanicRepository {
+class PSMechanicsRepository implements IMechanicRepository {
   @override
   Future<DataResult<MechanicModel>> add(MechanicModel mech) async {
     try {

@@ -9,6 +9,69 @@
 
 # ChangeLog
 
+## 2024/10/29 - version: 0.7.08+57
+
+This commit refactors the code to enhance modularity, consistency, and manageability by introducing a new store class, renaming files, and updating controllers to remove redundancy. The changes focus on improving the architecture, including the management of state and dependency injection across various components.
+
+### Changes made:
+
+1. **lib/common/singletons/current_user.dart**:
+   - Updated the import path for `IUserRepository` from `'iuser_repository.dart'` to `'i_user_repository.dart'` for better readability and consistency.
+
+2. **lib/components/others_widgets/shop_grid_view/shop_grid_view.dart**:
+   - Replaced the use of `BasicController` with `ShopController` for better specificity in managing shop-related state and logic.
+
+3. **lib/features/favorites/favorites_screen.dart**:
+   - Updated the import paths for `ShopController` and `ShopStore`.
+   - Replaced `FavoritesController` with `ShopController` and added `ShopStore` to manage state.
+   - Updated `AnimatedBuilder` to use `store.state` instead of `ctrl`.
+
+4. **lib/features/my_data/my_data_controller.dart**:
+   - Updated the import path for `IUserRepository`.
+
+5. **lib/features/payment_web_view/payment_web_view_page.dart**:
+   - Renamed the file to `payment_page.dart`.
+   - Renamed `PaymentWebViewPage` class to `PaymentPage` and added a static route name for easier navigation.
+
+6. **lib/features/shop/shop_controller.dart**:
+   - Removed inheritance from `BasicController`.
+   - Replaced `BasicState` management with `ShopStore` to handle the loading, success, and error states.
+   - Consolidated and simplified methods for managing page title and shop data.
+
+7. **lib/features/shop/shop_screen.dart**:
+   - Added `ShopStore` to manage the state of `ShopController`.
+   - Replaced `AnimatedBuilder` with `ListenableBuilder` to use the store state directly.
+   - Updated methods to use `store` for state management and clean disposal.
+
+8. **lib/features/shop/shop_store.dart**:
+   - Created a new `ShopStore` class to encapsulate state management for the shop feature.
+   - Added methods to handle page title, loading, and success/error state transitions.
+
+9. **lib/features/signin/signin_controller.dart & lib/features/signup/signup_controller.dart**:
+   - Updated the import paths for `IUserRepository` for consistency.
+
+10. **lib/get_it.dart**:
+    - Removed `ShopController` from dependency registration to align with its updated instantiation in individual screens.
+    - Updated repository interface import paths to maintain consistency.
+    - Updated repository class names (`PSUserRepository` and `PSMechanicsRepository`) for better readability.
+
+11. **lib/manager/mechanics_manager.dart**:
+    - Updated the import path for `IMechanicRepository`.
+
+12. **lib/my_material_app.dart**:
+    - Added routing for `PaymentPage` to facilitate navigation by passing a `preferenceId`.
+
+13. **lib/repository/interfaces/imechanic_repository.dart & iuser_repository.dart**:
+    - Renamed files to `i_mechanic_repository.dart` and `i_user_repository.dart` for improved consistency in naming conventions.
+
+14. **lib/repository/parse_server/ps_mechanics_repository.dart & ps_user_repository.dart**:
+    - Renamed classes to `PSMechanicsRepository` and `PSUserRepository` to maintain consistency with other repository class names.
+    - Updated the import paths for the respective interfaces.
+
+### Conclusion:
+These changes refactor the codebase to improve maintainability, modularity, and state management. The introduction of `ShopStore` decouples state handling from the controller, allowing for a cleaner separation of concerns. The file renaming and dependency registration changes improve readability and align the project structure with best practices for naming conventions. This refactoring paves the way for easier scalability and enhanced consistency across the codebase.
+
+
 ## 2024/10/29 - version: 0.7.07+56
 
 This commit introduces a new payment integration module using Mercado Pago Bricks and WebView, along with various updates to existing code and new functionalities. The focus of this update is to enhance the payment flow, improve error handling, and add new features for better user experience in managing payments and mechanics checks.
