@@ -75,7 +75,7 @@ class AdminHooks extends StatelessWidget {
             color: primary,
           ),
           title: Text(
-            'Restaurar Mecânicas',
+            'Verificar Mecânicas',
             style: TextStyle(color: primary),
           ),
           onTap: () => Navigator.pushNamed(

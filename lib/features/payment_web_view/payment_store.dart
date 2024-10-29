@@ -15,42 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
-
-import '../../common/models/mechanic.dart';
 import '../../common/state_store/state_store.dart';
 
-class CheckMechList {
-  final MechanicModel mech;
-  final bool _checked;
-
-  CheckMechList(this.mech, this._checked);
-
-  bool get isChecked => _checked;
-}
-
-class CheckStore extends StateStore {
-  final checkList = ValueNotifier<List<CheckMechList>>([]);
-
-  final count = ValueNotifier<int>(0);
-
-  @override
-  void dispose() {
-    checkList.dispose();
-    count.dispose();
-
-    super.dispose();
-  }
-
-  void setCheckList(List<CheckMechList> value) {
-    checkList.value = value;
-  }
-
-  void incrementCount() {
-    count.value++;
-  }
-
-  void resetCount() {
-    count.value = 0;
-  }
-}
+class PaymentStore extends StateStore {}

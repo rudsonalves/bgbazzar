@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -15,42 +16,19 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
+class PaymentModel {
+  final double amount;
+  final String description;
+  final int quantity;
 
-import '../../common/models/mechanic.dart';
-import '../../common/state_store/state_store.dart';
-
-class CheckMechList {
-  final MechanicModel mech;
-  final bool _checked;
-
-  CheckMechList(this.mech, this._checked);
-
-  bool get isChecked => _checked;
-}
-
-class CheckStore extends StateStore {
-  final checkList = ValueNotifier<List<CheckMechList>>([]);
-
-  final count = ValueNotifier<int>(0);
+  PaymentModel({
+    required this.amount,
+    required this.description,
+    required this.quantity,
+  });
 
   @override
-  void dispose() {
-    checkList.dispose();
-    count.dispose();
-
-    super.dispose();
-  }
-
-  void setCheckList(List<CheckMechList> value) {
-    checkList.value = value;
-  }
-
-  void incrementCount() {
-    count.value++;
-  }
-
-  void resetCount() {
-    count.value = 0;
-  }
+  String toString() => 'PaymentModel(amount: $amount,'
+      ' description: $description,'
+      ' quantity: $quantity)';
 }

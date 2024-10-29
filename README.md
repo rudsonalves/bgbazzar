@@ -9,6 +9,54 @@
 
 # ChangeLog
 
+## 2024/10/29 - version: 0.7.07+56
+
+This commit introduces a new payment integration module using Mercado Pago Bricks and WebView, along with various updates to existing code and new functionalities. The focus of this update is to enhance the payment flow, improve error handling, and add new features for better user experience in managing payments and mechanics checks.
+
+### Changes made:
+
+1. **docs/MP_pagamentos.md**:
+   - Added new documentation detailing the integration of Mercado Pago Bricks using Parse Server Cloud Code and WebView in Flutter.
+   - Explained the general integration strategy, usage of specific Bricks, and considerations for security and implementation.
+
+2. **lib/common/abstracts/data_result.dart**:
+   - Added a new `TimeoutFailure` class to represent a failure due to timeout when making API calls.
+
+3. **lib/common/models/payment.dart**:
+   - Introduced a new `PaymentModel` class containing fields for `amount`, `description`, and `quantity` to encapsulate payment information.
+
+4. **lib/features/check_mechanics/check_page.dart**:
+   - Updated app bar title from `'Restaurar Mecânicas'` to `'Verificar Mecânicas'`.
+   - Added `dispose()` method to properly dispose of `store` when the page is destroyed.
+
+5. **lib/features/check_mechanics/check_store.dart**:
+   - Added `count.dispose()` to the `dispose()` method to ensure proper cleanup of resources.
+
+6. **lib/features/my_account/widgets/admin_hooks.dart**:
+   - Updated title text from `'Restaurar Mecânicas'` to `'Verificar Mecânicas'`.
+
+7. **lib/features/payment_web_view/payment_controller.dart**:
+   - Added a new `PaymentController` class to manage the interaction with WebView for payment processing.
+   - Set up navigation delegates to handle page progress, resource errors, and control navigation to ensure a secure and user-friendly payment experience.
+
+8. **lib/features/payment_web_view/payment_store.dart**:
+   - Added a new `PaymentStore` class that extends `StateStore` to manage state during payment processing in the `PaymentWebView`.
+
+9. **lib/features/payment_web_view/payment_web_view_page.dart**:
+   - Created a new `PaymentWebViewPage` widget to handle displaying the payment process using WebView.
+   - Utilized `ValueListenableBuilder` to manage loading, success, and error states during payment.
+
+10. **lib/services/payment/payment_service.dart**:
+    - Added a new `PaymentService` class to handle interactions with the Parse Server's Cloud Code for payment preferences.
+    - Implemented `getPreferenceId()` method to request a preference ID from the Parse Cloud Function, with proper error handling, including timeout.
+
+11. **pubspec.yaml & pubspec.lock**:
+    - Added `webview_flutter` package version `^4.10.0` to integrate WebView for the payment functionality.
+
+### Conclusion:
+This commit significantly enhances the payment integration flow by utilizing Mercado Pago Bricks and a WebView approach for a secure and user-friendly experience. The added abstractions for payment models, services, and state management provide a more modular and maintainable structure for handling payments. Furthermore, proper error handling mechanisms were introduced to improve the robustness of the codebase during API interactions.
+
+
 ## 2024/10/28 - version: 0.7.06+55
 
 This commit brings several updates and enhancements to the application, focusing on new features, bug fixes, and improvements to maintainability, UI consistency, and underlying infrastructure changes.
