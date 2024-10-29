@@ -86,10 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _navLogin() {
     Navigator.pop(context);
-    Navigator.pushNamed(
-      context,
-      SignInScreen.routeName,
-    );
+    Navigator.pushNamed(context, SignInScreen.routeName);
   }
 
   @override

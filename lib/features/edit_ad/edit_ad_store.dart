@@ -69,7 +69,7 @@ class EditAdStore extends StateStore {
   }
 
   void _validateDescription() {
-    errorDescription.value = description!.length > 12
+    errorDescription.value = description != null && description!.length > 12
         ? null
         : 'Dê uma descrição melhor sobre o estado do produto.';
   }
@@ -80,8 +80,9 @@ class EditAdStore extends StateStore {
   }
 
   void _validateAddress() {
-    errorAddress.value =
-        address!.length > 5 ? null : 'Selecione um endereço valido.';
+    errorAddress.value = address != null && address!.length > 5
+        ? null
+        : 'Selecione um endereço valido.';
   }
 
   void setPrice(double value) {
@@ -90,7 +91,8 @@ class EditAdStore extends StateStore {
   }
 
   void _validatePrice() {
-    errorPrice.value = price! > 0 ? null : 'Preencha o valor de seu produto.';
+    errorPrice.value =
+        price != null && price! > 0 ? null : 'Preencha o valor de seu produto.';
   }
 
   void setMechanics(String value) {
@@ -108,5 +110,13 @@ class EditAdStore extends StateStore {
         errorDescription.value == null &&
         errorAddress.value == null &&
         errorPrice.value == null;
+  }
+
+  void resetStore() {
+    imagesLength.value = 0;
+    errorName.value = null;
+    errorDescription.value = null;
+    errorAddress.value = null;
+    errorPrice.value = null;
   }
 }

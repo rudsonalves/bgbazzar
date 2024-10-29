@@ -9,6 +9,40 @@
 
 # ChangeLog
 
+## 2024/10/29 - version: 0.7.09+58
+
+This commit refactors the `EditAd` feature, introducing improvements in code structure and component reuse, as well as updating validation logic for better error handling and consistency in form management. Additionally, minor UI improvements have been made to enhance the user experience.
+
+### Changes made:
+
+1. **lib/features/edit_ad/edit_ad_controller.dart**:
+   - Removed unnecessary `dispose()` method, as it was empty and redundant.
+
+2. **lib/features/edit_ad/edit_ad_screen.dart**:
+   - Updated import from `widgets/ad_form.dart` to `widgets/edit_ad_form.dart`.
+   - Removed `dispose()` call on `ctrl` since the controller no longer requires disposal.
+
+3. **lib/features/edit_ad/edit_ad_store.dart**:
+   - Updated `_validateDescription()`, `_validateAddress()`, and `_validatePrice()` methods to ensure values are not null before validating their lengths.
+   - Added a `resetStore()` method to reset all form validation error messages and image length.
+
+4. **lib/features/edit_ad/widgets/ad_form.dart**:
+   - Renamed file to `edit_ad_form.dart` and updated the class to `EditAdForm` for better naming consistency.
+   - Added controllers for form fields (`nameController`, `descriptionController`, etc.) to manage state directly within the form.
+   - Implemented `dispose()` method to properly dispose of all controllers to prevent memory leaks.
+   - Updated form fields to use respective controllers for better control over user input.
+
+5. **lib/features/edit_ad/widgets/horizontal_image_gallery.dart**:
+   - Updated the icon in the "add image" button to use `Icons.add_a_photo_rounded` for a more modern appearance.
+   - Removed the "+ inserir" text from the button for a cleaner UI.
+
+6. **lib/features/signup/signup_screen.dart**:
+   - Simplified the `_navLogin()` method by consolidating the `Navigator.pushNamed()` call into a single line for readability.
+
+### Conclusion:
+This commit enhances the maintainability of the `EditAd` feature by restructuring its components for consistency and eliminating redundancy. The improvements in validation logic ensure robust error handling, while the added controllers in `EditAdForm` improve input management. The minor UI adjustments provide a more streamlined user experience.
+
+
 ## 2024/10/29 - version: 0.7.08+57
 
 This commit refactors the code to enhance modularity, consistency, and manageability by introducing a new store class, renaming files, and updating controllers to remove redundancy. The changes focus on improving the architecture, including the management of state and dependency injection across various components.
