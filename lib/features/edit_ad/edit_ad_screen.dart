@@ -15,18 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with xlo_mobx.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import '../../common/models/ad.dart';
 import '../../components/buttons/big_button.dart';
-import '../../components/others_widgets/state_error_message.dart';
-import '../../components/others_widgets/state_loading_message.dart';
-import 'edit_ad_controller.dart';
+import 'edit_ad_form/edit_ad_form.dart';
 import 'edit_ad_store.dart';
-import 'widgets/edit_ad_form.dart';
-import 'widgets/image_list_view.dart';
+import 'image_list/image_list_view.dart';
 
 class EditAdScreen extends StatefulWidget {
   final AdModel? ad;
@@ -43,39 +38,29 @@ class EditAdScreen extends StatefulWidget {
 }
 
 class _EditAdScreenState extends State<EditAdScreen> {
-  final ctrl = EditAdController();
   final store = EditAdStore();
 
   @override
   void initState() {
     super.initState();
 
-    ctrl.init(widget.ad, store);
-  }
-
-  @override
-  void dispose() {
-    store.dispose();
-
-    super.dispose();
+    store.startAd(widget.ad);
   }
 
   Future<void> _createAnnounce() async {
-    AdModel? ad;
-    if (store.isValid) return;
-    FocusScope.of(context).unfocus();
-    if (widget.ad != null) {
-      ad = await ctrl.updateAds(widget.ad!.id!);
-    } else {
-      ad = await ctrl.createAds();
-    }
-    if (mounted) Navigator.pop(context, ad);
+    // AdModel? ad;
+    // if (store.isValid) return;
+    // FocusScope.of(context).unfocus();
+    // if (widget.ad != null) {
+    //   ad = await ctrl.updateAds(widget.ad!.id!);
+    // } else {
+    //   ad = await ctrl.createAds();
+    // }
+    // if (mounted) Navigator.pop(context, ad);
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.ad != null ? 'Editar Anúncio' : 'Criar Anúncio'),
@@ -87,69 +72,69 @@ class _EditAdScreenState extends State<EditAdScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                log(ctrl.ad.toString());
+                // log(ctrl.ad.toString());
               },
               icon: const Icon(Icons.print))
         ],
       ),
-      body: ListenableBuilder(
-        listenable: store.state,
-        builder: (context, _) => Stack(
-          children: [
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 12,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ImagesListView(
-                      ctrl: ctrl,
-                      validator: true,
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: store.imagesLength,
-                      builder: (context, imagesLength, _) {
-                        //(imagesLength == 0 && store.isValid) ||
-                        if (imagesLength > 0) {
-                          return Container();
-                        } else {
-                          return Text(
-                            'Adicione algumas imagens.',
-                            style: TextStyle(
-                              color: colorScheme.error,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    Column(
-                      children: [
-                        EditAdForm(controller: ctrl),
-                        BigButton(
-                          color: Colors.orange,
-                          label: widget.ad != null ? 'Atualizar' : 'Publicar',
-                          iconData:
-                              widget.ad != null ? Icons.update : Icons.save,
-                          onPressed: _createAnnounce,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+      body:
+          // ListenableBuilder(
+          //   listenable: store.state,
+          //   builder: (context, _) =>
+          Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 18,
+                vertical: 12,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ImagesListView(
+                    images: store.ad.images,
+                  ),
+                  // ValueListenableBuilder(
+                  //   valueListenable: store.imagesLength,
+                  //   builder: (context, imagesLength, _) {
+                  //     //(imagesLength == 0 && store.isValid) ||
+                  //     if (imagesLength > 0) {
+                  //       return Container();
+                  //     } else {
+                  //       return Text(
+                  //         'Adicione algumas imagens.',
+                  //         style: TextStyle(
+                  //           color: colorScheme.error,
+                  //         ),
+                  //       );
+                  //     }
+                  //   },
+                  // ),
+                  Column(
+                    children: [
+                      EditAdForm(ad: store.ad),
+                      BigButton(
+                        color: Colors.orange,
+                        label: widget.ad != null ? 'Atualizar' : 'Publicar',
+                        iconData: widget.ad != null ? Icons.update : Icons.save,
+                        onPressed: _createAnnounce,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            if (store.isLoading) const StateLoadingMessage(),
-            if (store.isError)
-              StateErrorMessage(
-                message: ctrl.errorMessage,
-                closeDialog: ctrl.gotoSuccess,
-              ),
-          ],
-        ),
+          ),
+          // if (store.isLoading) const StateLoadingMessage(),
+          // if (store.isError)
+          //   StateErrorMessage(
+          //     message: ctrl.errorMessage,
+          //     closeDialog: ctrl.gotoSuccess,
+          //   ),
+        ],
       ),
+      // ),
     );
   }
 }

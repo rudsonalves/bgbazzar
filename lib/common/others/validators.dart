@@ -53,7 +53,7 @@ class Validator {
   }
 
   static String? name(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.length < 3) {
       return 'Um nome/apelido é obrigatório!';
     }
     return null;

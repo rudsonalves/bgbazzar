@@ -92,7 +92,7 @@ class ParseToModel {
       images: (parse.get<List<dynamic>>(keyAdImages) as List<dynamic>)
           .map((item) => (item as ParseFile).url!)
           .toList(),
-      mechanicsId: mechs.map((e) => e as String).toList(),
+      mechanicsPSIds: mechs.map((e) => e as String).toList(),
       address: address,
       status: AdStatus.values
           .firstWhere((s) => s.index == parse.get<int>(keyAdStatus)!),

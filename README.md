@@ -9,6 +9,55 @@
 
 # ChangeLog
 
+## 2024/10/29 - version: 0.7.09+59
+
+This commit introduces significant refactoring and structural improvements in the codebase, focusing on the `EditAd` feature. The changes enhance maintainability, readability, and efficiency while optimizing form and controller handling.
+
+### Changes made:
+
+1. **lib/common/models/ad.dart**:
+   - Renamed `mechanicsId` to `mechanicsPSIds` for clarity.
+   - Added a `get mechanicsString` method for fetching mechanics as a formatted string using `MechanicsManager`.
+   - Added a `copyWith` method to simplify the creation of modified copies of `AdModel`.
+
+2. **lib/common/others/validators.dart**:
+   - Updated the `name` validation to check if the value length is at least 3 characters.
+
+3. **lib/components/form_fields/custom_form_field.dart**:
+   - Added `initialValue` parameter to `CustomFormField`.
+
+4. **lib/features/edit_ad/edit_ad_controller.dart**:
+   - Simplified the controller by removing redundant methods and keeping only essential attributes.
+
+5. **lib/features/edit_ad/edit_ad_screen.dart**:
+   - Refactored to use the newly structured `EditAdForm`, eliminating the controller dependency and simplifying the form handling.
+
+6. **lib/features/edit_ad/widgets/ad_form.dart**:
+   - Renamed to `edit_ad_form.dart`.
+   - Reworked form fields to use dedicated controllers (`nameController`, `descriptionController`, etc.).
+   - Implemented proper disposal of controllers to prevent memory leaks.
+
+7. **lib/features/edit_ad/widgets/horizontal_image_gallery.dart**:
+   - Updated the icon to `Symbols.add_a_photo_rounded` for a more modern UI.
+
+8. **lib/features/edit_boardgame/edit_boardgame_screen.dart**:
+   - Updated floating action buttons (`FAB`) to use `OverflowBar` instead of individual FABs for a better user interface.
+
+9. **Refactor Controllers and Stores**:
+   - Created separate controllers (`EditAdFormController`, `ImageListController`) and stores (`EditAdFormStore`, `ImageListStore`) for better separation of concerns.
+   - Moved image handling logic to `ImageListController` and store state to `ImageListStore`.
+   - Introduced `EditAdFormController` and `EditAdFormStore` for managing form data and state within the `EditAd` feature.
+
+10. **lib/repository/parse_server/common/parse_to_model.dart**:
+    - Updated references from `mechanicsId` to `mechanicsPSIds` for consistency.
+
+11. **lib/repository/parse_server/ps_ad_repository.dart**:
+    - Modified the `save` and `update` methods to use `mechanicsPSIds` instead of `mechanicsId`.
+
+### Conclusion:
+This refactoring enhances modularity, making the codebase more organized and maintainable. Controllers and stores have been separated for better control and state management, which also helps in reducing side effects and improving testing capabilities.
+
+
 ## 2024/10/29 - version: 0.7.09+58
 
 This commit refactors the `EditAd` feature, introducing improvements in code structure and component reuse, as well as updating validation logic for better error handling and consistency in form management. Additionally, minor UI improvements have been made to enhance the user experience.

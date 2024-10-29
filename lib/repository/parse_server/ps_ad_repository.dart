@@ -289,7 +289,7 @@ class PSAdRepository {
         ..set<String?>(keyAdArtist, ad.artist)
         ..set<ParseObject>(keyAdAddress, parseAddress)
         ..set<List<ParseFile>>(keyAdImages, parseImages)
-        ..set<List<String>>(keyAdMechanics, ad.mechanicsId);
+        ..set<List<String>>(keyAdMechanics, ad.mechanicsPSIds);
 
       final response = await parseAd.save();
       if (!response.success) {
@@ -350,7 +350,7 @@ class PSAdRepository {
         ..set<String?>(keyAdArtist, ad.artist)
         ..set<ParseObject>(keyAdAddress, parseAddress)
         ..set<List<ParseFile>>(keyAdImages, parseImages)
-        ..set<List<String>>(keyAdMechanics, ad.mechanicsId);
+        ..set<List<String>>(keyAdMechanics, ad.mechanicsPSIds);
 
       final response = await parseAd.update();
       if (!response.success) {
