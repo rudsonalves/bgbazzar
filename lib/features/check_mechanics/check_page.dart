@@ -44,10 +44,17 @@ class _CheckPageState extends State<CheckPage> {
   }
 
   @override
+  void dispose() {
+    store.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Restaurar Mecânicas'),
+        title: const Text('Verificar Mecânicas'),
         centerTitle: true,
         elevation: 5,
       ),

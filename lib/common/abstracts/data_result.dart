@@ -50,6 +50,10 @@ class APIFailure extends Failure {
   const APIFailure({super.message, super.code});
 }
 
+class TimeoutFailure extends GenericFailure {
+  const TimeoutFailure({super.message, super.code});
+}
+
 /// This abstraction contains either a success data of generic type `S` or a
 /// failure error of type `Failure` as its result.
 ///
