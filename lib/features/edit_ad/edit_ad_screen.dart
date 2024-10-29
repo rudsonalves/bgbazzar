@@ -25,7 +25,7 @@ import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
 import 'edit_ad_controller.dart';
 import 'edit_ad_store.dart';
-import 'widgets/ad_form.dart';
+import 'widgets/edit_ad_form.dart';
 import 'widgets/image_list_view.dart';
 
 class EditAdScreen extends StatefulWidget {
@@ -55,7 +55,6 @@ class _EditAdScreenState extends State<EditAdScreen> {
 
   @override
   void dispose() {
-    ctrl.dispose();
     store.dispose();
 
     super.dispose();
@@ -113,8 +112,8 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     ValueListenableBuilder(
                       valueListenable: store.imagesLength,
                       builder: (context, imagesLength, _) {
-                        if ((imagesLength == 0 && store.isValid) ||
-                            imagesLength > 0) {
+                        //(imagesLength == 0 && store.isValid) ||
+                        if (imagesLength > 0) {
                           return Container();
                         } else {
                           return Text(
@@ -128,7 +127,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     ),
                     Column(
                       children: [
-                        AdForm(controller: ctrl),
+                        EditAdForm(controller: ctrl),
                         BigButton(
                           color: Colors.orange,
                           label: widget.ad != null ? 'Atualizar' : 'Publicar',

@@ -87,8 +87,6 @@ class EditAdController {
     }
   }
 
-  void dispose() {}
-
   void addImage(String path) {
     _images.add(path);
     store.setImagesLength(_images.length);

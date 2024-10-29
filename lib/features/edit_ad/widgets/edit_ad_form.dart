@@ -17,35 +17,53 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../components/buttons/big_button.dart';
-import '../../../common/models/ad.dart';
-import '../../../components/form_fields/custom_form_field.dart';
-import '../../../components/others_widgets/fitted_button_segment.dart';
+import '/components/custon_field_controllers/currency_text_controller.dart';
+import '/components/buttons/big_button.dart';
+import '/common/models/ad.dart';
+import '/components/form_fields/custom_form_field.dart';
+import '/components/others_widgets/fitted_button_segment.dart';
 import '../../address/address_screen.dart';
 import '../../boardgame/boardgame_screen.dart';
 import '../../mechanics/mechanics_screen.dart';
 import '../edit_ad_controller.dart';
 import '../edit_ad_store.dart';
 
-class AdForm extends StatefulWidget {
+class EditAdForm extends StatefulWidget {
   final EditAdController controller;
 
-  const AdForm({
+  const EditAdForm({
     super.key,
     required this.controller,
   });
 
   @override
-  State<AdForm> createState() => _AdFormState();
+  State<EditAdForm> createState() => _EditAdFormState();
 }
 
-class _AdFormState extends State<AdForm> {
+class _EditAdFormState extends State<EditAdForm> {
   EditAdController get ctrl => widget.controller;
   EditAdStore get store => widget.controller.store;
+
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final mechsController = TextEditingController();
+  final addressController = TextEditingController();
+  final priceController = CurrencyTextController();
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    mechsController.dispose();
+    addressController.dispose();
+    priceController.dispose();
+
+    super.dispose();
   }
 
   Future<void> _addMecanics() async {
@@ -88,6 +106,7 @@ class _AdFormState extends State<AdForm> {
               valueListenable: store.errorName,
               builder: (context, erroName, _) {
                 return CustomFormField(
+                  controller: nameController,
                   labelText: 'Nome do Jogo *',
                   fullBorder: false,
                   maxLines: null,
@@ -109,6 +128,7 @@ class _AdFormState extends State<AdForm> {
               valueListenable: store.errorDescription,
               builder: (context, errorDescription, _) {
                 return CustomFormField(
+                  controller: descriptionController,
                   labelText: 'Descreva o estado do Jogo *',
                   fullBorder: false,
                   maxLines: null,
@@ -149,6 +169,7 @@ class _AdFormState extends State<AdForm> {
             onTap: _addMecanics,
             child: AbsorbPointer(
               child: CustomFormField(
+                controller: mechsController,
                 labelText: 'Mecânicas *',
                 fullBorder: false,
                 maxLines: null,
@@ -166,6 +187,7 @@ class _AdFormState extends State<AdForm> {
                   onTap: _addAddress,
                   child: AbsorbPointer(
                     child: CustomFormField(
+                      controller: addressController,
                       labelText: 'Endereço *',
                       fullBorder: false,
                       maxLines: null,
@@ -179,6 +201,7 @@ class _AdFormState extends State<AdForm> {
                 );
               }),
           CustomFormField(
+            controller: priceController,
             labelText: 'Preço *',
             fullBorder: false,
             keyboardType: TextInputType.number,
