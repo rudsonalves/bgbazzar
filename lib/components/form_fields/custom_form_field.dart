@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 
 class CustomFormField extends StatelessWidget {
   final String? labelText;
+  final String? initialValue;
   final TextStyle? labelStyle;
   final String? hintText;
   final TextEditingController? controller;
@@ -43,6 +44,7 @@ class CustomFormField extends StatelessWidget {
   CustomFormField({
     super.key,
     this.labelText,
+    this.initialValue,
     this.labelStyle,
     this.hintText,
     this.controller,
@@ -73,6 +75,7 @@ class CustomFormField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: TextFormField(
         controller: controller,
+        initialValue: initialValue,
         validator: validator,
         focusNode: focusNode,
         keyboardType: keyboardType,

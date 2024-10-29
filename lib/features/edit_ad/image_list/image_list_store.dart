@@ -15,40 +15,28 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '/common/models/ad.dart';
+import 'package:flutter/material.dart';
 
-class EditAdController {
-  AdModel? ad;
-  final List<String> images = [];
+import '/common/state_store/state_store.dart';
 
-  void init(AdModel? ad) {
-    this.ad = ad;
+class ImageListStore extends StateStore {
+  final imagesLength = ValueNotifier<int>(0);
 
-    _initialize();
+  @override
+  void dispose() {
+    imagesLength.dispose();
+    super.dispose();
   }
 
-  void _initialize() {
-    ad ??= AdModel(
-      images: [],
-      title: '',
-      description: '',
-      mechanicsPSIds: [],
-      price: 0,
-    );
-
-    images.addAll(ad!.images);
+  setImagesLength(int value) {
+    imagesLength.value = value;
   }
 
-  void refreshAdData(AdModel ad) {
-    this.ad = ad;
+  bool get isValid {
+    return imagesLength.value > 0;
   }
 
-  void refreshAdImages(List<String> images) {
-    this.images.clear();
-    this.images.addAll(images);
-  }
-
-  AdModel? getAd() {
-    return ad?.copyWith(images: images);
+  void resetStore() {
+    imagesLength.value = 0;
   }
 }

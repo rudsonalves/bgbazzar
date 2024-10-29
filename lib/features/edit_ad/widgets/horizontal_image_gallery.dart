@@ -20,6 +20,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '/components/others_widgets/bottom_message.dart';
 import 'photo_origin_bottom_sheet.dart';
@@ -184,7 +185,7 @@ class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.add_a_photo_rounded,
+                      Symbols.add_a_photo_rounded,
                       size: 65,
                     ),
                     // Text('+ inserir'),

@@ -140,25 +140,25 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
           icon: const Icon(Icons.arrow_back_ios_rounded),
         ),
       ),
-      floatingActionButton: OverflowBar(
-        children: [
-          FloatingActionButton.extended(
-            heroTag: 'fab01',
-            backgroundColor: colorScheme.primaryContainer.withOpacity(0.85),
-            onPressed: _backPageWithSave,
-            icon: const Icon(Icons.save),
-            label: const Text('Salvar'),
-          ),
-          const SizedBox(width: 20),
-          FloatingActionButton.extended(
-            heroTag: 'fab02',
-            backgroundColor: colorScheme.primaryContainer.withOpacity(0.85),
-            onPressed: _backPage,
-            icon: const Icon(Icons.cancel),
-            label: const Text('Cancelar'),
-          ),
-        ],
-      ),
+      // floatingActionButton: OverflowBar(
+      //   children: [
+      //     FloatingActionButton.extended(
+      //       heroTag: 'fab01',
+      //       backgroundColor: colorScheme.primaryContainer.withOpacity(0.85),
+      //       onPressed: _backPageWithSave,
+      //       icon: const Icon(Icons.save),
+      //       label: const Text('Salvar'),
+      //     ),
+      //     const SizedBox(width: 20),
+      //     FloatingActionButton.extended(
+      //       heroTag: 'fab02',
+      //       backgroundColor: colorScheme.primaryContainer.withOpacity(0.85),
+      //       onPressed: _backPage,
+      //       icon: const Icon(Icons.cancel),
+      //       label: const Text('Cancelar'),
+      //     ),
+      //   ],
+      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -352,7 +352,22 @@ class _EditBoardgamesScreenState extends State<EditBoardgamesScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 80),
+                      const SizedBox(height: 12),
+                      OverflowBar(
+                        alignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          FilledButton.icon(
+                            onPressed: _backPage,
+                            icon: Icon(Icons.cancel),
+                            label: Text('Cancelar'),
+                          ),
+                          FilledButton.icon(
+                            onPressed: _backPageWithSave,
+                            icon: Icon(Icons.save),
+                            label: Text('Salvar'),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                   if (ctrl.state is EditBoardgameStateLoading)

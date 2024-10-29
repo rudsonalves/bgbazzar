@@ -17,7 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '/components/custon_field_controllers/currency_text_controller.dart';
+import '/get_it.dart';
+import '../../../manager/mechanics_manager.dart';
 import '/components/buttons/big_button.dart';
 import '/common/models/ad.dart';
 import '/components/form_fields/custom_form_field.dart';
@@ -25,15 +26,15 @@ import '/components/others_widgets/fitted_button_segment.dart';
 import '../../address/address_screen.dart';
 import '../../boardgame/boardgame_screen.dart';
 import '../../mechanics/mechanics_screen.dart';
-import '../edit_ad_controller.dart';
-import '../edit_ad_store.dart';
+import 'edit_ad_form_controller.dart';
+import 'edit_ad_form_store.dart';
 
 class EditAdForm extends StatefulWidget {
-  final EditAdController controller;
+  final AdModel ad;
 
   const EditAdForm({
     super.key,
-    required this.controller,
+    required this.ad,
   });
 
   @override
@@ -41,36 +42,30 @@ class EditAdForm extends StatefulWidget {
 }
 
 class _EditAdFormState extends State<EditAdForm> {
-  EditAdController get ctrl => widget.controller;
-  EditAdStore get store => widget.controller.store;
-
-  final nameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final mechsController = TextEditingController();
-  final addressController = TextEditingController();
-  final priceController = CurrencyTextController();
+  final mechManager = getIt<MechanicsManager>();
+  final store = EditAdFormStore();
+  final ctrl = EditAdFormController();
 
   @override
   void initState() {
     super.initState();
+
+    store.startAd(widget.ad);
+    ctrl.init(store);
   }
 
   @override
-  dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
-    mechsController.dispose();
-    addressController.dispose();
-    priceController.dispose();
+  void dispose() {
+    ctrl.dispoase();
 
     super.dispose();
   }
 
-  Future<void> _addMecanics() async {
+  Future<void> _selectMecanics() async {
     final mechPsIds = await Navigator.pushNamed(
       context,
       MechanicsScreen.routeName,
-      arguments: ctrl.selectedMechIds,
+      arguments: store.ad.mechanicsPSIds,
     ) as List<String>?;
 
     if (mechPsIds != null) {
@@ -106,7 +101,7 @@ class _EditAdFormState extends State<EditAdForm> {
               valueListenable: store.errorName,
               builder: (context, erroName, _) {
                 return CustomFormField(
-                  controller: nameController,
+                  controller: ctrl.nameController,
                   labelText: 'Nome do Jogo *',
                   fullBorder: false,
                   maxLines: null,
@@ -128,7 +123,7 @@ class _EditAdFormState extends State<EditAdForm> {
               valueListenable: store.errorDescription,
               builder: (context, errorDescription, _) {
                 return CustomFormField(
-                  controller: descriptionController,
+                  initialValue: store.ad.description,
                   labelText: 'Descreva o estado do Jogo *',
                   fullBorder: false,
                   maxLines: null,
@@ -166,17 +161,17 @@ class _EditAdFormState extends State<EditAdForm> {
             ],
           ),
           InkWell(
-            onTap: _addMecanics,
+            onTap: _selectMecanics,
             child: AbsorbPointer(
               child: CustomFormField(
-                controller: mechsController,
+                controller: ctrl.mechsController,
                 labelText: 'Mecânicas *',
                 fullBorder: false,
                 maxLines: null,
                 floatingLabelBehavior: null,
                 readOnly: true,
                 suffixIcon: const Icon(Icons.ads_click),
-                onChanged: store.setMechanics,
+                // onChanged: store.setMechanicsFromString,
               ),
             ),
           ),
@@ -187,7 +182,7 @@ class _EditAdFormState extends State<EditAdForm> {
                   onTap: _addAddress,
                   child: AbsorbPointer(
                     child: CustomFormField(
-                      controller: addressController,
+                      initialValue: store.ad.address?.addressString(),
                       labelText: 'Endereço *',
                       fullBorder: false,
                       maxLines: null,
@@ -195,18 +190,19 @@ class _EditAdFormState extends State<EditAdForm> {
                       readOnly: true,
                       suffixIcon: const Icon(Icons.ads_click),
                       errorText: errorAddress,
-                      onChanged: store.setAddress,
+                      // onChanged: store.setAddress,
                     ),
                   ),
                 );
               }),
           CustomFormField(
-            controller: priceController,
+            controller: ctrl.priceController,
             labelText: 'Preço *',
             fullBorder: false,
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
             floatingLabelBehavior: null,
+            onChanged: store.setPrice,
           ),
           Row(
             children: [

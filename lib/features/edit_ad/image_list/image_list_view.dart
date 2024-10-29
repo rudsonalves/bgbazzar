@@ -17,35 +17,35 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../common/models/ad.dart';
-import '../edit_ad_controller.dart';
-import '../edit_ad_store.dart';
-import 'horizontal_image_gallery.dart';
+import 'image_list_store.dart';
+import 'image_list_controller.dart';
+import '../widgets/horizontal_image_gallery.dart';
 
-class ImagesListView extends StatelessWidget {
-  final EditAdController ctrl;
-  EditAdStore get store => ctrl.store;
-
-  final bool validator;
-  final Function(AdModel ad)? editAd;
-  final Function(AdModel ad)? deleteAd;
+class ImagesListView extends StatefulWidget {
+  final List<String>? images;
 
   const ImagesListView({
     super.key,
-    required this.ctrl,
-    required this.validator,
-    this.editAd,
-    this.deleteAd,
+    required this.images,
   });
+
+  @override
+  State<ImagesListView> createState() => _ImagesListViewState();
+}
+
+class _ImagesListViewState extends State<ImagesListView> {
+  final ctrl = ImageListController();
+  final store = ImageListStore();
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: ctrl.app.isDark
+        color: isDark
             ? colorScheme.onSecondary
             : colorScheme.primary.withOpacity(0.25),
         borderRadius: BorderRadius.circular(12),
