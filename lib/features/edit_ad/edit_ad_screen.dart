@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 
 import '../../common/models/ad.dart';
 import '../../components/buttons/big_button.dart';
+import '../../components/others_widgets/state_error_message.dart';
+import '../../components/others_widgets/state_loading_message.dart';
 import 'edit_ad_form/edit_ad_form.dart';
 import 'edit_ad_store.dart';
 import 'image_list/image_list_view.dart';
@@ -31,7 +33,7 @@ class EditAdScreen extends StatefulWidget {
     this.ad,
   });
 
-  static const routeName = '/insert';
+  static const routeName = '/insert_ad';
 
   @override
   State<EditAdScreen> createState() => _EditAdScreenState();
@@ -77,11 +79,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
               icon: const Icon(Icons.print))
         ],
       ),
-      body:
-          // ListenableBuilder(
-          //   listenable: store.state,
-          //   builder: (context, _) =>
-          Stack(
+      body: Stack(
         children: [
           SingleChildScrollView(
             child: Padding(
@@ -93,30 +91,14 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ImagesListView(
-                    images: store.ad.images,
+                    store: store,
                   ),
-                  // ValueListenableBuilder(
-                  //   valueListenable: store.imagesLength,
-                  //   builder: (context, imagesLength, _) {
-                  //     //(imagesLength == 0 && store.isValid) ||
-                  //     if (imagesLength > 0) {
-                  //       return Container();
-                  //     } else {
-                  //       return Text(
-                  //         'Adicione algumas imagens.',
-                  //         style: TextStyle(
-                  //           color: colorScheme.error,
-                  //         ),
-                  //       );
-                  //     }
-                  //   },
-                  // ),
                   Column(
                     children: [
-                      EditAdForm(ad: store.ad),
+                      EditAdForm(store: store),
                       BigButton(
                         color: Colors.orange,
-                        label: widget.ad != null ? 'Atualizar' : 'Publicar',
+                        label: widget.ad != null ? 'Atualizar' : 'Salvar',
                         iconData: widget.ad != null ? Icons.update : Icons.save,
                         onPressed: _createAnnounce,
                       ),
@@ -126,12 +108,12 @@ class _EditAdScreenState extends State<EditAdScreen> {
               ),
             ),
           ),
-          // if (store.isLoading) const StateLoadingMessage(),
-          // if (store.isError)
-          //   StateErrorMessage(
-          //     message: ctrl.errorMessage,
-          //     closeDialog: ctrl.gotoSuccess,
-          //   ),
+          if (store.isLoading) const StateLoadingMessage(),
+          if (store.isError)
+            StateErrorMessage(
+              message: store.errorMessage,
+              closeDialog: store.setStateSuccess,
+            ),
         ],
       ),
       // ),

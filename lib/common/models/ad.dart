@@ -29,25 +29,17 @@ enum ProductCondition { all, used, sealed }
 class AdModel {
   String? id;
   UserModel? owner;
-  BoardgameModel? boardgame;
   String title;
   String description;
   bool hidePhone;
   double price;
   AdStatus status;
-  List<String> mechanicsPSIds;
+  List<String> mechanicsIds;
   AddressModel? address;
   List<String> images;
   ProductCondition condition;
 
-  int? yearpublished;
-  int? minplayers;
-  int? maxplayers;
-  int? minplaytime;
-  int? maxplaytime;
-  int? age;
-  String? designer;
-  String? artist;
+  BoardgameModel? boardgame;
 
   int views;
   DateTime createdAt;
@@ -55,22 +47,13 @@ class AdModel {
   AdModel({
     this.id,
     this.owner,
-    this.boardgame,
     required this.images,
     required this.title,
     required this.description,
-    required this.mechanicsPSIds,
+    required this.mechanicsIds,
     this.address,
     required this.price,
     this.condition = ProductCondition.all,
-    this.yearpublished,
-    this.minplayers,
-    this.maxplayers,
-    this.minplaytime,
-    this.maxplaytime,
-    this.age,
-    this.designer,
-    this.artist,
     this.hidePhone = false,
     this.status = AdStatus.pending,
     this.views = 0,
@@ -80,7 +63,7 @@ class AdModel {
   String get mechanicsString {
     final mechManager = getIt<MechanicsManager>();
     return mechManager.mechanics
-        .where((mec) => mechanicsPSIds.contains(mec.psId))
+        .where((mec) => mechanicsIds.contains(mec.psId))
         .map((mec) => mec.name)
         .toList()
         .join(', ');
@@ -111,24 +94,15 @@ class AdModel {
   String toString() {
     return 'AdModel(id: $id,\n'
         ' owner: $owner,\n'
-        ' boardgame: $boardgame,\n'
         ' title: $title,\n'
         ' description: $description,\n'
         ' hidePhone: $hidePhone,\n'
         ' price: $price,\n'
         ' status: $status,\n'
-        ' mechanicsId: $mechanicsPSIds,\n'
+        ' mechanicsIds: $mechanicsIds,\n'
         ' address: $address,\n'
         ' images: $images,\n'
         ' condition: $condition,\n'
-        ' yearpublished: $yearpublished,\n'
-        ' minplayers: $minplayers,\n'
-        ' maxplayers: $maxplayers,\n'
-        ' minplaytime: $minplaytime,\n'
-        ' maxplaytime: $maxplaytime,\n'
-        ' age: $age,\n'
-        ' designer: $designer,\n'
-        ' artist: $artist,\n'
         ' views: $views,\n'
         ' createdAt: $createdAt)';
   }
@@ -136,48 +110,30 @@ class AdModel {
   AdModel copyWith({
     String? id,
     UserModel? owner,
-    BoardgameModel? boardgame,
     String? title,
     String? description,
     bool? hidePhone,
     double? price,
     AdStatus? status,
-    List<String>? mechanicsId,
+    List<String>? mechanicsIds,
     AddressModel? address,
     List<String>? images,
     ProductCondition? condition,
-    int? yearpublished,
-    int? minplayers,
-    int? maxplayers,
-    int? minplaytime,
-    int? maxplaytime,
-    int? age,
-    String? designer,
-    String? artist,
     int? views,
     DateTime? createdAt,
   }) {
     return AdModel(
       id: id ?? this.id,
       owner: owner ?? this.owner,
-      boardgame: boardgame ?? this.boardgame,
       title: title ?? this.title,
       description: description ?? this.description,
       hidePhone: hidePhone ?? this.hidePhone,
       price: price ?? this.price,
       status: status ?? this.status,
-      mechanicsPSIds: mechanicsId ?? this.mechanicsPSIds,
+      mechanicsIds: mechanicsIds ?? this.mechanicsIds,
       address: address ?? this.address,
       images: images ?? this.images,
       condition: condition ?? this.condition,
-      yearpublished: yearpublished ?? this.yearpublished,
-      minplayers: minplayers ?? this.minplayers,
-      maxplayers: maxplayers ?? this.maxplayers,
-      minplaytime: minplaytime ?? this.minplaytime,
-      maxplaytime: maxplaytime ?? this.maxplaytime,
-      age: age ?? this.age,
-      designer: designer ?? this.designer,
-      artist: artist ?? this.artist,
       views: views ?? this.views,
       createdAt: createdAt ?? this.createdAt,
     );

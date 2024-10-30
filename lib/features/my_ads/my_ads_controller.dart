@@ -20,13 +20,15 @@ import 'dart:developer';
 import '../../common/basic_controller/basic_state.dart';
 import '../../common/models/ad.dart';
 import '../../common/models/filter.dart';
-import '../../repository/parse_server/ps_ad_repository.dart';
+import '../../get_it.dart';
+import '../../repository/interfaces/i_ad_repository.dart';
 import '../../common/basic_controller/basic_controller.dart';
 import '../../repository/parse_server/common/constants.dart';
 
 class MyAdsController extends BasicController {
   AdStatus _productStatus = AdStatus.active;
   AdStatus get productStatus => _productStatus;
+  final adRepository = getIt<IAdRepository>();
 
   int _adPage = 0;
 
@@ -51,7 +53,7 @@ class MyAdsController extends BasicController {
   }
 
   Future<void> _getAds() async {
-    final result = await PSAdRepository.getMyAds(
+    final result = await adRepository.getMyAds(
       currentUser.user!,
       _productStatus.index,
     );
@@ -90,7 +92,7 @@ class MyAdsController extends BasicController {
 
   Future<void> _getMoreAds() async {
     _adPage++;
-    final result = await PSAdRepository.get(
+    final result = await adRepository.get(
       filter: FilterModel(),
       search: '',
       page: _adPage,
@@ -113,7 +115,7 @@ class MyAdsController extends BasicController {
     int atePage = _adPage;
     try {
       changeState(BasicStateLoading());
-      final result = await PSAdRepository.updateStatus(ad);
+      final result = await adRepository.updateStatus(ad);
       if (result.isFailure) {
         throw Exception(result.error);
       }
@@ -140,7 +142,7 @@ class MyAdsController extends BasicController {
     try {
       changeState(BasicStateLoading());
       ad.status = AdStatus.deleted;
-      await PSAdRepository.updateStatus(ad);
+      await adRepository.updateStatus(ad);
       await _getAds();
       changeState(BasicStateSuccess());
     } catch (err) {

@@ -20,12 +20,13 @@ import 'dart:developer';
 import '../../common/models/address.dart';
 import '../../get_it.dart';
 import '../../manager/address_manager.dart';
-import '../../repository/parse_server/ps_ad_repository.dart';
+import '../../repository/interfaces/i_ad_repository.dart';
 import 'address_store.dart';
 
 class AddressController {
   final addressManager = getIt<AddressManager>();
   late final AddressStore store;
+  final adRepository = getIt<IAdRepository>();
 
   List<AddressModel> get addresses => addressManager.addresses;
   List<String> get addressNames => addressManager.addressNames.toList();
@@ -71,7 +72,7 @@ class AddressController {
     try {
       store.setStateLoading();
       if (adsList.isNotEmpty && moveToId != null) {
-        final result = await PSAdRepository.moveAdsAddressTo(adsList, moveToId);
+        final result = await adRepository.moveAdsAddressTo(adsList, moveToId);
         if (result.isFailure) {
           throw Exception(result.error);
         }

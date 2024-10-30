@@ -17,41 +17,27 @@
 
 import 'dart:io';
 
-import 'image_list_store.dart';
+import '../edit_ad_store.dart';
 
 class ImageListController {
-  late final ImageListStore store;
-  final List<String> _images = [];
+  late final EditAdStore store;
 
-  List<String> get images => _images;
+  List<String> get images => store.ad.images;
 
-  void init(ImageListStore store) {
+  void init(EditAdStore store) {
     this.store = store;
   }
 
-  void setImages(List<String> images) {
-    _images.clear();
-    _images.addAll(images);
-    store.setImagesLength(_images.length);
-  }
-
-  void addImage(String path) {
-    _images.add(path);
-    store.setImagesLength(_images.length);
+  void addImage(String image) {
+    store.addImage(image);
   }
 
   void removeImage(int index) {
     final image = images[index];
-    if (index < images.length) {
-      if (image.contains(RegExp(r'^http'))) {
-        _images.removeAt(index);
-        store.setImagesLength(_images.length);
-      } else {
-        final file = File(image);
-        _images.removeAt(index);
-        store.setImagesLength(_images.length);
-        file.delete();
-      }
+    store.removeImage(image);
+    if (!image.contains(RegExp(r'^http'))) {
+      final file = File(image);
+      file.delete();
     }
   }
 }

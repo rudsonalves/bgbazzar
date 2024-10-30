@@ -16,7 +16,7 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 class BoardgameModel {
-  String? bgId;
+  String? id;
   String name;
   String image;
   int publishYear;
@@ -32,7 +32,7 @@ class BoardgameModel {
   List<String> mechsPsIds;
 
   BoardgameModel({
-    this.bgId,
+    this.id,
     required this.name,
     required this.image,
     required this.publishYear,
@@ -61,7 +61,7 @@ class BoardgameModel {
   @override
   String toString() {
     return 'BoardgameModel('
-        ' id: $bgId,\n'
+        ' id: $id,\n'
         ' name: $name,\n'
         ' image: $image,\n'
         ' yearpublished: $publishYear,\n'

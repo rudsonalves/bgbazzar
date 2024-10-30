@@ -22,7 +22,8 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
-import '../../repository/parse_server/ps_ad_repository.dart';
+import '../../get_it.dart';
+import '../../repository/interfaces/i_ad_repository.dart';
 import '../new_address/new_address_screen.dart';
 import 'address_controller.dart';
 import 'address_store.dart';
@@ -56,8 +57,10 @@ class _AddressScreenState extends State<AddressScreen> {
 
   Future<void> _removeAddress() async {
     final addressId = ctrl.selectesAddresId;
+    final adRepository = getIt<IAdRepository>();
+
     if (addressId != null) {
-      final result = await PSAdRepository.adsInAddress(addressId);
+      final result = await adRepository.adsInAddress(addressId);
       if (result.isFailure) {
         // FIXME: complete this error handling
         throw Exception('AddressScreen._removeAddress err: ${result.error}');

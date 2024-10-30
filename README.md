@@ -9,7 +9,67 @@
 
 # ChangeLog
 
-## 2024/10/29 - version: 0.7.09+59
+## 2024/10/30 - version: 0.7.09+60
+
+This commit focuses on the restructuring and refactoring of the advertisement and board game models, as well as the migration from `PSAdRepository` to the use of a repository interface (`IAdRepository`). It also includes improvements to state management in the editing advertisements flow, specifically targeting modularity and reusability.
+
+### Changes made:
+
+1. **lib/common/models/ad.dart**:
+   - Removed attributes related to board game details (`yearpublished`, `minplayers`, `maxplayers`, `minplaytime`, `maxplaytime`, `age`, `designer`, `artist`), and moved them to the `BoardgameModel` to enhance modularity.
+   - Replaced `mechanicsPSIds` with `mechanicsIds` to unify the naming convention.
+   - Adjusted constructors, copy methods, and properties to reflect these changes.
+   - Updated the `toString` method to reflect the removal of board game details, simplifying the output.
+
+2. **lib/common/models/boardgame.dart**:
+   - Renamed the `bgId` attribute to `id` to maintain consistency throughout the codebase.
+   - Updated all references to `bgId` in related classes and methods to `id` to ensure consistency.
+
+3. **lib/features/address/address_controller.dart** and **lib/features/address/address_screen.dart**:
+   - Replaced `PSAdRepository` with `IAdRepository` via dependency injection (`getIt<IAdRepository>()`), enhancing flexibility and testing capabilities.
+   - Updated method calls to use the injected `adRepository` instance instead of directly referencing `PSAdRepository`.
+
+4. **lib/features/edit_ad/**:
+   - Removed `edit_ad_controller.dart` and `edit_ad_form/edit_ad_form_store.dart`, consolidating their responsibilities into `edit_ad_store.dart` and `edit_ad_form.dart` to simplify the flow.
+   - Updated `edit_ad_form_controller.dart` and `edit_ad_store.dart` to integrate new methods for handling the `BoardgameModel` and ensure smoother state transitions.
+   - Added detailed error handling and validation in `EditAdStore` for fields like `images`, `price`, and `address` to improve user input management.
+   - Replaced deprecated and redundant attributes (`mechanicsPSIds`, `imagesLength`, etc.) with more dynamic value notifiers, improving state management.
+   - Modified the logic for setting board game information in `EditAdStore` to utilize the new `BoardgameModel` reference, centralizing board game details.
+
+5. **lib/features/edit_ad/image_list/**:
+   - Refactored `image_list_controller.dart` and deleted `image_list_store.dart`, simplifying image management for advertisements.
+   - Introduced new logic in `ImagesListView` to handle dynamic image updates and user feedback, such as minimum image requirements.
+   - Updated `HorizontalImageGallery` to remove redundant parameters and make use of the new `EditAdStore` for image handling, streamlining the workflow.
+
+6. **lib/features/edit_boardgame/edit_boardgame_controller.dart**:
+   - Updated the attribute `bgId` to `id` for consistency in board game management.
+   - Adjusted the logic for saving board game details to reflect the attribute name change, ensuring all related operations are updated.
+
+7. **lib/features/my_ads/my_ads_controller.dart** and **lib/features/shop/shop_controller.dart**:
+   - Updated all references from `PSAdRepository` to `IAdRepository` to maintain the new abstraction layer.
+   - Leveraged `getIt<IAdRepository>()` for better dependency handling, ensuring all references are updated consistently.
+   - Modified methods like `_getAds`, `_getMoreAds`, and `_updateAdStatus` to use the injected repository interface, enhancing code flexibility.
+
+8. **lib/repository/interfaces/i_ad_repository.dart**:
+   - Created the `IAdRepository` interface to define methods like `moveAdsAddressTo`, `adsInAddress`, `updateStatus`, `getMyAds`, `get`, `save`, `update`, and `delete`, ensuring consistency in ad data operations.
+   - Documented each method to provide clarity on its intended use and expected parameters, facilitating future maintenance and extension.
+
+9. **lib/repository/parse_server/ps_ad_repository.dart**:
+   - Implemented `IAdRepository` interface methods in `PSAdRepository` to conform to the newly introduced abstraction.
+   - Added the relationship between `AdModel` and `BoardgameModel` to maintain integrity when saving and updating advertisements.
+   - Updated methods like `save` and `update` to utilize `ParseObject` relationships for the board game, ensuring proper linkage between ads and their related board games.
+   - Removed redundant attributes (`yearpublished`, `minplayers`, etc.) from the Parse save logic, centralizing these details in the `BoardgameModel`.
+
+10. **lib/repository/parse_server/common/constants.dart** and **parse_to_model.dart**:
+    - Removed constants related to board game attributes from the `AdModel` and added `keyAdBoargGame` to reflect new data handling.
+    - Updated parsing logic to support new relationships between ads and board games, ensuring that board game details are properly retrieved and associated with the advertisement model.
+    - Modified the `ParseToModel` utility to handle the nested `BoardgameModel` within `AdModel`, enhancing the separation of concerns and improving data integrity.
+
+### Conclusion:
+The refactoring enhances code modularity and maintainability by separating concerns between advertisements and board games. The migration to repository interfaces (`IAdRepository`) paves the way for better testing and future extensibility, while the improvements in state management contribute to a more predictable and user-friendly experience. This detailed restructuring also reduces redundancy, centralizes board game attributes, and enhances overall code readability and scalability.
+
+
+## 2024/10/30 - version: 0.7.09+59
 
 This commit introduces significant refactoring and structural improvements in the codebase, focusing on the `EditAd` feature. The changes enhance maintainability, readability, and efficiency while optimizing form and controller handling.
 

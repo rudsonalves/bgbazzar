@@ -59,14 +59,7 @@ const keyAdAddress = 'address';
 const keyAdViews = 'views';
 const keyAdCondition = 'condition';
 const keyAdCreatedAt = 'createdAt';
-const keyAdYearpublished = 'yearpublished';
-const keyAdMinplayers = 'minplayers';
-const keyAdMaxplayers = 'maxplayers';
-const keyAdMinplaytime = 'minplaytime';
-const keyAdMaxplaytime = 'maxplaytime';
-const keyAdAge = 'age';
-const keyAdDesigner = 'designer';
-const keyAdArtist = 'artist';
+const keyAdBoargGame = 'boargGame';
 
 const keyFavoriteTable = 'Favorites';
 const keyFavoriteId = 'objectId';

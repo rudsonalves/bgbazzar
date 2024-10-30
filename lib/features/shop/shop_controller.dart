@@ -25,7 +25,7 @@ import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
 import '../../common/singletons/search_filter.dart';
 import '../../get_it.dart';
-import '../../repository/parse_server/ps_ad_repository.dart';
+import '../../repository/interfaces/i_ad_repository.dart';
 import '../../repository/parse_server/common/constants.dart';
 import 'shop_store.dart';
 
@@ -33,6 +33,7 @@ class ShopController {
   final app = getIt<AppSettings>();
   final currentUser = getIt<CurrentUser>();
   final searchFilter = getIt<SearchFilter>();
+  final adRepository = getIt<IAdRepository>();
   late final ShopStore store;
 
   final List<AdModel> _ads = [];
@@ -115,7 +116,7 @@ class ShopController {
   }
 
   Future<void> _getAds() async {
-    final result = await PSAdRepository.get(
+    final result = await adRepository.get(
       filter: filter,
       search: searchFilter.searchString,
     );
@@ -150,7 +151,7 @@ class ShopController {
   }
 
   Future<void> _getMoreAds() async {
-    final result = await PSAdRepository.get(
+    final result = await adRepository.get(
       filter: filter,
       search: searchFilter.searchString,
       page: _adsPage,

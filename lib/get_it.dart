@@ -17,6 +17,7 @@
 
 import 'dart:developer';
 
+import 'package:bgbazzar/repository/parse_server/ps_ad_repository.dart';
 import 'package:get_it/get_it.dart';
 
 import 'common/singletons/app_settings.dart';
@@ -27,6 +28,7 @@ import 'manager/address_manager.dart';
 import 'manager/boardgames_manager.dart';
 import 'manager/favorites_manager.dart';
 import 'manager/mechanics_manager.dart';
+import 'repository/interfaces/i_ad_repository.dart';
 import 'repository/interfaces/i_mechanic_repository.dart';
 import 'repository/interfaces/i_user_repository.dart';
 import 'repository/parse_server/ps_mechanics_repository.dart';
@@ -55,6 +57,7 @@ void setupDependencies() {
     // Repositories
     getIt.registerFactory<IUserRepository>(() => PSUserRepository());
     getIt.registerFactory<IMechanicRepository>(() => PSMechanicsRepository());
+    getIt.registerFactory<IAdRepository>(() => PSAdRepository());
   } catch (err) {
     log('GetIt Locator Error: $err');
   }
