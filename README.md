@@ -9,6 +9,30 @@
 
 # ChangeLog
 
+## 2024/10/30 - version: 0.7.09+61
+
+This commit introduces several important refactorings and improvements across multiple files in the Parse server repositories, focusing on modularizing error handling, refining query logic, and optimizing code readability and maintainability.
+
+### Changes made:
+
+1. **lib/repository/parse_server/common/parse_to_model.dart**:
+   - Added `ParseObjectExtensions` extension to allow setting non-null fields on `ParseObject` using the `setNonNull` method.
+
+2. **lib/repository/parse_server/ps_ad_repository.dart**:
+   - Updated `moveAdsAddressTo` method to perform multiple ad updates in parallel using `Future.wait`, improving efficiency.
+   - Refactored `adsInAddress`, `updateStatus`, `getMyAds`, `get`, `save`, and `update` methods to use a more consistent error handling approach with `_handleError`.
+   - Introduced new helper methods `_parseCurrentUser`, `_parseAddress`, `_parseBoardgame`, `_createDefaultAcl`, `_prepareAdForSaveOrUpdate`, and `_handleError` to modularize repetitive logic, improve code readability, and facilitate reuse.
+   - Modified `_saveImages` to return directly as a list of `ParseFile` objects instead of wrapping the result in a `DataResult`, and refactored it for clarity and simplicity.
+   - Added `_prepareAdForSaveOrUpdate` to centralize ad creation or update logic, using `setNonNull` for all fields to prevent unnecessary null checks.
+   - Created new methods to generate `ParseObject` representations of address and board game (`_parseAddress`, `_parseBoardgame`) to improve maintainability.
+
+3. **lib/repository/parse_server/ps_user_repository.dart**:
+   - Renamed parameter `message` to `module` in `_handleError` method to standardize error handling parameters and improve log clarity.
+
+### Conclusion:
+These changes enhance the modularity and maintainability of the code by encapsulating repeated logic into well-defined helper methods and extensions. Additionally, the adoption of batch updates and parallelism in operations significantly improves performance, while consistent error handling across the repository ensures better error tracking and debugging.
+
+
 ## 2024/10/30 - version: 0.7.09+60
 
 This commit focuses on the restructuring and refactoring of the advertisement and board game models, as well as the migration from `PSAdRepository` to the use of a repository interface (`IAdRepository`). It also includes improvements to state management in the editing advertisements flow, specifically targeting modularity and reusability.
