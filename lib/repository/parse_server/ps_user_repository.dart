@@ -225,8 +225,8 @@ class PSUserRepository implements IUserRepository {
     }
   }
 
-  DataResult<T> _handleError<T>(String message, Object error) {
-    final fullMessage = 'UserRepository.$message: $error';
+  DataResult<T> _handleError<T>(String module, Object error) {
+    final fullMessage = 'UserRepository.$module: $error';
     log(fullMessage);
     return DataResult.failure(GenericFailure(message: fullMessage));
   }

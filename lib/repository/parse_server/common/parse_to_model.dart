@@ -26,6 +26,14 @@ import '/common/models/favorite.dart';
 import '/common/models/user.dart';
 import 'constants.dart';
 
+extension ParseObjectExtensions on ParseObject {
+  void setNonNull<T>(String key, T? value) {
+    if (value != null) {
+      set<T>(key, value);
+    }
+  }
+}
+
 /// This class provides static methods to convert Parse objects to application
 /// models.
 class ParseToModel {
