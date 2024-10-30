@@ -19,17 +19,17 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '../../../components/custon_field_controllers/currency_text_controller.dart';
+import '/components/custon_field_controllers/currency_text_controller.dart';
+import '../edit_ad_store.dart';
 import '/common/singletons/current_user.dart';
 import '/common/models/ad.dart';
 import '/common/models/mechanic.dart';
 import '/get_it.dart';
 import '/manager/boardgames_manager.dart';
 import '/manager/mechanics_manager.dart';
-import 'edit_ad_form_store.dart';
 
 class EditAdFormController {
-  late final EditAdFormStore store;
+  late final EditAdStore store;
   final bgManager = getIt<BoardgamesManager>();
   final mechanicsManager = getIt<MechanicsManager>();
   final currentUser = getIt<CurrentUser>();
@@ -41,12 +41,13 @@ class EditAdFormController {
   final nameController = TextEditingController();
   final priceController = CurrencyTextController();
   final mechsController = TextEditingController();
+  final addressController = TextEditingController();
 
   AdModel ad = AdModel(
     images: [],
     title: '',
     description: '',
-    mechanicsPSIds: [],
+    mechanicsIds: [],
     price: 0,
   );
 
@@ -55,7 +56,7 @@ class EditAdFormController {
   ProductCondition get condition => _condition;
   List<MechanicModel> get mechanics => mechanicsManager.mechanics;
 
-  void init(EditAdFormStore store) {
+  void init(EditAdStore store) {
     this.store = store;
   }
 
@@ -63,6 +64,7 @@ class EditAdFormController {
     nameController.dispose();
     mechsController.dispose();
     priceController.dispose();
+    addressController.dispose();
   }
 
   Future<void> setBgInfo(String bgId) async {
@@ -75,19 +77,11 @@ class EditAdFormController {
       final bg = result.data;
       if (bg != null) {
         setMechanicsPsIds(bg.mechsPsIds);
-        store.setName(bg.name);
-        ad.title = bg.name;
-        ad.yearpublished = bg.publishYear;
-        ad.minplayers = bg.minPlayers;
-        ad.maxplayers = bg.maxPlayers;
-        ad.minplaytime = bg.minTime;
-        ad.maxplaytime = bg.maxTime;
-        ad.age = bg.minAge;
-        ad.designer = bg.designer;
-        ad.artist = bg.artist;
-        ad.mechanicsPSIds = bg.mechsPsIds;
+        setName(bg.name);
+        store.setBGInfo(bg);
+        setMechanicsPsIds(bg.mechsPsIds);
       }
-      log(ad.toString());
+      log(store.ad.toString());
       store.setStateSuccess();
     } catch (err) {
       log(err.toString());
@@ -106,7 +100,8 @@ class EditAdFormController {
     final addressNames = currentUser.addressNames;
     if (addressNames.contains(addressName)) {
       final address = currentUser.addressByName(addressName)!;
-      // store.setAddress(address.addressString());
+      addressController.text = address.addressString();
+      store.setAddress(address);
       _selectedAddressId = address.id!;
     }
   }
@@ -117,5 +112,19 @@ class EditAdFormController {
 
   void setAdStatus(AdStatus newStatus) {
     _adStatus = newStatus;
+  }
+
+  void setName(String name) {
+    nameController.text = name;
+    store.setName(name);
+  }
+
+  void setPrice(double price) {
+    priceController.currencyValue = price;
+    store.setPrice(price);
+  }
+
+  void setPriceString(String value) {
+    store.setPrice(priceController.currencyValue);
   }
 }

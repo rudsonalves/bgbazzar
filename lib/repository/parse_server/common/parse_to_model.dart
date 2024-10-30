@@ -15,15 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:bgbazzar/common/models/mechanic.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import '../../../common/models/address.dart';
-import '../../../common/models/ad.dart';
-import '../../../common/models/bg_name.dart';
-import '../../../common/models/boardgame.dart';
-import '../../../common/models/favorite.dart';
-import '../../../common/models/user.dart';
+import '/common/models/mechanic.dart';
+import '/common/models/address.dart';
+import '/common/models/ad.dart';
+import '/common/models/bg_name.dart';
+import '/common/models/boardgame.dart';
+import '/common/models/favorite.dart';
+import '/common/models/user.dart';
 import 'constants.dart';
 
 /// This class provides static methods to convert Parse objects to application
@@ -92,20 +92,12 @@ class ParseToModel {
       images: (parse.get<List<dynamic>>(keyAdImages) as List<dynamic>)
           .map((item) => (item as ParseFile).url!)
           .toList(),
-      mechanicsPSIds: mechs.map((e) => e as String).toList(),
+      mechanicsIds: mechs.map((element) => element as String).toList(),
       address: address,
       status: AdStatus.values
           .firstWhere((s) => s.index == parse.get<int>(keyAdStatus)!),
       condition: ProductCondition.values
           .firstWhere((c) => c.index == parse.get<int>(keyAdCondition)!),
-      yearpublished: parse.get<int?>(keyAdYearpublished),
-      minplayers: parse.get<int?>(keyAdMinplayers),
-      maxplayers: parse.get<int?>(keyAdMaxplayers),
-      minplaytime: parse.get<int?>(keyAdMinplaytime),
-      maxplaytime: parse.get<int?>(keyAdMaxplaytime),
-      age: parse.get<int?>(keyAdAge),
-      designer: parse.get<String?>(keyAdDesigner),
-      artist: parse.get<String?>(keyAdArtist),
       views: parse.get<int>(keyAdViews, defaultValue: 0)!,
       createdAt: parse.get<DateTime>(keyAdCreatedAt)!,
     );
@@ -124,7 +116,7 @@ class ParseToModel {
     final mechs = parse.get<List<dynamic>>(keyBgMechanics)!;
 
     return BoardgameModel(
-      bgId: parse.objectId,
+      id: parse.objectId,
       name: parse.get<String>(keyBgName)!,
       image: parse.get<ParseFile>(keyBgImage)!.url!,
       publishYear: parse.get<int>(keyBgPublishYear)!,

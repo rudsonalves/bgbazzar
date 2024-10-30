@@ -175,7 +175,7 @@ class _ProductScreenState extends State<ProductScreen>
                     TitleProduct(title: ad.title),
                     const Divider(indent: indent, endIndent: indent),
                     DescriptionProduct(description: ad.description),
-                    if (ad.designer != null)
+                    if (ad.boardgame != null)
                       GameData(
                         ad: ad,
                         indent: indent,

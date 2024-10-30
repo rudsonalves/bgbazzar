@@ -148,7 +148,7 @@ class EditBoardgameController extends ChangeNotifier {
   Future<DataResult<void>> saveBoardgame() async {
     try {
       _changeState(EditBoardgameStateLoading());
-      if (_editedBg != null && _editedBg!.bgId != null) {
+      if (_editedBg != null && _editedBg!.id != null) {
         _editedBg!.name = nameController.text;
         _editedBg!.image = imageController.text;
         _editedBg!.publishYear = yearController.numericValue;

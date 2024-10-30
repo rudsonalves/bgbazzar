@@ -47,12 +47,12 @@ class GameData extends StatelessWidget {
           text: TextSpan(
             children: [
               TextSpan(
-                text: ad.minplayers.toString(),
+                text: ad.boardgame!.minPlayers.toString(),
                 style: AppTextStyle.font16Bold,
               ),
               const TextSpan(text: ' a '),
               TextSpan(
-                text: ad.maxplayers.toString(),
+                text: ad.boardgame!.maxPlayers.toString(),
                 style: AppTextStyle.font16Bold,
               ),
               const TextSpan(text: ' Jogadores'),
@@ -63,12 +63,12 @@ class GameData extends StatelessWidget {
           text: TextSpan(
             children: [
               TextSpan(
-                text: ad.minplaytime.toString(),
+                text: ad.boardgame!.minTime.toString(),
                 style: AppTextStyle.font16Bold,
               ),
               const TextSpan(text: ' a '),
               TextSpan(
-                text: ad.maxplaytime.toString(),
+                text: ad.boardgame!.maxTime.toString(),
                 style: AppTextStyle.font16Bold,
               ),
               const TextSpan(text: ' minutos'),
@@ -79,7 +79,7 @@ class GameData extends StatelessWidget {
           text: TextSpan(children: [
             const TextSpan(text: 'Idade recomendada: '),
             TextSpan(
-              text: '${ad.age}+',
+              text: '${ad.boardgame!.minAge}+',
               style: AppTextStyle.font16Bold,
             ),
           ]),
@@ -89,7 +89,7 @@ class GameData extends StatelessWidget {
             text: 'Designer: ',
             children: [
               TextSpan(
-                text: ad.designer,
+                text: ad.boardgame!.designer,
                 style: AppTextStyle.font16Bold,
               ),
             ],
@@ -100,7 +100,7 @@ class GameData extends StatelessWidget {
             text: 'Artistas: ',
             children: [
               TextSpan(
-                text: ad.artist,
+                text: ad.boardgame!.artist,
                 style: AppTextStyle.font16Bold,
               ),
             ],

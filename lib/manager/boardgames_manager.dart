@@ -132,7 +132,7 @@ class BoardgamesManager {
       }
 
       final bgName = BGNameModel(
-        bgId: newBg.bgId,
+        bgId: newBg.id,
         name: '${newBg.name} (${newBg.publishYear})',
       );
       SqliteBGNamesRepository.add(bgName);
@@ -181,8 +181,8 @@ class BoardgamesManager {
         await File(convertedImagePath).delete();
       }
 
-      final bgName = _bgs.firstWhere((b) => b.bgId == bg.bgId,
-          orElse: () => BGNameModel());
+      final bgName =
+          _bgs.firstWhere((b) => b.bgId == bg.id, orElse: () => BGNameModel());
       if (bgName.id == null) {
         throw Exception('_bgs bgId not found.');
       }
@@ -197,7 +197,7 @@ class BoardgamesManager {
 
       SqliteBGNamesRepository.update(bgName);
 
-      final index = _bgs.indexWhere((b) => b.bgId == bg.bgId);
+      final index = _bgs.indexWhere((b) => b.bgId == bg.id);
       if (index == -1) {
         throw Exception('_bgs index not found.');
       }

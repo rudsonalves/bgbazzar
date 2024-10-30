@@ -106,7 +106,7 @@ class PSBoardgameRepository {
       parseAcl.setPublicWriteAccess(allowed: false);
 
       parse
-        ..objectId = bg.bgId
+        ..objectId = bg.id
         ..setACL(parseAcl)
         ..set<String>(keyBgName, bg.name)
         ..set<ParseFile>(keyBgImage, parseImage)

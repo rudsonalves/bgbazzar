@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../edit_ad_store.dart';
 import '/get_it.dart';
 import '../../../manager/mechanics_manager.dart';
 import '/components/buttons/big_button.dart';
@@ -27,14 +28,13 @@ import '../../address/address_screen.dart';
 import '../../boardgame/boardgame_screen.dart';
 import '../../mechanics/mechanics_screen.dart';
 import 'edit_ad_form_controller.dart';
-import 'edit_ad_form_store.dart';
 
 class EditAdForm extends StatefulWidget {
-  final AdModel ad;
+  final EditAdStore store;
 
   const EditAdForm({
     super.key,
-    required this.ad,
+    required this.store,
   });
 
   @override
@@ -43,14 +43,13 @@ class EditAdForm extends StatefulWidget {
 
 class _EditAdFormState extends State<EditAdForm> {
   final mechManager = getIt<MechanicsManager>();
-  final store = EditAdFormStore();
   final ctrl = EditAdFormController();
+
+  EditAdStore get store => widget.store;
 
   @override
   void initState() {
     super.initState();
-
-    store.startAd(widget.ad);
     ctrl.init(store);
   }
 
@@ -65,7 +64,7 @@ class _EditAdFormState extends State<EditAdForm> {
     final mechPsIds = await Navigator.pushNamed(
       context,
       MechanicsScreen.routeName,
-      arguments: store.ad.mechanicsPSIds,
+      arguments: store.ad.mechanicsIds,
     ) as List<String>?;
 
     if (mechPsIds != null) {
@@ -93,6 +92,8 @@ class _EditAdFormState extends State<EditAdForm> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Form(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,6 +118,16 @@ class _EditAdFormState extends State<EditAdForm> {
               onPressed: _getBGGInfo,
               label: 'Informações do Jogo',
               iconData: Icons.info_outline_rounded,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              'Estes dados são informações genéricas do jogo coletadas em sites especializados e no distribuidor',
             ),
           ),
           ValueListenableBuilder(
@@ -182,7 +193,7 @@ class _EditAdFormState extends State<EditAdForm> {
                   onTap: _addAddress,
                   child: AbsorbPointer(
                     child: CustomFormField(
-                      initialValue: store.ad.address?.addressString(),
+                      controller: ctrl.addressController,
                       labelText: 'Endereço *',
                       fullBorder: false,
                       maxLines: null,
@@ -202,7 +213,7 @@ class _EditAdFormState extends State<EditAdForm> {
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
             floatingLabelBehavior: null,
-            onChanged: store.setPrice,
+            onChanged: ctrl.setPriceString,
           ),
           Row(
             children: [

@@ -15,18 +15,19 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:bgbazzar/common/theme/app_text_style.dart';
 import 'package:flutter/material.dart';
 
-import 'image_list_store.dart';
+import '../edit_ad_store.dart';
 import 'image_list_controller.dart';
 import '../widgets/horizontal_image_gallery.dart';
 
 class ImagesListView extends StatefulWidget {
-  final List<String>? images;
+  final EditAdStore store;
 
   const ImagesListView({
     super.key,
-    required this.images,
+    required this.store,
   });
 
   @override
@@ -35,31 +36,56 @@ class ImagesListView extends StatefulWidget {
 
 class _ImagesListViewState extends State<ImagesListView> {
   final ctrl = ImageListController();
-  final store = ImageListStore();
+
+  EditAdStore get store => widget.store;
+
+  @override
+  void initState() {
+    super.initState();
+
+    ctrl.init(store);
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        color: isDark
-            ? colorScheme.onSecondary
-            : colorScheme.primary.withOpacity(0.25),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      height: 120,
-      child: ValueListenableBuilder(
-        valueListenable: store.imagesLength,
-        builder: (context, length, _) => HotizontalImageGallery(
-          length: length,
-          images: ctrl.images,
-          addImage: ctrl.addImage,
-          removeImage: ctrl.removeImage,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            color: isDark
+                ? colorScheme.onSecondary
+                : colorScheme.primary.withOpacity(0.25),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          height: 120,
+          child: ValueListenableBuilder(
+            valueListenable: store.updateImages,
+            builder: (context, erroString, _) => HotizontalImageGallery(
+              images: ctrl.images,
+              addImage: ctrl.addImage,
+              removeImage: ctrl.removeImage,
+            ),
+          ),
         ),
-      ),
+        ValueListenableBuilder(
+            valueListenable: store.errorImages,
+            builder: (context, message, _) {
+              if (message == null) {
+                return Container();
+              } else {
+                return Text(
+                  message,
+                  style: AppTextStyle.font12Bold
+                      .copyWith(color: colorScheme.error),
+                );
+              }
+            })
+      ],
     );
   }
 }

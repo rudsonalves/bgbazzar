@@ -28,14 +28,12 @@ import 'photo_origin_bottom_sheet.dart';
 const maxImages = 5;
 
 class HotizontalImageGallery extends StatefulWidget {
-  final int length;
   final List<String> images;
   final void Function(String path) addImage;
   final void Function(int index) removeImage;
 
   const HotizontalImageGallery({
     super.key,
-    required this.length,
     required this.images,
     required this.addImage,
     required this.removeImage,
@@ -157,11 +155,13 @@ class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
 
   @override
   Widget build(BuildContext context) {
+    int length = widget.images.length;
+
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: widget.length < maxImages ? widget.length + 1 : maxImages,
+      itemCount: length < maxImages ? length + 1 : maxImages,
       itemBuilder: (context, index) {
-        if (index < widget.length) {
+        if (index < length) {
           // Show image
           return Padding(
             padding: const EdgeInsets.only(right: 4),
@@ -188,7 +188,6 @@ class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
                       Symbols.add_a_photo_rounded,
                       size: 65,
                     ),
-                    // Text('+ inserir'),
                   ],
                 ),
               ),

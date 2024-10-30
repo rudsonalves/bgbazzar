@@ -25,15 +25,15 @@ import '../../common/abstracts/data_result.dart';
 import '../../common/models/ad.dart';
 import '../../common/models/filter.dart';
 import '../../common/models/user.dart';
+import '../interfaces/i_ad_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 
 /// This class provides methods to interact with the Parse Server
 /// to retrieve and save advertisements.
-class PSAdRepository {
-  PSAdRepository._();
-
-  static Future<DataResult<void>> moveAdsAddressTo(
+class PSAdRepository implements IAdRepository {
+  @override
+  Future<DataResult<void>> moveAdsAddressTo(
     List<String> adsIdList,
     String moveToId,
   ) async {
@@ -58,7 +58,8 @@ class PSAdRepository {
     }
   }
 
-  static Future<DataResult<List<String>>> adsInAddress(String addressId) async {
+  @override
+  Future<DataResult<List<String>>> adsInAddress(String addressId) async {
     final List<String> adsId = [];
     try {
       final query = QueryBuilder<ParseObject>(ParseObject(keyAdTable));
@@ -85,7 +86,8 @@ class PSAdRepository {
     }
   }
 
-  static Future<DataResult<bool>> updateStatus(AdModel ad) async {
+  @override
+  Future<DataResult<bool>> updateStatus(AdModel ad) async {
     try {
       final parse = ParseObject(keyAdTable)
         ..objectId = ad.id!
@@ -110,8 +112,8 @@ class PSAdRepository {
   /// [user] - The user to apply to the search.
   /// Returns a list of `AdvertModel` if the query is successful, otherwise
   /// returns `null`.
-  static Future<DataResult<List<AdModel>?>> getMyAds(
-      UserModel usr, int status) async {
+  @override
+  Future<DataResult<List<AdModel>?>> getMyAds(UserModel usr, int status) async {
     try {
       final query = QueryBuilder<ParseObject>(ParseObject(keyAdTable));
 
@@ -158,7 +160,8 @@ class PSAdRepository {
   /// [page] - The page number to retrieve, used for pagination.
   /// Returns a list of `AdModel` if the query is successful, otherwise
   /// returns `null`.
-  static Future<DataResult<List<AdModel>?>> get({
+  @override
+  Future<DataResult<List<AdModel>?>> get({
     required FilterModel filter,
     required String search,
     int page = 0,
@@ -245,7 +248,8 @@ class PSAdRepository {
   /// [ad] - The advertisement model to save.
   /// Returns the saved `AdModel` if successful, otherwise throws an
   /// exception.
-  static Future<DataResult<AdModel?>> save(AdModel ad) async {
+  @override
+  Future<DataResult<AdModel?>> save(AdModel ad) async {
     try {
       final parseUser = await ParseUser.currentUser() as ParseUser?;
       if (parseUser == null) {
@@ -266,6 +270,9 @@ class PSAdRepository {
         parseAd.objectId = ad.id;
       }
 
+      final parseBoardgame = ParseObject(keyBgTable);
+      parseBoardgame.objectId = ad.boardgame!.id;
+
       final parseAcl = ParseACL(owner: parseUser);
       parseAcl.setPublicReadAccess(allowed: true);
       parseAcl.setPublicWriteAccess(allowed: false);
@@ -279,17 +286,10 @@ class PSAdRepository {
         ..set<double>(keyAdPrice, ad.price)
         ..set<int>(keyAdStatus, ad.status.index)
         ..set<int>(keyAdCondition, ad.condition.index)
-        ..set<int?>(keyAdYearpublished, ad.yearpublished)
-        ..set<int?>(keyAdMinplayers, ad.minplayers)
-        ..set<int?>(keyAdMaxplayers, ad.maxplayers)
-        ..set<int?>(keyAdMinplaytime, ad.minplaytime)
-        ..set<int?>(keyAdMaxplaytime, ad.maxplaytime)
-        ..set<int?>(keyAdAge, ad.age)
-        ..set<String?>(keyAdDesigner, ad.designer)
-        ..set<String?>(keyAdArtist, ad.artist)
+        ..set<ParseObject>(keyAdBoargGame, parseBoardgame)
         ..set<ParseObject>(keyAdAddress, parseAddress)
         ..set<List<ParseFile>>(keyAdImages, parseImages)
-        ..set<List<String>>(keyAdMechanics, ad.mechanicsPSIds);
+        ..set<List<String>>(keyAdMechanics, ad.mechanicsIds);
 
       final response = await parseAd.save();
       if (!response.success) {
@@ -311,7 +311,8 @@ class PSAdRepository {
     }
   }
 
-  static Future<DataResult<AdModel?>> update(AdModel ad) async {
+  @override
+  Future<DataResult<AdModel?>> update(AdModel ad) async {
     try {
       final parseUser = await ParseUser.currentUser() as ParseUser?;
       if (parseUser == null) {
@@ -331,6 +332,9 @@ class PSAdRepository {
         throw Exception('Ad ID cannot be null for update');
       }
 
+      final parseBoardgame = ParseObject(keyBgTable);
+      parseBoardgame.objectId = ad.boardgame!.id;
+
       final parseAd = ParseObject(keyAdTable)..objectId = ad.id!;
 
       parseAd
@@ -340,17 +344,10 @@ class PSAdRepository {
         ..set<double>(keyAdPrice, ad.price)
         ..set<int>(keyAdStatus, ad.status.index)
         ..set<int>(keyAdCondition, ad.condition.index)
-        ..set<int?>(keyAdYearpublished, ad.yearpublished)
-        ..set<int?>(keyAdMinplayers, ad.minplayers)
-        ..set<int?>(keyAdMaxplayers, ad.maxplayers)
-        ..set<int?>(keyAdMinplaytime, ad.minplaytime)
-        ..set<int?>(keyAdMaxplaytime, ad.maxplaytime)
-        ..set<int?>(keyAdAge, ad.age)
-        ..set<String?>(keyAdDesigner, ad.designer)
-        ..set<String?>(keyAdArtist, ad.artist)
+        ..set<ParseObject>(keyAdBoargGame, parseBoardgame)
         ..set<ParseObject>(keyAdAddress, parseAddress)
         ..set<List<ParseFile>>(keyAdImages, parseImages)
-        ..set<List<String>>(keyAdMechanics, ad.mechanicsPSIds);
+        ..set<List<String>>(keyAdMechanics, ad.mechanicsIds);
 
       final response = await parseAd.update();
       if (!response.success) {
@@ -378,7 +375,7 @@ class PSAdRepository {
   /// [parseUser] - The current Parse user.
   /// Returns a list of `ParseFile` representing the saved images.
   /// Throws an exception if the save operation fails.
-  static Future<DataResult<List<ParseFile>>> _saveImages(
+  Future<DataResult<List<ParseFile>>> _saveImages(
     List<String> imagesPaths,
     ParseUser parseUser,
   ) async {
@@ -421,7 +418,8 @@ class PSAdRepository {
     }
   }
 
-  static Future<DataResult<void>> delete(String ad) async {
+  @override
+  Future<DataResult<void>> delete(String ad) async {
     try {
       final parse = ParseObject(keyAdTable)..objectId = ad;
 
