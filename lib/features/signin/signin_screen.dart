@@ -133,8 +133,23 @@ class _SignInScreenState extends State<SignInScreen> {
                             SignInForm(
                               store: store,
                               userLogin: _userLogin,
-                              navSignUp: _navSignUp,
                               navLostPassword: _navLostPassword,
+                            ),
+                            BigButton(
+                              color: Colors.amber,
+                              label: 'Entrar',
+                              onPressed: _userLogin,
+                            ),
+                            const Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('Não possui uma conta?'),
+                                TextButton(
+                                  onPressed: _navSignUp,
+                                  child: const Text('Cadastrar'),
+                                ),
+                              ],
                             ),
                           ],
                         ),
