@@ -100,7 +100,12 @@ class CustomFormField extends StatelessWidget {
           floatingLabelBehavior: floatingLabelBehavior,
         ),
         onChanged: onChanged,
-        onFieldSubmitted: onFieldSubmitted,
+        onFieldSubmitted: (value) {
+          FocusScope.of(context).requestFocus(nextFocusNode);
+          if (onFieldSubmitted != null) {
+            onFieldSubmitted!(value);
+          }
+        },
       ),
     );
   }

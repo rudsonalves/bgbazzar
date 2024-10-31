@@ -24,15 +24,16 @@ import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
 import '../../features/edit_ad/edit_ad_screen.dart';
 import '../../features/favorites/favorites_screen.dart';
-import '../../features/shop/shop_controller.dart';
 import '../../get_it.dart';
 import 'widgets/custom_drawer_header.dart';
 
 class CustomDrawer extends StatelessWidget {
+  final void Function() setPageTitle;
   final void Function() navToLoginScreen;
 
   CustomDrawer({
     super.key,
+    required this.setPageTitle,
     required this.navToLoginScreen,
   });
 
@@ -44,7 +45,7 @@ class CustomDrawer extends StatelessWidget {
     if (context.mounted) Navigator.pop(context);
     await Future.delayed(const Duration(milliseconds: 400));
     log('update...');
-    getIt<ShopController>().setPageTitle();
+    setPageTitle();
   }
 
   void _navAccountScreen(BuildContext context) {

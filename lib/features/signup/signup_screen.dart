@@ -20,7 +20,6 @@ import 'package:flutter/material.dart';
 import '../../components/buttons/big_button.dart';
 import '../../components/dialogs/simple_message.dart';
 import '../signin/signin_screen.dart';
-import '../../components/others_widgets/or_row.dart';
 import 'signup_controller.dart';
 import 'signup_store.dart';
 import 'widgets/signup_form.dart';
@@ -51,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
-  Future<void> signupUser() async {
+  Future<void> _signupUser() async {
     if (store.isValid()) {
       try {
         final user = await ctrl.signupUser();
@@ -122,16 +121,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            BigButton(
-                              color: Colors.blue,
-                              label: 'Cadastrar com Facebook',
-                              onPressed: () {},
-                            ),
-                            const OrRow(),
+                            // BigButton(
+                            //   color: Colors.blue,
+                            //   label: 'Cadastrar com Facebook',
+                            //   onPressed: () {},
+                            // ),
+                            // const OrRow(),
                             SignUpForm(
                               store: store,
-                              signupUser: signupUser,
-                              navLogin: _navLogin,
+                              signupUser: _signupUser,
+                            ),
+                            BigButton(
+                              color: Colors.amber,
+                              label: 'Registrar',
+                              onPressed: _signupUser,
+                            ),
+                            const Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('Possui uma conta?'),
+                                TextButton(
+                                  onPressed: _navLogin,
+                                  child: const Text('Entrar'),
+                                ),
+                              ],
                             ),
                           ],
                         ),

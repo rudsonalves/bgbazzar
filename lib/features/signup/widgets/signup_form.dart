@@ -18,23 +18,34 @@
 import 'package:flutter/material.dart';
 
 import '../../../common/others/validators.dart';
-import '../../../components/buttons/big_button.dart';
 import '../../../components/form_fields/custom_form_field.dart';
 import '../../../components/form_fields/custom_mask_field.dart';
 import '../../../components/form_fields/password_form_field.dart';
 import '../signup_store.dart';
 
-class SignUpForm extends StatelessWidget {
+class SignUpForm extends StatefulWidget {
   final SignupStore store;
   final void Function() signupUser;
-  final void Function() navLogin;
 
   const SignUpForm({
     super.key,
     required this.store,
     required this.signupUser,
-    required this.navLogin,
   });
+
+  @override
+  State<SignUpForm> createState() => _SignUpFormState();
+}
+
+class _SignUpFormState extends State<SignUpForm> {
+  final checkPassword = FocusNode();
+
+  @override
+  void dispose() {
+    checkPassword.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,26 +53,26 @@ class SignUpForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ValueListenableBuilder(
-            valueListenable: store.errorName,
+            valueListenable: widget.store.errorName,
             builder: (context, errorName, _) {
               return CustomFormField(
                 labelText: 'Nome',
                 hintText: 'Como aparecerá em seus anúncios',
                 errorText: errorName,
-                onChanged: store.setName,
+                onChanged: widget.store.setName,
                 validator: Validator.name,
                 textCapitalization: TextCapitalization.words,
                 // nextFocusNode: controller.emailFocusNode,
               );
             }),
         ValueListenableBuilder(
-            valueListenable: store.errorEmail,
+            valueListenable: widget.store.errorEmail,
             builder: (context, errorEmail, _) {
               return CustomFormField(
                 labelText: 'E-mail',
                 hintText: 'seu-email@provedor.com',
                 errorText: errorEmail,
-                onChanged: store.setEmail,
+                onChanged: widget.store.setEmail,
                 validator: Validator.email,
                 keyboardType: TextInputType.emailAddress,
                 // focusNode: controller.emailFocusNode,
@@ -69,14 +80,14 @@ class SignUpForm extends StatelessWidget {
               );
             }),
         ValueListenableBuilder(
-            valueListenable: store.errorPhone,
+            valueListenable: widget.store.errorPhone,
             builder: (context, errorPhone, _) {
               return CustomMaskField(
                 labelText: 'Celular',
                 hintText: '(19) 9999-9999',
                 mask: '(##) #####-####',
                 errorText: errorPhone,
-                onChanged: store.setPhone,
+                onChanged: widget.store.setPhone,
 
                 keyboardType: TextInputType.phone,
                 // focusNode: controller.phoneFocusNode,
@@ -84,43 +95,29 @@ class SignUpForm extends StatelessWidget {
               );
             }),
         ValueListenableBuilder(
-            valueListenable: store.errorPassword,
+            valueListenable: widget.store.errorPassword,
             builder: (context, errorPassword, _) {
               return PasswordFormField(
                 labelText: 'Senha',
                 hintText: '6+ letras e números',
                 errorText: errorPassword,
-                onChanged: store.setPassword,
+                onChanged: widget.store.setPassword,
                 textInputAction: TextInputAction.next,
-                // nextFocusNode: controller.checkPassFocusNode,
+                nextFocusNode: checkPassword,
               );
             }),
         ValueListenableBuilder(
-            valueListenable: store.errorCheckPassword,
+            valueListenable: widget.store.errorCheckPassword,
             builder: (context, errorCheckPassword, _) {
               return PasswordFormField(
                 labelText: 'Confirmar senha',
                 hintText: '6+ letras e números',
                 errorText: errorCheckPassword,
-                onChanged: store.setCheckPassword,
+                onChanged: widget.store.setCheckPassword,
+                focusNode: checkPassword,
+                onFieldSubmitted: (value) => widget.signupUser(),
               );
             }),
-        BigButton(
-          color: Colors.amber,
-          label: 'Registrar',
-          onPressed: signupUser,
-        ),
-        const Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Possui uma conta?'),
-            TextButton(
-              onPressed: navLogin,
-              child: const Text('Entrar'),
-            ),
-          ],
-        ),
       ],
     );
   }

@@ -80,7 +80,12 @@ class PasswordFormField extends StatelessWidget {
               ),
             ),
             onChanged: onChanged,
-            onFieldSubmitted: onFieldSubmitted,
+            onFieldSubmitted: (value) {
+              FocusScope.of(context).requestFocus(nextFocusNode);
+              if (onFieldSubmitted != null) {
+                onFieldSubmitted!(value);
+              }
+            },
           );
         },
       ),

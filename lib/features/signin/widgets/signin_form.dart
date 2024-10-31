@@ -17,24 +17,35 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../components/buttons/big_button.dart';
 import '../../../components/form_fields/custom_form_field.dart';
 import '../../../components/form_fields/password_form_field.dart';
 import '../signin_store.dart';
 
-class SignInForm extends StatelessWidget {
+class SignInForm extends StatefulWidget {
   final SignInStore store;
   final void Function() userLogin;
-  final void Function() navSignUp;
   final void Function() navLostPassword;
 
   const SignInForm({
     super.key,
     required this.store,
     required this.userLogin,
-    required this.navSignUp,
     required this.navLostPassword,
   });
+
+  @override
+  State<SignInForm> createState() => _SignInFormState();
+}
+
+class _SignInFormState extends State<SignInForm> {
+  final passwordFocus = FocusNode();
+
+  @override
+  void dispose() {
+    passwordFocus.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +55,21 @@ class SignInForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ValueListenableBuilder(
-            valueListenable: store.errorEmail,
+            valueListenable: widget.store.errorEmail,
             builder: (context, errorEmail, _) {
               return CustomFormField(
                 labelText: 'E-mail',
                 hintText: 'seu-email@provedor.com',
                 keyboardType: TextInputType.emailAddress,
                 errorText: errorEmail,
-                onChanged: store.setEmail,
+                onChanged: widget.store.setEmail,
+                nextFocusNode: passwordFocus,
               );
             }),
         Align(
           alignment: Alignment.centerRight,
           child: InkWell(
-            onTap: navLostPassword,
+            onTap: widget.navLostPassword,
             child: Text(
               'Esqueceu a senha?',
               style: TextStyle(
@@ -68,30 +80,16 @@ class SignInForm extends StatelessWidget {
           ),
         ),
         ValueListenableBuilder(
-          valueListenable: store.errorPassword,
+          valueListenable: widget.store.errorPassword,
           builder: (context, errorPassword, _) {
             return PasswordFormField(
               labelText: 'Senha',
               errorText: errorPassword,
-              onChanged: store.setPassword,
+              onChanged: widget.store.setPassword,
+              focusNode: passwordFocus,
+              onFieldSubmitted: (value) => widget.userLogin(),
             );
           },
-        ),
-        BigButton(
-          color: Colors.amber,
-          label: 'Entrar',
-          onPressed: userLogin,
-        ),
-        const Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Não possui uma conta?'),
-            TextButton(
-              onPressed: navSignUp,
-              child: const Text('Cadastrar'),
-            ),
-          ],
         ),
       ],
     );

@@ -144,10 +144,10 @@ class _ShopScreenState extends State<ShopScreen>
         : Text(store.pageTitle.value);
   }
 
-  Future<void> navToLoginScreen() async {
+  Future<void> _navToLoginScreen() async {
     if (!ctrl.isLogged) {
       await Navigator.pushNamed(context, SignInScreen.routeName);
-      ctrl.init(store);
+      // ctrl.init(store);
     } else {
       Navigator.pushNamed(context, MyAccountScreen.routeName);
     }
@@ -192,7 +192,8 @@ class _ShopScreenState extends State<ShopScreen>
         ],
       ),
       drawer: CustomDrawer(
-        navToLoginScreen: navToLoginScreen,
+        setPageTitle: ctrl.setPageTitle,
+        navToLoginScreen: _navToLoginScreen,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ValueListenableBuilder(
@@ -210,10 +211,7 @@ class _ShopScreenState extends State<ShopScreen>
                   label: const Text('Adicionar anúncio'),
                 )
               : FloatingActionButton.extended(
-                  onPressed: () async {
-                    await Navigator.pushNamed(context, SignInScreen.routeName);
-                    ctrl.init(store);
-                  },
+                  onPressed: _navToLoginScreen,
                   backgroundColor: colorScheme.tertiaryContainer,
                   icon: const Icon(Icons.login),
                   label: const Text('Faça Login'),

@@ -9,6 +9,49 @@
 
 # ChangeLog
 
+## 2024/10/31 - version: 0.7.09+62
+
+This commit refactors and enhances several UI components and navigation flows, with a focus on improving code reuse, consistency, and user interaction. These updates primarily affect form submission behaviors and the handling of navigation within the app.
+
+### Changes made:
+
+1. **lib/components/custom_drawer/custom_drawer.dart**:
+   - Added a `setPageTitle` callback parameter to improve flexibility when updating the page title after drawer interaction.
+   - Modified `_navAccountScreen` method to use the new `setPageTitle` callback.
+
+2. **lib/components/form_fields/custom_form_field.dart**:
+   - Enhanced the `onFieldSubmitted` method to advance focus to the next form field, ensuring a smoother form filling experience.
+
+3. **lib/components/form_fields/password_form_field.dart**:
+   - Updated `onFieldSubmitted` to advance focus to the next form field and call `onFieldSubmitted` if it is not null, similar to `custom_form_field.dart`.
+
+4. **lib/features/shop/shop_screen.dart**:
+   - Renamed `navToLoginScreen` to `_navToLoginScreen` to reflect private method naming conventions.
+   - Updated drawer instantiation to pass the `setPageTitle` function instead of directly using the controller method.
+   - Refactored floating action button behavior to use `_navToLoginScreen` method.
+
+5. **lib/features/signin/signin_screen.dart**:
+   - Refactored UI to include a new `BigButton` for login action and moved the registration button into a more accessible area.
+   - Simplified the form and navigation flow for better usability.
+
+6. **lib/features/signin/widgets/signin_form.dart**:
+   - Converted `SignInForm` from a `StatelessWidget` to a `StatefulWidget` to manage `FocusNode` for better form control.
+   - Added `nextFocusNode` parameter to the email field to improve user experience.
+   - Moved the password field's submission behavior to advance focus and initiate login.
+
+7. **lib/features/signup/signup_screen.dart**:
+   - Renamed `signupUser` method to `_signupUser` to follow private method naming conventions.
+   - Commented out and removed social media registration buttons (e.g., Facebook) for simplification.
+
+8. **lib/features/signup/widgets/signup_form.dart**:
+   - Converted `SignUpForm` from a `StatelessWidget` to a `StatefulWidget` to manage `FocusNode`.
+   - Added focus control between password and confirm password fields, allowing for smoother form navigation.
+   - Moved the "Sign Up" button to the main `SignUpScreen` for better separation of concerns.
+
+### Conclusion:
+The changes introduced in this commit significantly enhance the user experience when interacting with forms by improving focus management and simplifying navigation. Additionally, UI refactorings ensure a consistent look and feel across the application, while adhering to best practices for code organization and reuse.
+
+
 ## 2024/10/30 - version: 0.7.09+61
 
 This commit introduces several important refactorings and improvements across multiple files in the Parse server repositories, focusing on modularizing error handling, refining query logic, and optimizing code readability and maintainability.
