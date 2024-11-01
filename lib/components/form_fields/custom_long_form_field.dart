@@ -24,6 +24,7 @@ class CustomLongFormField extends StatefulWidget {
   final String? hintText;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
   final TextInputType? keyboardType;
   final TextCapitalization? textCapitalization;
   final bool fullBorder;
@@ -41,6 +42,7 @@ class CustomLongFormField extends StatefulWidget {
     this.labelStyle,
     this.hintText,
     this.controller,
+    this.onChanged,
     this.validator,
     this.keyboardType,
     this.fullBorder = true,
@@ -130,11 +132,7 @@ class _CustomFormFieldState extends State<CustomLongFormField> {
                 : null,
             floatingLabelBehavior: widget.floatingLabelBehavior,
           ),
-          onChanged: (value) {
-            if (value.length > 2 && widget.validator != null) {
-              errorString.value = widget.validator!(value);
-            }
-          },
+          onChanged: widget.onChanged,
         ),
       ),
     );

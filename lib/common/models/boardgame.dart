@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -28,7 +29,6 @@ class BoardgameModel {
   String? designer;
   String? artist;
   String? description;
-  int views;
   List<String> mechsPsIds;
 
   BoardgameModel({
@@ -44,9 +44,22 @@ class BoardgameModel {
     this.designer,
     this.artist,
     this.description,
-    this.views = 0,
     required this.mechsPsIds,
   });
+
+  factory BoardgameModel.clean() {
+    return BoardgameModel(
+      name: '',
+      image: '',
+      publishYear: 2010,
+      minPlayers: 2,
+      maxPlayers: 4,
+      minTime: 25,
+      maxTime: 50,
+      minAge: 10,
+      mechsPsIds: [],
+    );
+  }
 
   static String cleanDescription(String text) {
     String description = text.replaceAll('<br/>', '\n');
@@ -73,7 +86,38 @@ class BoardgameModel {
         ' designer: $designer,\n'
         ' artist: $artist,\n'
         ' description: $description,\n'
-        ' views: $views,\n'
         ' boardgamemechanic: $mechsPsIds)';
+  }
+
+  BoardgameModel copyWith({
+    String? id,
+    String? name,
+    String? image,
+    int? publishYear,
+    int? minPlayers,
+    int? maxPlayers,
+    int? minTime,
+    int? maxTime,
+    int? minAge,
+    String? designer,
+    String? artist,
+    String? description,
+    List<String>? mechsPsIds,
+  }) {
+    return BoardgameModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      publishYear: publishYear ?? this.publishYear,
+      minPlayers: minPlayers ?? this.minPlayers,
+      maxPlayers: maxPlayers ?? this.maxPlayers,
+      minTime: minTime ?? this.minTime,
+      maxTime: maxTime ?? this.maxTime,
+      minAge: minAge ?? this.minAge,
+      designer: designer ?? this.designer,
+      artist: artist ?? this.artist,
+      description: description ?? this.description,
+      mechsPsIds: mechsPsIds ?? this.mechsPsIds,
+    );
   }
 }

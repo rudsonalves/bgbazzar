@@ -22,120 +22,68 @@ import 'dart:io';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:path/path.dart';
 
+import '/repository/interfaces/i_boardgame_repository.dart';
 import '../../common/abstracts/data_result.dart';
 import '../../common/models/bg_name.dart';
 import '../../common/models/boardgame.dart';
-import '../../common/utils/utils.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 
-class PSBoardgameRepository {
-  static Future<DataResult<BoardgameModel?>> save(BoardgameModel bg) async {
+/// This class provides methods to interact with the Parse Server
+/// to retrieve and save boardgames informations
+class PSBoardgameRepository implements IBoardgameRepository {
+  @override
+  Future<DataResult<BoardgameModel?>> save(BoardgameModel bg) async {
     try {
-      final parse = ParseObject(keyBgTable);
+      final parseUser = await _parseCurrentUser();
+      final parseAcl = _createDefaultAcl(parseUser);
+      final parseImage = await _saveImage(path: bg.image, parseUser: parseUser);
 
-      final parseUser = await ParseUser.currentUser() as ParseUser?;
-      if (parseUser == null) {
-        throw Exception('Current user access error');
-      }
-
-      final result = await _saveImage(
-        path: bg.image,
-        parseUser: parseUser,
-        fileName: '${Utils.normalizeFileName(bg.name)}_${bg.publishYear}.jpg',
+      final parseBg = _prepareBgForSaveOrUpdate(
+        bg: bg,
+        parseImage: parseImage,
+        parseAcl: parseAcl,
       );
-      if (result.isFailure) {
-        throw Exception(result.error);
-      }
-      final parseImage = result.data!;
 
-      final parseAcl = ParseACL(owner: parseUser);
-      parseAcl.setPublicReadAccess(allowed: true);
-      parseAcl.setPublicWriteAccess(allowed: false);
-
-      parse
-        ..setACL(parseAcl)
-        ..set<String>(keyBgName, bg.name)
-        ..set<ParseFile>(keyBgImage, parseImage)
-        ..set<int>(keyBgPublishYear, bg.publishYear)
-        ..set<int>(keyBgMinPlayers, bg.minPlayers)
-        ..set<int>(keyBgMaxPlayers, bg.maxPlayers)
-        ..set<int>(keyBgMinTime, bg.minTime)
-        ..set<int>(keyBgMaxTime, bg.maxTime)
-        ..set<int>(keyBgMinAge, bg.minAge)
-        ..set<String?>(keyBgDesigner, bg.designer)
-        ..set<String?>(keyBgArtist, bg.artist)
-        ..set<String?>(keyBgDescription, bg.description)
-        ..set<int?>(keyBgViews, bg.views)
-        ..set<List<String>>(keyBgMechanics, bg.mechsPsIds);
-
-      final response = await parse.save();
+      final response = await parseBg.save();
       if (!response.success) {
-        throw Exception(response.error);
+        throw BoardgameRepositoryException(
+            response.error?.message ?? 'Failed to save ad.');
       }
 
-      return DataResult.success(ParseToModel.boardgameModel(parse));
+      return DataResult.success(ParseToModel.boardgameModel(parseBg));
     } catch (err) {
-      final message = 'AdRepository.save: $err';
-      log(message);
-      return DataResult.failure(APIFailure(message: message));
+      return _handleError('save', err);
     }
   }
 
-  static Future<DataResult<BoardgameModel?>> update(BoardgameModel bg) async {
+  @override
+  Future<DataResult<BoardgameModel?>> update(BoardgameModel bg) async {
     try {
-      final parse = ParseObject(keyBgTable);
+      final parseUser = await _parseCurrentUser();
+      final parseImage = await _saveImage(path: bg.image, parseUser: parseUser);
+      final parseAcl = _createDefaultAcl(parseUser);
 
-      final parseUser = await ParseUser.currentUser() as ParseUser?;
-      if (parseUser == null) {
-        throw Exception('Current user access error');
-      }
-
-      final result = await _saveImage(
-        path: bg.image,
-        parseUser: parseUser,
-        fileName: '${Utils.normalizeFileName(bg.name)}_${bg.publishYear}.jpg',
+      final parseBg = _prepareBgForSaveOrUpdate(
+        bg: bg,
+        parseImage: parseImage,
+        parseAcl: parseAcl,
       );
-      if (result.isFailure) {
-        throw Exception(result.error);
-      }
-      final parseImage = result.data!;
 
-      final parseAcl = ParseACL(owner: parseUser);
-      parseAcl.setPublicReadAccess(allowed: true);
-      parseAcl.setPublicWriteAccess(allowed: false);
-
-      parse
-        ..objectId = bg.id
-        ..setACL(parseAcl)
-        ..set<String>(keyBgName, bg.name)
-        ..set<ParseFile>(keyBgImage, parseImage)
-        ..set<int>(keyBgPublishYear, bg.publishYear)
-        ..set<int>(keyBgMinPlayers, bg.minPlayers)
-        ..set<int>(keyBgMaxPlayers, bg.maxPlayers)
-        ..set<int>(keyBgMinTime, bg.minTime)
-        ..set<int>(keyBgMaxTime, bg.maxTime)
-        ..set<int>(keyBgMinAge, bg.minAge)
-        ..set<String?>(keyBgDesigner, bg.designer)
-        ..set<String?>(keyBgArtist, bg.artist)
-        ..set<String?>(keyBgDescription, bg.description)
-        ..set<int?>(keyBgViews, bg.views)
-        ..set<List<String>>(keyBgMechanics, bg.mechsPsIds);
-
-      final response = await parse.update();
+      final response = await parseBg.update();
       if (!response.success) {
-        throw Exception(response.error);
+        throw BoardgameRepositoryException(
+            response.error?.toString() ?? 'unknow error');
       }
 
-      return DataResult.success(ParseToModel.boardgameModel(parse));
+      return DataResult.success(ParseToModel.boardgameModel(parseBg));
     } catch (err) {
-      final message = 'AdRepository.save: $err';
-      log(message);
-      return DataResult.failure(APIFailure(message: message));
+      return _handleError('update', err);
     }
   }
 
-  static Future<DataResult<BoardgameModel?>> getById(String bgId) async {
+  @override
+  Future<DataResult<BoardgameModel?>> getById(String bgId) async {
     try {
       final parse = ParseObject(keyBgTable);
 
@@ -143,20 +91,20 @@ class PSBoardgameRepository {
       if (!response.success ||
           response.results == null ||
           response.results!.isEmpty) {
-        throw Exception(response.error ?? 'no data found');
+        throw BoardgameRepositoryException(
+            response.error?.toString() ?? 'no data found');
       }
 
       final resultParse = response.results!.first as ParseObject;
 
       return DataResult.success(ParseToModel.boardgameModel(resultParse));
     } catch (err) {
-      final message = 'BgRepository.getById: $err';
-      log(message);
-      return DataResult.failure(APIFailure(message: message));
+      return _handleError('getById', err);
     }
   }
 
-  static Future<DataResult<List<BGNameModel>>> getNames() async {
+  @override
+  Future<DataResult<List<BGNameModel>>> getNames() async {
     try {
       final query = QueryBuilder<ParseObject>(ParseObject(keyBgTable));
 
@@ -164,7 +112,8 @@ class PSBoardgameRepository {
 
       final response = await query.query();
       if (!response.success) {
-        throw Exception(response.error);
+        throw BoardgameRepositoryException(
+            response.error?.toString() ?? 'unknow error');
       }
 
       if (response.results == null) {
@@ -178,49 +127,97 @@ class PSBoardgameRepository {
       }
       return DataResult.success(bgs);
     } catch (err) {
-      final message = 'BgRepository.getNames: $err';
-      log(message);
-      return DataResult.failure(APIFailure(message: message));
+      return _handleError('getNames', err);
     }
   }
 
-  static Future<DataResult<ParseFile>> _saveImage({
+  /// Fetches the current logged-in user from Parse Server.
+  ///
+  /// Throws an [BoardgameRepositoryException] if no user is currently logged
+  /// in.
+  Future<ParseUser> _parseCurrentUser() async {
+    final parseUser = await ParseUser.currentUser() as ParseUser?;
+    if (parseUser == null) {
+      throw BoardgameRepositoryException('Current user access error');
+    }
+    return parseUser;
+  }
+
+  /// Creates a default ACL for an ad, allowing public read access and
+  /// restricted write access.
+  ///
+  /// [owner] - The user who will be the owner of the created ACL.
+  ParseACL _createDefaultAcl(ParseUser owner) {
+    return ParseACL(owner: owner)
+      ..setPublicReadAccess(allowed: true)
+      ..setPublicWriteAccess(allowed: false);
+  }
+
+  /// Prepares a ParseObject for saving or updating an ad.
+  ///
+  /// [bg] - The BoardgameModel with boardgame information.
+  /// [parseImage] - The list of ParseFiles representing the ad images.
+  /// [parseAcl] - Optional ACL for the ad.
+  ParseObject _prepareBgForSaveOrUpdate({
+    required BoardgameModel bg,
+    required ParseFile parseImage,
+    ParseACL? parseAcl,
+  }) {
+    final parseBg =
+        bg.id == null ? ParseObject(keyBgTable) : ParseObject(keyBgTable)
+          ..objectId = bg.id!;
+
+    if (parseAcl != null) {
+      parseBg.setACL(parseAcl);
+    }
+
+    parseBg
+      ..set<String>(keyBgName, bg.name)
+      ..set<ParseFile>(keyBgImage, parseImage)
+      ..set<int>(keyBgPublishYear, bg.publishYear)
+      ..set<int>(keyBgMinPlayers, bg.minPlayers)
+      ..set<int>(keyBgMaxPlayers, bg.maxPlayers)
+      ..set<int>(keyBgMinTime, bg.minTime)
+      ..set<int>(keyBgMaxTime, bg.maxTime)
+      ..set<int>(keyBgMinAge, bg.minAge)
+      ..set<String?>(keyBgDesigner, bg.designer)
+      ..set<String?>(keyBgArtist, bg.artist)
+      ..set<String?>(keyBgDescription, bg.description)
+      ..set<List<String>>(keyBgMechanics, bg.mechsPsIds);
+
+    return parseBg;
+  }
+
+  Future<ParseFile> _saveImage({
     required String path,
     required ParseUser parseUser,
-    required String fileName,
   }) async {
     try {
-      late ParseFile parseFile;
+      // Check if the path is a local file path or an existing URL
+      if (!path.startsWith('http')) {
+        // Create ParseFile from the local file path
+        final parseImage = ParseFile(File(path), name: basename(path));
+        parseImage.setACL(_createDefaultAcl(parseUser));
 
-      if (!path.contains(RegExp(r'http'))) {
-        final file = File(path);
-        parseFile = ParseFile(file, name: fileName);
-
-        final acl = ParseACL(owner: parseUser);
-        acl.setPublicReadAccess(allowed: true);
-        acl.setPublicWriteAccess(allowed: false);
-
-        parseFile.setACL(acl);
-
-        final response = await parseFile.save();
+        // Save the file to the Parse server
+        final response = await parseImage.save();
         if (!response.success) {
-          log('Error saving file: ${response.error}');
-          throw Exception(response.error);
+          throw BoardgameRepositoryException(
+              response.error?.message ?? 'Failed to save file: $path');
         }
 
-        if (parseFile.url == null) {
-          throw Exception('failed to get URL after saving the file');
-        }
-      } else {
-        final oldName = basename(path);
-        parseFile = ParseFile(null, name: oldName, url: path);
+        return parseImage;
       }
-
-      return DataResult.success(parseFile);
+      // If it's already a URL, create a ParseFile pointing to that URL
+      return ParseFile(null, name: basename(path), url: path);
     } catch (err) {
-      final message = 'exception in _saveImages: $err';
-      log(message);
-      return DataResult.failure(APIFailure(message: message));
+      throw BoardgameRepositoryException('_saveImages: $err');
     }
+  }
+
+  DataResult<T> _handleError<T>(String module, Object error) {
+    final fullMessage = 'PSBoardgameRepository.$module: $error';
+    log(fullMessage);
+    return DataResult.failure(GenericFailure(message: fullMessage));
   }
 }

@@ -17,196 +17,43 @@
 
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-
 import '../../common/abstracts/data_result.dart';
-import '../../common/models/mechanic.dart';
 import '../../manager/boardgames_manager.dart';
-import '../../manager/mechanics_manager.dart';
-import '../../common/models/boardgame.dart';
-import '../../components/custon_field_controllers/numeric_edit_controller.dart';
 import '../../get_it.dart';
-import '../../repository/parse_server/ps_boardgame_repository.dart';
-import 'edit_boardgame_state.dart';
+import 'edit_boardgame_store.dart';
 
-class EditBoardgameController extends ChangeNotifier {
-  EditBoardgameState _state = EditBoardgameStateInitial();
+class EditBoardgameController {
+  late final EditBoardgameStore store;
 
   final bgManager = getIt<BoardgamesManager>();
-  final mechManager = getIt<MechanicsManager>();
-  final mechanicsManager = getIt<MechanicsManager>();
 
-  final nameController = TextEditingController();
-  final yearController = NumericEditController<int>(initialValue: 2010);
-  final imageController = TextEditingController();
-  final minPlayersController = NumericEditController<int>();
-  final maxPlayersController = NumericEditController<int>();
-  final minTimeController = NumericEditController<int>();
-  final maxTimeController = NumericEditController<int>();
-  final ageController = NumericEditController<int>();
-  final designerController = TextEditingController();
-  final artistController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final mechsController = TextEditingController();
+  void init(EditBoardgameStore store) {
+    this.store = store;
+  }
 
-  final List<String> _selectedMechPsIds = [];
+  void dispose() {}
 
-  BoardgameModel? _editedBg;
-
-  List<MechanicModel> get mechanics => mechanicsManager.mechanics;
-
-  List<String> get selectedMechIds => _selectedMechPsIds;
-  List<String> get selectedMachNames => mechanics
-      .where((c) => _selectedMechPsIds.contains(c.psId!))
-      .map((c) => c.name)
-      .toList();
-
-  EditBoardgameState get state => _state;
-  List<String> get bgNames => bgManager.bgNames;
-
-  void init(BoardgameModel? bg) {
-    if (bg != null) {
-      _editedBg = bg;
-      nameController.text = bg.name;
-      yearController.numericValue = bg.publishYear;
-      imageController.text = bg.image;
-      minPlayersController.numericValue = bg.minPlayers;
-      maxPlayersController.numericValue = bg.maxPlayers;
-      minTimeController.numericValue = bg.minTime;
-      maxTimeController.numericValue = bg.maxTime;
-      ageController.numericValue = bg.minAge;
-      designerController.text = bg.designer ?? '';
-      artistController.text = bg.artist ?? '';
-      descriptionController.text = bg.description ?? '';
-      mechsController.text = mechManager.namesFromIdListString(bg.mechsPsIds);
+  Future<DataResult<void>> saveBoardgame() async {
+    if (!store.isValid() && !store.isEdited) {
+      return DataResult.failure(GenericFailure());
     }
-  }
 
-  @override
-  void dispose() {
-    nameController.dispose();
-    yearController.dispose();
-    imageController.dispose();
-    minPlayersController.dispose();
-    maxPlayersController.dispose();
-    minTimeController.dispose();
-    maxTimeController.dispose();
-    ageController.dispose();
-    designerController.dispose();
-    artistController.dispose();
-    descriptionController.dispose();
-    mechsController.dispose();
-    super.dispose();
-  }
-
-  void _changeState(EditBoardgameState newState) {
-    _state = newState;
-    notifyListeners();
-  }
-
-  Future<DataResult<void>> getBgInfo() async {
     try {
-      _changeState(EditBoardgameStateLoading());
-      if (nameController.text.isEmpty) {
-        throw Exception('name is note defined');
-      }
-      final id = bgManager.gameId(nameController.text);
-      if (id == null) {
-        throw Exception('boardgame id not found');
-      }
-      final result = await PSBoardgameRepository.getById(id);
+      store.setStateLoading();
+      log(store.boardgame.toString());
+
+      final result = await bgManager.update(store.boardgame);
       if (result.isFailure) {
         throw Exception(result.error);
       }
-      final bgInfo = result.data;
 
-      if (bgInfo != null) loadBoardInfo(bgInfo);
-      log(bgInfo.toString());
-      _changeState(EditBoardgameStateSuccess());
+      store.setStateSuccess();
       return DataResult.success(null);
     } catch (err) {
-      _changeState(EditBoardgameStateError());
-      final message = 'EditBoardgameController.getBgInfo: $err';
-      return DataResult.failure(GenericFailure(message: message));
-    }
-  }
-
-  loadBoardInfo(BoardgameModel bg) {
-    yearController.numericValue = bg.publishYear.toInt();
-    imageController.text = bg.image;
-    minPlayersController.text = bg.minPlayers.toString();
-    maxPlayersController.text = bg.maxPlayers.toString();
-    minTimeController.text = bg.minTime.toString();
-    maxTimeController.text = bg.maxTime.toString();
-    ageController.text = bg.minAge.toString();
-    designerController.text = bg.designer ?? '';
-    artistController.text = bg.designer ?? '';
-    descriptionController.text = bg.description ?? '';
-    mechsController.text = mechManager.namesFromIdListString(bg.mechsPsIds);
-  }
-
-  Future<DataResult<void>> saveBoardgame() async {
-    try {
-      _changeState(EditBoardgameStateLoading());
-      if (_editedBg != null && _editedBg!.id != null) {
-        _editedBg!.name = nameController.text;
-        _editedBg!.image = imageController.text;
-        _editedBg!.publishYear = yearController.numericValue;
-        _editedBg!.minPlayers = minPlayersController.numericValue;
-        _editedBg!.maxPlayers = maxPlayersController.numericValue;
-        _editedBg!.minTime = minTimeController.numericValue;
-        _editedBg!.maxTime = maxTimeController.numericValue;
-        _editedBg!.minAge = ageController.numericValue;
-        _editedBg!.mechsPsIds = _selectedMechPsIds.isNotEmpty
-            ? _selectedMechPsIds
-            : _editedBg!.mechsPsIds;
-        _editedBg!.designer = designerController.text;
-        _editedBg!.artist = artistController.text;
-        _editedBg!.description = descriptionController.text;
-
-        final result = await bgManager.update(_editedBg!);
-        if (result.isFailure) {
-          throw Exception(result.error);
-        }
-      } else {
-        final bg = BoardgameModel(
-          name: nameController.text,
-          image: imageController.text,
-          publishYear: yearController.numericValue,
-          minPlayers: minPlayersController.numericValue,
-          maxPlayers: maxPlayersController.numericValue,
-          minTime: minTimeController.numericValue,
-          maxTime: maxTimeController.numericValue,
-          minAge: ageController.numericValue,
-          mechsPsIds: _selectedMechPsIds,
-          designer: designerController.text,
-          artist: artistController.text,
-          description: descriptionController.text,
-        );
-
-        final result = await bgManager.save(bg);
-        if (result.isFailure) {
-          throw Exception(result.error);
-        }
-      }
-
-      _changeState(EditBoardgameStateSuccess());
-      return DataResult.success(null);
-    } catch (err) {
-      _changeState(EditBoardgameStateError());
       final message = 'EditBoardController.saveBoardgame: $err';
+      store.setError(message);
       log(message);
       return DataResult.failure(GenericFailure(message: message));
     }
-  }
-
-  void setMechanicsPsIds(List<String> mechPsIds) {
-    _selectedMechPsIds.clear();
-    _selectedMechPsIds.addAll(mechPsIds);
-    mechsController.text = selectedMachNames.join(', ');
-  }
-
-  void closeErroMessage() {
-    _changeState(EditBoardgameStateSuccess());
   }
 }

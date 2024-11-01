@@ -29,29 +29,23 @@ class PSMechanicsRepository implements IMechanicRepository {
   @override
   Future<DataResult<MechanicModel>> add(MechanicModel mech) async {
     try {
-      final parseUser = await ParseUser.currentUser() as ParseUser?;
-      if (parseUser == null) {
-        throw Exception('Current user access error');
-      }
+      final parseUser = await _parseCurrentUser();
+      final parseAcl = _createDefaultAcl(parseUser);
 
-      final parse = ParseObject(keyMechTable);
+      // Prepares a ParseObject representing the new mechanic for saving
+      final parseMech = _prepareMechForSaveOrUpdate(
+        mech: mech,
+        parseAcl: parseAcl,
+      );
 
-      final parseAcl = ParseACL(owner: parseUser);
-      parseAcl
-        ..setPublicReadAccess(allowed: true)
-        ..setPublicWriteAccess(allowed: false);
-
-      parse
-        ..setACL(parseAcl)
-        ..set<String>(keyMechName, mech.name)
-        ..set<String>(keyMechDescription, mech.description!);
-
-      final response = await parse.save();
+      // Save the ParseObject to the Parse server
+      final response = await parseMech.save();
       if (!response.success) {
-        throw Exception(response.error?.message);
+        throw Exception(response.error?.message ?? 'unknow error.');
       }
 
-      return DataResult.success(ParseToModel.mechanic(parse));
+      // Converts the ParseObject back to a MechanicModel to return
+      return DataResult.success(ParseToModel.mechanic(parseMech));
     } catch (err) {
       return _handleError('add', err);
     }
@@ -60,30 +54,23 @@ class PSMechanicsRepository implements IMechanicRepository {
   @override
   Future<DataResult<MechanicModel>> update(MechanicModel mech) async {
     try {
-      final parseUser = await ParseUser.currentUser() as ParseUser?;
-      if (parseUser == null) {
-        throw Exception('Current user access error');
-      }
+      final parseUser = await _parseCurrentUser();
+      final parseAcl = _createDefaultAcl(parseUser);
 
-      final parse = ParseObject(keyMechTable)
-        // ..objectId = mech.psId // Definir o objectId antes de criar
-        ..set<String>(keyMechName, mech.name)
-        ..set<String>(keyMechDescription, mech.description!);
+      // Prepares a ParseObject representing the new mechanic for saving
+      final parse = _prepareMechForSaveOrUpdate(
+        mech: mech,
+        parseAcl: parseAcl,
+      );
 
-      // Definir ACL (opcional, mas recomendado)
-      final parseAcl = ParseACL(owner: parseUser);
-      parseAcl
-        ..setPublicReadAccess(allowed: true)
-        ..setPublicWriteAccess(allowed: false);
-      parse.setACL(parseAcl);
-
-      // Tentar criar o objeto com o objectId fornecido
+      // Update the ParseObject to the Parse server
       final response = await parse.update();
-
       if (!response.success) {
-        throw Exception(response.error?.message);
+        throw MechanicRepositoryException(
+            response.error?.message ?? 'Failed to save ad.');
       }
 
+      // Converts the ParseObject back to a MechanicModel to return
       return DataResult.success(ParseToModel.mechanic(parse));
     } catch (err) {
       return _handleError('update', err);
@@ -95,16 +82,21 @@ class PSMechanicsRepository implements IMechanicRepository {
     final query = QueryBuilder<ParseObject>(ParseObject(keyMechTable));
 
     try {
+      // Executes the query to retrieve all mechanics
       final response = await query.query();
+
+      // Checks if the query was successful and throws an error if not
       if (!response.success) {
-        throw Exception(response.error);
+        throw MechanicRepositoryException(
+            response.error?.message ?? 'Failed to save ad.');
       }
 
-      final List<MechanicModel> mechs = [];
-      for (final ParseObject parse in response.results!) {
-        final mech = ParseToModel.mechanic(parse);
-        mechs.add(mech);
-      }
+      // Maps the results to a list of MechanicModel objects
+      final List<MechanicModel> mechs = response.results
+              ?.map((parse) => ParseToModel.mechanic(parse))
+              .toList() ??
+          [];
+
       return DataResult.success(mechs);
     } catch (err) {
       return _handleError('getAll', err);
@@ -114,16 +106,24 @@ class PSMechanicsRepository implements IMechanicRepository {
   @override
   Future<DataResult<MechanicModel>> get(String psId) async {
     try {
+      // Creates a ParseObject representing the mechanics table and retrieves
+      // the object by ID
       final parse = ParseObject(keyMechTable);
       final response = await parse.getObject(psId);
 
+      // Checks if the query was successful and throws an error if not
       if (!response.success) {
-        throw Exception(response.error);
-      }
-      if (response.results == null) {
-        throw Exception('not found mech.id: $psId');
+        throw MechanicRepositoryException(
+            response.error?.message ?? 'register not found.');
       }
 
+      // Checks if the response contains results, throws error if no record is
+      // found
+      if (response.results == null) {
+        throw MechanicRepositoryException('not found mech.id: $psId');
+      }
+
+      // Converts the retrieved ParseObject to a MechanicModel instance
       final MechanicModel mechanic = ParseToModel.mechanic(
         response.results!.first as ParseObject,
       );
@@ -139,26 +139,127 @@ class PSMechanicsRepository implements IMechanicRepository {
     final query = QueryBuilder<ParseObject>(ParseObject(keyMechTable));
 
     try {
+      // Restrict the query to return only the objectId key for each record
       query.keysToReturn([keyMechObjectId]);
 
+      // Execute the query to fetch the object IDs
       final response = await query.query();
+
+      // Checks if the query was successful, throws an error if not
       if (!response.success) {
-        throw Exception(response.error?.message);
+        throw MechanicRepositoryException(
+            response.error?.message ?? 'register not found.');
       }
 
-      final List<String> mechs = [];
-      for (final ParseObject parse in response.results!) {
-        final id = parse.objectId;
-        mechs.add(id!);
-      }
+      // Maps the query results to a list of object IDs (String)
+      final List<String> mechs = response.results
+              ?.map((parse) => (parse as ParseObject).objectId!)
+              .toList() ??
+          [];
+
       return DataResult.success(mechs);
     } catch (err) {
       return _handleError('getIds', err);
     }
   }
 
-  DataResult<T> _handleError<T>(String message, Object error) {
-    final fullMessage = 'MechanicsRepository.$message: $error';
+  /// Prepares a ParseObject representing a mechanic for save or update
+  /// operations.
+  ///
+  /// This method takes a [MechanicModel] and converts it into a [ParseObject]
+  /// that can be saved or updated in the Parse server.
+  ///
+  /// - If the [mech] contains a `psId`, the method assumes it is an update and
+  ///   assigns that `objectId` to the ParseObject, indicating that it already
+  ///   exists in the server.
+  /// - If no `psId` is provided, the method creates a new ParseObject, assuming
+  ///   it is for a new mechanic.
+  ///
+  /// Parameters:
+  /// - [mech]: The mechanic model containing all the data that needs to be
+  ///   persisted.
+  /// - [parseAcl]: (Optional) A ParseACL object that will be assigned to the
+  ///   ParseObject.
+  ///   If provided, this will define the permissions for the object.
+  ///
+  /// Returns:
+  /// A [ParseObject] configured with the mechanic information from [mech] that is
+  /// ready to be saved or updated on the server.
+  ParseObject _prepareMechForSaveOrUpdate({
+    required MechanicModel mech,
+    ParseACL? parseAcl,
+  }) {
+    final parseMech = mech.psId == null
+        ? ParseObject(keyMechanicTable)
+        : ParseObject(keyMechanicTable)
+      ..objectId = mech.psId!;
+
+    if (parseAcl != null) {
+      parseMech.setACL(parseAcl);
+    }
+
+    parseMech
+      ..set<String>(keyMechName, mech.name)
+      ..set<String>(keyMechDescription, mech.description ?? '');
+
+    return parseMech;
+  }
+
+  /// Creates a default ACL (Access Control List) for an object.
+  ///
+  /// The default ACL allows public read access but restricts write access to
+  /// only the [owner]. This is generally used to protect the integrity of data
+  /// while allowing other users to view it.
+  ///
+  /// Parameters:
+  /// - [owner]: The [ParseUser] who will be set as the owner of the ACL, and
+  ///   thus the one who will have full write permissions to the object.
+  ///
+  /// Returns:
+  /// A [ParseACL] instance with permissions set for public read access and
+  /// write access restricted to the owner.
+  ParseACL _createDefaultAcl(ParseUser owner) {
+    return ParseACL(owner: owner)
+      ..setPublicReadAccess(allowed: true)
+      ..setPublicWriteAccess(allowed: false);
+  }
+
+  /// Fetches the current logged-in user from Parse Server.
+  ///
+  /// This method attempts to get the current user that is authenticated
+  /// in the Parse server. If no user is logged in, it throws a
+  /// [MechanicRepositoryException].
+  ///
+  /// Throws:
+  /// - [MechanicRepositoryException]: If there is no current user logged in.
+  ///
+  /// Returns:
+  /// A [ParseUser] representing the current logged-in user.
+  Future<ParseUser> _parseCurrentUser() async {
+    final parseUser = await ParseUser.currentUser() as ParseUser?;
+    if (parseUser == null) {
+      throw MechanicRepositoryException('Current user access error');
+    }
+    return parseUser;
+  }
+
+  /// Handles errors by logging and wrapping them in a [DataResult] failure
+  /// response.
+  ///
+  /// This method takes the name of the method where the error occurred and the
+  /// actual error object.
+  /// It logs a detailed error message and returns a failure wrapped in
+  /// [DataResult].
+  ///
+  /// Parameters:
+  /// - [method]: The name of the method where the error occurred.
+  /// - [error]: The error object that describes what went wrong.
+  ///
+  /// Returns:
+  /// A [DataResult.failure] with a [GenericFailure] that includes a detailed
+  /// message.
+  DataResult<T> _handleError<T>(String method, Object error) {
+    final fullMessage = 'MechanicsRepository.$method: $error';
     log(fullMessage);
     return DataResult.failure(GenericFailure(message: fullMessage));
   }
