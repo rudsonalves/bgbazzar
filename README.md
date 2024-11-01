@@ -9,6 +9,117 @@
 
 # ChangeLog
 
+## 2024/11/01 - version: 0.7.10+63
+
+This commit introduces multiple updates to improve code modularity, maintainability, and add new features to the boardgame application. Changes include modifications to build configurations, models, form fields, new feature additions, and the refactoring of various components and screens.
+
+### Changes made:
+
+1. **android/app/build.gradle**:
+   - Enabled configurations for code shrinking, obfuscation, and optimization in release builds.
+   - Added rules to use `proguard-rules.pro` for ProGuard settings.
+   - Added comments to clarify configurations that are not part of the official documentation, to assist with potential troubleshooting in production.
+
+2. **android/app/proguard-rules.pro**:
+   - Created a new ProGuard configuration file with a rule to keep the `androidx.lifecycle.DefaultLifecycleObserver` class.
+
+3. **lib/common/models/boardgame.dart**:
+   - Removed the `views` property from `BoardgameModel`.
+   - Added a factory constructor `BoardgameModel.clean()` to return a default, clean instance of the model.
+   - Introduced `copyWith` method to enable easy cloning and modification of `BoardgameModel` instances.
+
+4. **lib/components/form_fields/custom_long_form_field.dart**:
+   - Added `onChanged` callback to `CustomLongFormField` for flexibility in form interactions.
+   - Updated the `onChanged` function to use the provided `onChanged` callback directly.
+
+5. **lib/components/form_fields/custom_names_form_field.dart**:
+   - Added `onChanged` and updated the `onSubmitted` callback to pass the current value.
+   - Updated `onChanged` to use the provided callback directly.
+
+6. **lib/components/others_widgets/spin_box_field.dart**:
+   - Added `onChange` callback to handle changes in the spin box values.
+   - Updated `_increment` and `_decrement` methods to call `_updateOnChange` whenever values are adjusted.
+
+7. **lib/features/boardgame/boardgame_screen.dart**:
+   - Replaced the `OverflowBar` for Floating Action Buttons with a new `CustomFloatingActionBar` widget to improve code reuse and consistency.
+
+8. **lib/features/boardgame/widgets/custom_floating_action_bar.dart** (new file):
+   - Introduced a new widget `CustomFloatingActionBar` to manage the floating action buttons for boardgame operations.
+
+9. **lib/features/edit_ad/edit_ad_controller.dart.old** (deleted):
+   - Removed old and unused file `edit_ad_controller.dart.old` to clean up the project.
+
+10. **lib/features/edit_boardgame/edit_boardgame_controller.dart**:
+    - Refactored `EditBoardgameController` to decouple the state management from the controller logic.
+    - Integrated `EditBoardgameStore` to handle stateful logic, improving separation of concerns.
+
+11. **lib/features/edit_boardgame/edit_boardgame_form/edit_boardgame_form.dart** (new file):
+    - Created a new `EditBoardgameForm` widget to encapsulate the form fields and related logic for editing a boardgame.
+
+12. **lib/features/edit_boardgame/edit_boardgame_form/edit_boardgame_form_controller.dart** (new file):
+    - Created a new controller `EditBoardgameFormController` to manage the logic for `EditBoardgameForm`, providing better modularity.
+
+13. **lib/features/edit_boardgame/edit_boardgame_screen.dart**:
+    - Updated to use `EditBoardgameForm` and `CustomFilledButton`, enhancing maintainability by breaking down responsibilities.
+
+14. **lib/features/edit_boardgame/edit_boardgame_state.dart** (deleted):
+    - Removed the obsolete state management file in favor of using the new `EditBoardgameStore`.
+
+15. **lib/features/edit_boardgame/edit_boardgame_store.dart** (new file):
+    - Added `EditBoardgameStore` to handle the boardgame state, including validation and status tracking for editing operations.
+
+16. **lib/features/edit_boardgame/get_image/get_image.dart** (new file):
+    - Added a new widget `GetImage` to handle image selection, allowing users to either input a path manually or pick a file using a dialog.
+    - Includes functionality for picking local files via the `FilePicker` package.
+
+17. **lib/features/edit_boardgame/widgets/custom_filled_button.dart** (new file):
+    - Introduced `CustomFilledButton` widget to provide a consistent styled button for actions throughout the boardgame edit flow.
+
+18. **lib/features/mechanics/mechanics_screen.dart**:
+    - Updated the Floating Action Buttons to provide a consistent layout, replacing the `OverflowBar` with individual `Padding` widgets for better spacing control.
+
+19. **lib/get_it.dart**:
+    - Registered `IBoardgameRepository` with `PSBoardgameRepository` for dependency injection, enhancing the consistency of repository management.
+
+20. **lib/manager/boardgames_manager.dart**:
+    - Updated to use `IBoardgameRepository` instead of directly accessing `PSBoardgameRepository`.
+    - Improved dependency injection and separation of concerns.
+
+21. **lib/repository/interfaces/i_ad_repository.dart**:
+    - Added detailed comments to document each method, clarifying their purpose and expected behavior for maintainability.
+
+22. **lib/repository/interfaces/i_boardgame_repository.dart** (new file):
+    - Created an interface for `IBoardgameRepository` to define the contract for managing boardgame data, promoting modularity and testability.
+
+23. **lib/repository/interfaces/i_mechanic_repository.dart**:
+    - Added comprehensive documentation for all methods to improve code clarity and ease of use.
+
+24. **lib/repository/parse_server/common/constants.dart**:
+    - Removed `keyBgViews` as it is no longer needed in the updated `BoardgameModel`.
+
+25. **lib/repository/parse_server/common/parse_to_model.dart**:
+    - Updated `ParseToModel.boardgameModel()` to remove the mapping for `views` since it is no longer part of the model.
+
+26. **lib/repository/parse_server/ps_ad_repository.dart**:
+    - Removed redundant comments and added new error handling to the `delete()` method for better consistency.
+
+27. **lib/repository/parse_server/ps_boardgame_repository.dart**:
+    - Implemented `IBoardgameRepository` interface and refactored methods for better consistency and error handling.
+    - Added private helper methods to modularize repetitive tasks such as creating ACLs and preparing `ParseObject` instances.
+
+28. **lib/repository/parse_server/ps_mechanics_repository.dart**:
+    - Improved code documentation, modularized methods for ACL creation and current user fetching, and enhanced error handling.
+
+29. **pubspec.yaml**:
+    - Added `file_picker` dependency (version `8.1.3`) to support local file selection.
+
+30. **pubspec.lock**:
+    - Updated to include the `file_picker` package (version `8.1.3`).
+
+### Conclusion:
+These changes improve the maintainability and modularity of the boardgame application, making it easier to manage forms, UI components, and state. The addition of new callbacks provides greater flexibility, while the refactoring ensures that state management is more streamlined and separated from UI logic.
+
+
 ## 2024/10/31 - version: 0.7.09+62
 
 This commit refactors and enhances several UI components and navigation flows, with a focus on improving code reuse, consistency, and user interaction. These updates primarily affect form submission behaviors and the handling of navigation within the app.

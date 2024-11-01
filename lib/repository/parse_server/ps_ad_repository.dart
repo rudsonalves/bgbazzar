@@ -124,11 +124,6 @@ class PSAdRepository implements IAdRepository {
     }
   }
 
-  /// Fetches a list of advertisements from an user.
-  ///
-  /// [user] - The user to apply to the search.
-  /// Returns a list of `AdvertModel` if the query is successful, otherwise
-  /// returns `null`.
   @override
   Future<DataResult<List<AdModel>?>> getMyAds(UserModel usr, int status) async {
     try {
@@ -169,14 +164,6 @@ class PSAdRepository implements IAdRepository {
     }
   }
 
-  /// Fetches a list of advertisements from the Parse Server based on the
-  /// provided filters and search string.
-  ///
-  /// [filter] - The filter model to apply to the search.
-  /// [search] - The search string to filter advertisements by title.
-  /// [page] - The page number to retrieve, used for pagination.
-  /// Returns a list of `AdModel` if the query is successful, otherwise
-  /// returns `null`.
   @override
   Future<DataResult<List<AdModel>?>> get({
     required FilterModel filter,
@@ -243,16 +230,10 @@ class PSAdRepository implements IAdRepository {
     }
   }
 
-  /// Saves an advertisement to the Parse Server.
-  ///
-  /// [ad] - The advertisement model to save.
-  /// Returns the saved `AdModel` if successful, otherwise throws an
-  /// exception.
   @override
   Future<DataResult<AdModel?>> save(AdModel ad) async {
     try {
       final parseUser = await _parseCurrentUser();
-
       final List<ParseFile> parseImages =
           await _saveImages(ad.images, parseUser);
       final parseAddress = _parseAddress(ad.address!.id!);
@@ -284,7 +265,6 @@ class PSAdRepository implements IAdRepository {
   Future<DataResult<AdModel?>> update(AdModel ad) async {
     try {
       final parseUser = await _parseCurrentUser();
-
       final List<ParseFile> parseImages =
           await _saveImages(ad.images, parseUser);
       final parseAddress = _parseAddress(ad.address!.id!);
@@ -307,6 +287,26 @@ class PSAdRepository implements IAdRepository {
       return DataResult.success(ad);
     } catch (err) {
       return _handleError('update', err);
+    }
+  }
+
+  @override
+  Future<DataResult<void>> delete(String ad) async {
+    try {
+      // Create a ParseObject representing the advertisement to be deleted
+      final parse = ParseObject(keyAdTable)..objectId = ad;
+
+      // Attempt to delete the object from the Parse Server
+      final response = await parse.delete();
+
+      // Check if the response is successful
+      if (!response.success) {
+        throw AdRepositoryException(
+            response.error?.toString() ?? 'delete ad table error');
+      }
+      return DataResult.success(null);
+    } catch (err) {
+      return _handleError('delete', err);
     }
   }
 
@@ -353,22 +353,6 @@ class PSAdRepository implements IAdRepository {
     return parseAd;
   }
 
-  @override
-  Future<DataResult<void>> delete(String ad) async {
-    try {
-      final parse = ParseObject(keyAdTable)..objectId = ad;
-
-      final response = await parse.delete();
-      if (!response.success) {
-        throw AdRepositoryException(
-            response.error?.toString() ?? 'delete ad table error');
-      }
-      return DataResult.success(null);
-    } catch (err) {
-      return _handleError('delete', err);
-    }
-  }
-
   /// Saves the images to the Parse Server.
   ///
   /// [imagesPaths] - The list of image paths to save.
@@ -406,7 +390,7 @@ class PSAdRepository implements IAdRepository {
 
       return parseImages;
     } catch (err) {
-      throw AdRepositoryException('PSAdRepository._saveImages: $err');
+      throw AdRepositoryException('_saveImages: $err');
     }
   }
 

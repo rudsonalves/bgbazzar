@@ -126,30 +126,35 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
               ),
               floatingActionButton: OverflowBar(
                 children: [
-                  getIt<CurrentUser>().isAdmin
-                      ? FloatingActionButton.extended(
-                          heroTag: 'hero-1',
-                          backgroundColor:
-                              colorScheme.primaryContainer.withOpacity(0.85),
-                          onPressed: _addMechanic,
-                          label: const Text('Adicionar'),
-                          icon: const Icon(Icons.add),
-                        )
-                      : FloatingActionButton.extended(
-                          heroTag: 'hero-2',
-                          backgroundColor:
-                              colorScheme.primaryContainer.withOpacity(0.85),
-                          onPressed: _closeMechanicsPage,
-                          label: const Text('Voltar'),
-                          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                        ),
-                  const SizedBox(width: 20),
-                  FloatingActionButton.extended(
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: FloatingActionButton(
+                      heroTag: 'hero-1',
+                      backgroundColor:
+                          colorScheme.primaryContainer.withOpacity(0.85),
+                      onPressed: _closeMechanicsPage,
+                      tooltip: 'Voltar',
+                      child: const Icon(Icons.arrow_back_ios_new_rounded),
+                    ),
+                  ),
+                  if (getIt<CurrentUser>().isAdmin)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: FloatingActionButton(
+                        heroTag: 'hero-2',
+                        backgroundColor:
+                            colorScheme.primaryContainer.withOpacity(0.85),
+                        onPressed: _addMechanic,
+                        tooltip: 'Adicionar',
+                        child: const Icon(Icons.add),
+                      ),
+                    ),
+                  FloatingActionButton(
                     backgroundColor:
                         colorScheme.primaryContainer.withOpacity(0.85),
                     onPressed: ctrl.deselectAll,
-                    icon: const Icon(Icons.deselect),
-                    label: const Text('Deselecionar'),
+                    tooltip: 'Deselecionar',
+                    child: const Icon(Icons.deselect),
                   ),
                 ],
               ),

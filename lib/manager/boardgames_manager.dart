@@ -27,13 +27,14 @@ import '../common/abstracts/data_result.dart';
 import '../common/models/bg_name.dart';
 import '../common/models/boardgame.dart';
 import '../get_it.dart';
+import '../repository/interfaces/i_boardgame_repository.dart';
 import '../services/parse_server_server.dart';
 import '../common/utils/utils.dart';
-import '../repository/parse_server/ps_boardgame_repository.dart';
 import '../repository/sqlite/bg_names_repository.dart';
 
 class BoardgamesManager {
   final parseServer = getIt<ParseServerService>();
+  final boardgameRepository = getIt<IBoardgameRepository>();
 
   final List<BGNameModel> _bgs = [];
 
@@ -69,7 +70,7 @@ class BoardgamesManager {
   }
 
   Future<DataResult<List<BGNameModel>>> _getParseBgNames() async {
-    final bgs = await PSBoardgameRepository.getNames();
+    final bgs = await boardgameRepository.getNames();
     return bgs;
   }
 
@@ -114,7 +115,7 @@ class BoardgamesManager {
         bg.image = convertedImagePath;
       }
 
-      final result = await PSBoardgameRepository.save(bg);
+      final result = await boardgameRepository.save(bg);
       if (result.isFailure) {
         throw Exception(result.error);
       }
@@ -165,7 +166,7 @@ class BoardgamesManager {
         bg.image = convertedImagePath;
       }
 
-      final result = await PSBoardgameRepository.update(bg);
+      final result = await boardgameRepository.update(bg);
       if (result.isFailure) {
         throw Exception(result.error);
       }
@@ -248,7 +249,7 @@ class BoardgamesManager {
   }
 
   Future<DataResult<BoardgameModel?>> getBoardgameId(String bgId) async {
-    return await PSBoardgameRepository.getById(bgId);
+    return await boardgameRepository.getById(bgId);
   }
 
   void _sortingBGNames() {

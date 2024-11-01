@@ -24,6 +24,7 @@ import '../edit_boardgame/edit_boardgame_screen.dart';
 import '../shop/widgets/search/search_dialog.dart';
 import 'boardgame_controller.dart';
 import 'boardgame_store.dart';
+import 'widgets/custom_floating_action_bar.dart';
 import 'widgets/view_boardgame.dart';
 
 class BoardgameScreen extends StatefulWidget {
@@ -120,48 +121,12 @@ class _BoardgameScreenState extends State<BoardgameScreen> {
           ),
         ],
       ),
-      floatingActionButton: ctrl.isAdmin
-          ? OverflowBar(
-              children: [
-                FloatingActionButton(
-                  heroTag: 'Fab01',
-                  onPressed: _addBoardgame,
-                  tooltip: 'Adicionar',
-                  child: const Icon(Icons.add),
-                ),
-                const SizedBox(width: 20),
-                FloatingActionButton(
-                  heroTag: 'Fab02',
-                  onPressed: _editBoardgame,
-                  tooltip: 'Editar',
-                  child: const Icon(Icons.edit),
-                ),
-                const SizedBox(width: 20),
-                FloatingActionButton(
-                  heroTag: 'Fab03',
-                  onPressed: _viewBoardgame,
-                  tooltip: 'Visualizar',
-                  child: const Icon(Icons.visibility),
-                ),
-              ],
-            )
-          : OverflowBar(
-              children: [
-                FloatingActionButton.extended(
-                  heroTag: 'Fab05',
-                  onPressed: _backPageWithGame,
-                  icon: const Icon(Icons.task_alt_rounded),
-                  label: const Text('Selecionar'),
-                ),
-                const SizedBox(width: 20),
-                FloatingActionButton.extended(
-                  heroTag: 'Fab04',
-                  onPressed: _viewBoardgame,
-                  icon: const Icon(Icons.visibility),
-                  label: const Text('Visualizar'),
-                ),
-              ],
-            ),
+      floatingActionButton: CustomFloatingActionBar(
+        backPageWithGame: _backPageWithGame,
+        addBoardgame: _addBoardgame,
+        editBoardgame: _editBoardgame,
+        viewBoardgame: _viewBoardgame,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: ValueListenableBuilder(

@@ -33,6 +33,7 @@ class SpinBoxField<T extends num> extends StatefulWidget {
   final T increment;
   final InputDecoration? decoration;
   final int fractionDigits;
+  final void Function(T)? onChange;
 
   const SpinBoxField({
     super.key,
@@ -41,6 +42,7 @@ class SpinBoxField<T extends num> extends StatefulWidget {
     this.style,
     this.hintText,
     required this.controller,
+    this.onChange,
     this.flex = 1,
     T? minValue,
     T? maxValue,
@@ -130,11 +132,18 @@ class _SpinBoxFieldState<T extends num> extends State<SpinBoxField<T>> {
     _decrementTimer?.cancel();
   }
 
+  void _updateOnChange() {
+    if (widget.onChange != null) {
+      widget.onChange!(value);
+    }
+  }
+
   void _increment() {
     if (value < widget.maxValue) {
       value = (value + widget.increment) as T;
       value = value > widget.maxValue ? widget.maxValue : value;
       _changeText(value);
+      _updateOnChange();
     }
   }
 
@@ -143,6 +152,7 @@ class _SpinBoxFieldState<T extends num> extends State<SpinBoxField<T>> {
       value = (value - widget.increment) as T;
       value = value < widget.minValue ? widget.minValue : value;
       _changeText(value);
+      _updateOnChange();
     }
   }
 

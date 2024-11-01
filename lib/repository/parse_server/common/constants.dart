@@ -79,7 +79,6 @@ const keyBgMinAge = 'minAge';
 const keyBgDesigner = 'designer';
 const keyBgArtist = 'artist';
 const keyBgDescription = 'description';
-const keyBgViews = 'views';
 const keyBgMechanics = 'mechanics';
 
 const keyMechTable = mechTable;
