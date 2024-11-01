@@ -20,18 +20,13 @@ import 'dart:developer';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import '../../common/models/address.dart';
+import '../interfaces/i_address_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 
-/// This class provides methods to interact with the Parse Server
-/// to manage addresses associated with the user.
-class PSAddressRepository {
-  /// Saves an address to the Parse Server.
-  ///
-  /// [address] - The address model to save.
-  /// Returns the saved `AddressModel` if successful, otherwise throws an
-  /// exception.
-  static Future<AddressModel?> save(AddressModel address) async {
+class PSAddressRepository implements IAddressRepository {
+  @override
+  Future<AddressModel?> save(AddressModel address) async {
     try {
       final parseAddress = ParseObject(keyAddressTable);
 
@@ -74,11 +69,8 @@ class PSAddressRepository {
     }
   }
 
-  /// Deletes an address from the Parse Server.
-  ///
-  /// [addressId] - The address model to delete.
-  /// Returns `true` if successful, otherwise returns `false`.
-  static Future<bool> delete(String addressId) async {
+  @override
+  Future<bool> delete(String addressId) async {
     try {
       final parseAddress = ParseObject(keyAddressTable);
       parseAddress.objectId = addressId;
@@ -95,12 +87,8 @@ class PSAddressRepository {
     }
   }
 
-  /// Fetches the list of addresses associated with the current user.
-  ///
-  /// [userId] - The ID of the user whose addresses are to be fetched.
-  /// Returns a list of `AddressModel` if successful, otherwise throws an
-  /// exception.
-  static Future<List<AddressModel>?> getUserAddresses(String userId) async {
+  @override
+  Future<List<AddressModel>?> getUserAddresses(String userId) async {
     try {
       List<AddressModel>? addresses;
 

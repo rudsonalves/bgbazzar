@@ -28,9 +28,11 @@ import 'manager/boardgames_manager.dart';
 import 'manager/favorites_manager.dart';
 import 'manager/mechanics_manager.dart';
 import 'repository/interfaces/i_ad_repository.dart';
+import 'repository/interfaces/i_address_repository.dart';
 import 'repository/interfaces/i_boardgame_repository.dart';
 import 'repository/interfaces/i_mechanic_repository.dart';
 import 'repository/interfaces/i_user_repository.dart';
+import 'repository/parse_server/ps_address_repository.dart';
 import 'repository/parse_server/ps_boardgame_repository.dart';
 import '/repository/parse_server/ps_ad_repository.dart';
 import 'repository/parse_server/ps_mechanics_repository.dart';
@@ -58,11 +60,14 @@ void setupDependencies() {
     getIt.registerLazySingleton<DatabaseManager>(() => DatabaseManager());
     getIt.registerLazySingleton<BoardgamesManager>(() => BoardgamesManager());
 
-    // Repositories
+    // Parse Server Repositories
     getIt.registerFactory<IUserRepository>(() => PSUserRepository());
     getIt.registerFactory<IMechanicRepository>(() => PSMechanicsRepository());
     getIt.registerFactory<IAdRepository>(() => PSAdRepository());
     getIt.registerFactory<IBoardgameRepository>(() => PSBoardgameRepository());
+    getIt.registerFactory<IAddressRepository>(() => PSAddressRepository());
+
+    // SQFLite Repositories
     getIt.registerFactory<IBgNamesRepository>(() => SqliteBGNamesRepository());
   } catch (err) {
     log('GetIt Locator Error: $err');
