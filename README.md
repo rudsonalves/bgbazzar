@@ -9,6 +9,46 @@
 
 # ChangeLog
 
+## 2024/11/01 - version: 0.7.10+65
+
+This commit introduces significant updates to the dependency injection setup and several repository classes to improve the consistency and scalability of the codebase. Notable changes include the introduction of new interfaces for repositories and the implementation of dependency inversion to ensure better separation of concerns.
+
+### Changes made:
+
+1. **lib/get_it.dart**:
+   - Added imports for `i_address_repository.dart` and `ps_address_repository.dart`.
+   - Registered `IAddressRepository` with `PSAddressRepository` in `GetIt` for Parse Server dependencies.
+   - Introduced `SQFLite Repositories` with the `SqliteBGNamesRepository` registration.
+
+2. **lib/manager/address_manager.dart**:
+   - Replaced direct use of `PSAddressRepository` with `IAddressRepository` to decouple the implementation from the `AddressManager`.
+   - Utilized `getIt<IAddressRepository>()` to obtain the repository instance for handling CRUD operations.
+
+3. **lib/manager/mechanics_manager.dart**:
+   - Added import for `i_local_mechanic_repository.dart`.
+   - Introduced `localMechRepository` for handling operations via the local SQLite database.
+   - Replaced direct references to `SqliteMechanicRepository` with `localMechRepository` to use dependency injection for better scalability.
+
+4. **lib/repository/interfaces/i_address_repository.dart** (New file):
+   - Created an interface `IAddressRepository` defining the contract for saving, deleting, and fetching user addresses.
+   - Introduced `AddressRepositoryException` to handle errors related to the address repository.
+
+5. **lib/repository/parse_server/ps_address_repository.dart**:
+   - Implemented `IAddressRepository` to provide the address-related functionality specific to Parse Server.
+   - Changed methods (`save`, `delete`, `getUserAddresses`) from `static` to instance methods, aligning them with the interface implementation.
+
+6. **lib/repository/sqlite/local_interfaces/i_local_mechanic_repository.dart** (New file):
+   - Created an interface `ILocalMechanicRepository` for handling SQLite operations related to game mechanics.
+   - Defined methods for retrieving, adding, and updating mechanics within the local database.
+
+7. **lib/repository/sqlite/mechanic_repository.dart**:
+   - Updated `SqliteMechanicRepository` to implement `ILocalMechanicRepository`.
+   - Converted static methods (`get`, `add`, `update`) to instance methods to comply with the interface requirements.
+
+### Conclusion:
+These modifications enhance modularity and flexibility by decoupling specific implementations from the core logic through the use of interfaces. This approach ensures that future changes in the repository implementations are less intrusive, thus promoting easier testing and maintenance.
+
+
 ## 2024/11/01 - version: 0.7.10+64
 
 This commit introduces several key changes to enhance the maintainability of the boardgame application, focusing on improving local storage handling, modularizing state management, and refining UI elements.

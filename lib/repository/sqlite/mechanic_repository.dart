@@ -19,15 +19,11 @@ import 'dart:developer';
 
 import '../../common/models/mechanic.dart';
 import '../../store/stores/mechanics_store.dart';
+import 'local_interfaces/i_local_mechanic_repository.dart';
 
-/// This class provides methods to interact with the Parse Server
-/// to retrieve a list of mechanics.
-class SqliteMechanicRepository {
-  /// Fetches a list of mechanics from the Parse Server.
-  ///
-  /// Returns a list of `MechanicModel` if the query is successful,
-  /// otherwise create an error.
-  static Future<List<MechanicModel>> get() async {
+class SqliteMechanicRepository implements ILocalMechanicRepository {
+  @override
+  Future<List<MechanicModel>> get() async {
     try {
       final result = await MechanicsStore.get();
       if (result.isEmpty) return [];
@@ -44,7 +40,8 @@ class SqliteMechanicRepository {
     }
   }
 
-  static Future<MechanicModel?> add(MechanicModel mech) async {
+  @override
+  Future<MechanicModel?> add(MechanicModel mech) async {
     try {
       final id = await MechanicsStore.add(mech.toMap());
       if (id < 0) throw Exception('return id $id');
@@ -58,7 +55,8 @@ class SqliteMechanicRepository {
     }
   }
 
-  static Future<int> update(MechanicModel mech) async {
+  @override
+  Future<int> update(MechanicModel mech) async {
     try {
       final result = await MechanicsStore.update(mech.toMap());
       return result;

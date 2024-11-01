@@ -19,10 +19,10 @@ import 'dart:developer';
 
 import 'package:bgbazzar/get_it.dart';
 
-import '../common/abstracts/data_result.dart';
-import '../common/models/mechanic.dart';
-import '../repository/interfaces/i_mechanic_repository.dart';
-import '../repository/sqlite/mechanic_repository.dart';
+import '/common/abstracts/data_result.dart';
+import '/common/models/mechanic.dart';
+import '/repository/interfaces/i_mechanic_repository.dart';
+import '/repository/sqlite/local_interfaces/i_local_mechanic_repository.dart';
 
 enum ManagerStatus { ok, error, duplicated }
 
@@ -30,6 +30,7 @@ enum ManagerStatus { ok, error, duplicated }
 /// retrieve mechanic names, and find mechanic names based on their IDs.
 class MechanicsManager {
   final mechRepository = getIt<IMechanicRepository>();
+  final localMechRepository = getIt<ILocalMechanicRepository>();
 
   final List<MechanicModel> _mechanics = [];
 
@@ -42,7 +43,7 @@ class MechanicsManager {
   }
 
   Future<void> getAllMechanics() async {
-    final mechs = await SqliteMechanicRepository.get();
+    final mechs = await localMechRepository.get();
     _mechanics.clear();
     if (mechs.isNotEmpty) {
       _mechanics.addAll(mechs);
@@ -66,7 +67,7 @@ class MechanicsManager {
 
         if (mech != null) {
           if (!localIds.contains(mech.psId)) {
-            final newMech = await SqliteMechanicRepository.add(mech);
+            final newMech = await localMechRepository.add(mech);
             if (newMech != null) {
               _mechanics.add(newMech);
             }
@@ -144,7 +145,7 @@ class MechanicsManager {
     }
     final newMech = result.data!;
     if (newMech.psId != mech.psId) {
-      SqliteMechanicRepository.update(newMech);
+      localMechRepository.update(newMech);
     }
     int index = _mechanics.indexWhere((m) => m.id == mech.id);
     log('Indec: $index');
@@ -162,7 +163,7 @@ class MechanicsManager {
     if (mechanicsNames.contains(mech.name)) return null;
     if (mech.id != null) return null;
 
-    final newMech = await SqliteMechanicRepository.add(mech);
+    final newMech = await localMechRepository.add(mech);
 
     return newMech;
   }
