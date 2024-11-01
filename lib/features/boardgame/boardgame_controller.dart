@@ -33,7 +33,7 @@ class BoardgameController {
   String? _selectedBGId;
 
   bool get isAdmin => user.isAdmin;
-  List<BGNameModel> get bgs => bgManager.bgs;
+  List<BGNameModel> get bgs => bgManager.localBGList;
   String get search => _search;
   List<BGNameModel> get filteredBGs => _filteredBGs;
   String? get selectedBGId => _selectedBGId;

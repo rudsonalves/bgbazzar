@@ -124,8 +124,16 @@ class _EditBoardgameFormState extends State<EditBoardgameForm> {
             builder: (context, _) {
               return InkWell(
                 onTap: _setImage,
-                child: ImageView(
-                  image: ctrl.imageController.text,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ImageView(
+                      image: ctrl.imageController.text,
+                    ),
+                  ),
                 ),
               );
             },

@@ -19,9 +19,11 @@ import 'dart:developer';
 
 import '../../store/stores/bg_names_store.dart';
 import '/common/models/bg_name.dart';
+import 'local_interfaces/i_bg_names_repository.dart';
 
-class SqliteBGNamesRepository {
-  static Future<List<BGNameModel>> get() async {
+class SqliteBGNamesRepository implements IBgNamesRepository {
+  @override
+  Future<List<BGNameModel>> get() async {
     try {
       final result = await BGNamesStore.get();
       if (result.isEmpty) return [];
@@ -35,7 +37,8 @@ class SqliteBGNamesRepository {
     }
   }
 
-  static Future<BGNameModel> add(BGNameModel bg) async {
+  @override
+  Future<BGNameModel> add(BGNameModel bg) async {
     try {
       final id = await BGNamesStore.add(bg.toMap());
       if (id < 0) throw Exception('retrun id $id');
@@ -49,7 +52,8 @@ class SqliteBGNamesRepository {
     }
   }
 
-  static Future<int> update(BGNameModel bg) async {
+  @override
+  Future<int> update(BGNameModel bg) async {
     try {
       final result = await BGNamesStore.update(bg.toMap());
       return result;

@@ -17,7 +17,6 @@
 
 import 'dart:developer';
 
-import 'package:bgbazzar/repository/parse_server/ps_ad_repository.dart';
 import 'package:get_it/get_it.dart';
 
 import 'common/singletons/app_settings.dart';
@@ -33,8 +32,11 @@ import 'repository/interfaces/i_boardgame_repository.dart';
 import 'repository/interfaces/i_mechanic_repository.dart';
 import 'repository/interfaces/i_user_repository.dart';
 import 'repository/parse_server/ps_boardgame_repository.dart';
+import '/repository/parse_server/ps_ad_repository.dart';
 import 'repository/parse_server/ps_mechanics_repository.dart';
 import 'repository/parse_server/ps_user_repository.dart';
+import 'repository/sqlite/bg_names_repository.dart';
+import 'repository/sqlite/local_interfaces/i_bg_names_repository.dart';
 import 'services/parse_server_server.dart';
 import 'store/database/database_manager.dart';
 
@@ -61,6 +63,7 @@ void setupDependencies() {
     getIt.registerFactory<IMechanicRepository>(() => PSMechanicsRepository());
     getIt.registerFactory<IAdRepository>(() => PSAdRepository());
     getIt.registerFactory<IBoardgameRepository>(() => PSBoardgameRepository());
+    getIt.registerFactory<IBgNamesRepository>(() => SqliteBGNamesRepository());
   } catch (err) {
     log('GetIt Locator Error: $err');
   }

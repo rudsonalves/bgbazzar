@@ -9,6 +9,43 @@
 
 # ChangeLog
 
+## 2024/11/01 - version: 0.7.10+64
+
+This commit introduces several key changes to enhance the maintainability of the boardgame application, focusing on improving local storage handling, modularizing state management, and refining UI elements.
+
+#### Changes made:
+
+1. **lib/features/boardgame/boardgame_controller.dart**:
+   - Updated the getter for the list of board games (`bgs`) to reference `bgManager.localBGList` instead of `bgManager.bgs`.
+
+2. **lib/features/edit_boardgame/edit_boardgame_controller.dart**:
+   - Added logic to check if `boardgame.id` is `null` to decide whether to update an existing board game or save a new one.
+
+3. **lib/features/edit_boardgame/edit_boardgame_form/edit_boardgame_form.dart**:
+   - Wrapped the `ImageView` widget in a `ClipRRect` with a border radius of 12 to add rounded corners, enhancing UI consistency.
+
+4. **lib/get_it.dart**:
+   - Removed redundant import of `ps_ad_repository.dart`.
+   - Added a new import for `bg_names_repository.dart` and registered `IBgNamesRepository` to enhance dependency management.
+
+5. **lib/manager/boardgames_manager.dart**:
+   - Refactored the board game manager to use a new local SQLite repository (`IBgNamesRepository`) for managing board game names.
+   - Added methods to handle initialization, saving, updating, and local database synchronization.
+   - Modularized image processing logic to make board game saving and updating more consistent and maintainable.
+
+6. **lib/repository/parse_server/ps_user_repository.dart**:
+   - Introduced `_handleError` method for centralized error logging and handling.
+
+7. **lib/repository/sqlite/bg_names_repository.dart**:
+   - Implemented the `IBgNamesRepository` interface, including `get`, `add`, and `update` methods for board game names.
+
+8. **lib/repository/sqlite/local_interfaces/i_bg_names_repository.dart** (new file):
+   - Created an interface (`IBgNamesRepository`) to standardize SQLite operations for board game names, ensuring modularity and testability.
+
+#### Conclusion:
+These updates improve the consistency of state management, enhance the user experience with improved UI elements, and standardize the handling of local board game names. The refactoring also modularizes the code, making future updates easier to manage and enhancing error handling across the application.
+
+
 ## 2024/11/01 - version: 0.7.10+63
 
 This commit introduces multiple updates to improve code modularity, maintainability, and add new features to the boardgame application. Changes include modifications to build configurations, models, form fields, new feature additions, and the refactoring of various components and screens.
