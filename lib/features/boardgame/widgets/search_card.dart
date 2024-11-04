@@ -46,7 +46,7 @@ class SearchCard extends StatelessWidget {
 
             return ListTile(
               onTap: () {
-                getBoardInfo(bgBoard.bgId!);
+                getBoardInfo(bgBoard.id!);
               },
               title: Text(bgBoard.name!),
               // subtitle: Text(

@@ -54,7 +54,7 @@ class MechanicsManager {
 
     final ids = result.data!;
 
-    final localIds = _mechanics.map((m) => m.psId).toList();
+    final localIds = _mechanics.map((m) => m.id).toList();
 
     for (final id in ids) {
       if (!localIds.contains(id)) {
@@ -66,7 +66,7 @@ class MechanicsManager {
         final mech = result.data;
 
         if (mech != null) {
-          if (!localIds.contains(mech.psId)) {
+          if (!localIds.contains(mech.id)) {
             final newMech = await localMechRepository.add(mech);
             if (newMech != null) {
               _mechanics.add(newMech);
@@ -84,7 +84,7 @@ class MechanicsManager {
   String? nameFromPsId(String psId) {
     return _mechanics
         .firstWhere(
-          (item) => item.psId == psId,
+          (item) => item.id == psId,
           orElse: () => MechanicModel(id: null, name: ''),
         )
         .name;
@@ -117,7 +117,7 @@ class MechanicsManager {
   }
 
   MechanicModel mechanicOfPsId(String psId) {
-    return _mechanics.firstWhere((item) => item.psId == psId);
+    return _mechanics.firstWhere((item) => item.id == psId);
   }
 
   MechanicModel? mechanicOfName(String name) {
@@ -129,7 +129,7 @@ class MechanicsManager {
   Future<ManagerStatus> add(MechanicModel mech) async {
     // add in parse server database
     final newMech = await _psAdd(mech);
-    if (newMech == null || newMech.psId == null) return ManagerStatus.error;
+    if (newMech == null || newMech.id == null) return ManagerStatus.error;
     // add in local database
     await _localAdd(newMech);
 
@@ -144,7 +144,7 @@ class MechanicsManager {
       throw Exception(result.error);
     }
     final newMech = result.data!;
-    if (newMech.psId != mech.psId) {
+    if (newMech.id != mech.id) {
       localMechRepository.update(newMech);
     }
     int index = _mechanics.indexWhere((m) => m.id == mech.id);

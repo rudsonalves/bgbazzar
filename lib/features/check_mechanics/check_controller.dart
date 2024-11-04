@@ -36,7 +36,7 @@ class CheckController {
     try {
       store.setStateLoading();
       for (final mech in mechanics) {
-        final result = await mechManager.get(mech.psId!);
+        final result = await mechManager.get(mech.id!);
         store.incrementCount();
         if (result.isFailure || result.data == null) {
           checkList.add(CheckMechList(mech, false));

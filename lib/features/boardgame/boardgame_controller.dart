@@ -55,7 +55,7 @@ class BoardgameController {
     store.setStateSuccess();
   }
 
-  bool isSelected(BGNameModel bg) => bg.bgId == _selectedBGId;
+  bool isSelected(BGNameModel bg) => bg.id == _selectedBGId;
 
   void _updateSearchFilter(String fsearch) {
     _search = fsearch.trim();
@@ -80,7 +80,7 @@ class BoardgameController {
 
   Future<void> selectBGId(BGNameModel bg) async {
     store.setStateLoading();
-    _selectedBGId = (_selectedBGId == bg.bgId) ? null : bg.bgId;
+    _selectedBGId = (_selectedBGId == bg.id) ? null : bg.id;
     store.setStateSuccess();
   }
 

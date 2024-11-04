@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -16,29 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-class BGNameModel {
-  String? id;
-  String? name;
+import '../../common/models/favorite.dart';
 
-  BGNameModel({
-    this.id,
-    this.name,
-  });
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-    };
-  }
-
-  factory BGNameModel.fromMap(Map<String, dynamic> map) {
-    return BGNameModel(
-      id: map['id'] != null ? map['id'] as String : null,
-      name: map['name'] != null ? map['name'] as String : null,
-    );
-  }
-
-  @override
-  String toString() => 'BGNameModel(id: $id, name: $name)';
+abstract class IFavoriteRepository {
+  Future<FavoriteModel?> add(String userId, String adId);
+  Future<void> delete(String favId);
 }

@@ -21,11 +21,13 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import '../../common/models/ad.dart';
 import '../../common/models/favorite.dart';
+import '../interfaces/i_favorite_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 
-class PSFavoriteRepository {
-  static Future<FavoriteModel?> add(String userId, String adId) async {
+class PSFavoriteRepository implements IFavoriteRepository {
+  @override
+  Future<FavoriteModel?> add(String userId, String adId) async {
     try {
       final parseFav = ParseObject(keyFavoriteTable);
       final parseAd = ParseObject(keyAdTable)..objectId = adId;
@@ -54,7 +56,8 @@ class PSFavoriteRepository {
     }
   }
 
-  static Future<void> delete(String favId) async {
+  @override
+  Future<void> delete(String favId) async {
     try {
       final parseFav = ParseObject(keyFavoriteTable)..objectId = favId;
 

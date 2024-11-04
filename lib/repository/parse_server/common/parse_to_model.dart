@@ -145,14 +145,14 @@ class ParseToModel {
     int year = parse.get<int>(keyBgPublishYear)!;
 
     return BGNameModel(
-      bgId: parse.objectId!,
+      id: parse.objectId!,
       name: '$name ($year)',
     );
   }
 
   static MechanicModel mechanic(ParseObject parse) {
     return MechanicModel(
-      psId: parse.objectId,
+      id: parse.objectId,
       name: parse.get<String>(keyMechName)!,
       description: parse.get<String>(keyMechDescription)!,
     );

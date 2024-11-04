@@ -43,7 +43,6 @@ class SqliteBGNamesRepository implements IBgNamesRepository {
       final id = await BGNamesStore.add(bg.toMap());
       if (id < 0) throw Exception('retrun id $id');
 
-      bg.id = id;
       return bg;
     } catch (err) {
       final message = 'BGNamesRepository.add: $err';

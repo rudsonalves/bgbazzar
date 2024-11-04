@@ -15,20 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'constants.dart';
+// import 'constants.dart';
 
 class MigrationSqlScripts {
   MigrationSqlScripts._();
 
-  static const localDBVersion = 1001;
+  static const localDBVersion = 1000;
   // FIXME: Check by db version in AppSettoings.localDBVersion!
 
   static const Map<int, List<String>> sqlMigrationsScripts = {
     1000: [],
-    1001: [
-      'ALTER TABLE $mechTable ADD COLUMN $mechPSId CHAR(10)',
-      'CREATE INDEX IF NOT EXISTS $mechIndexPSId ON $mechTable ($mechPSId)',
-    ],
-    1002: [],
   };
 }

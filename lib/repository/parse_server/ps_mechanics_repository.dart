@@ -189,10 +189,10 @@ class PSMechanicsRepository implements IMechanicRepository {
     required MechanicModel mech,
     ParseACL? parseAcl,
   }) {
-    final parseMech = mech.psId == null
+    final parseMech = mech.id == null
         ? ParseObject(keyMechanicTable)
         : ParseObject(keyMechanicTable)
-      ..objectId = mech.psId!;
+      ..objectId = mech.id!;
 
     if (parseAcl != null) {
       parseMech.setACL(parseAcl);

@@ -9,6 +9,93 @@
 
 # ChangeLog
 
+## 2024/11/04 - version: 0.7.11+66
+
+This commit introduces changes aimed at simplifying the data models and repository architecture, eliminating redundant fields and improving the overall consistency of the code. The modifications streamline the handling of IDs across models, ensuring a more uniform approach for data identification and storage.
+
+### Changes made:
+
+1. **assets/data/bgBazzar.db**:
+   - Updated the binary data of the SQLite database.
+
+2. **assets/data/bgBazzar2.db**:
+   - Removed the deprecated `bgBazzar2.db` database file.
+
+3. **lib/common/models/ad.dart**:
+   - Modified `mechanicsString` to use `mec.id` instead of `mec.psId` for consistency with other models.
+
+4. **lib/common/models/bg_name.dart**:
+   - Removed the `bgId` field and replaced `id` type from `int` to `String` to align with other models.
+
+5. **lib/common/models/mechanic.dart**:
+   - Removed the `psId` field and replaced `id` type from `int` to `String` to standardize data representation.
+
+6. **lib/features/boardgame/boardgame_controller.dart**:
+   - Updated `isSelected` and `selectBGId` methods to use `bg.id` instead of `bg.bgId`.
+
+7. **lib/features/boardgame/widgets/search_card.dart**:
+   - Modified the `onTap` callback to use `bgBoard.id` instead of `bgBoard.bgId`.
+
+8. **lib/features/check_mechanics/check_controller.dart**:
+   - Replaced `mech.psId` with `mech.id` in the `get` method for mechanics.
+
+9. **lib/features/check_mechanics/check_page.dart**:
+   - Updated the display of mechanic IDs to use `mech.id` instead of `mech.psId`.
+
+10. **lib/features/mechanics/mechanics_controller.dart**:
+    - Updated `isSelectedIndex` and `toogleSelectionIndex` methods to use `mechanics[index].id` instead of `mechanics[index].psId`.
+
+11. **lib/get_it.dart**:
+    - Added imports for `i_favorite_repository.dart` and `ps_favorite_repository.dart`.
+    - Registered `ILocalMechanicRepository` and `IFavoriteRepository` in `GetIt` for dependency injection.
+
+12. **lib/manager/boardgames_manager.dart**:
+    - Updated references to `bgId` to use `id` in methods like `_initializeBGNames` and `_updateLocalDatabaseIfNeeded`.
+    - Added a comment for better clarity in the `_sortingBGNames` method.
+
+13. **lib/manager/favorites_manager.dart**:
+    - Replaced direct use of `PSFavoriteRepository` with `favoriteRepository` to decouple the implementation.
+
+14. **lib/manager/mechanics_manager.dart**:
+    - Removed usage of `psId` in favor of `id` for mechanics throughout the manager.
+
+15. **lib/repository/interfaces/i_favorite_repository.dart** (New file):
+    - Created an interface `IFavoriteRepository` to handle adding and deleting favorites.
+
+16. **lib/repository/parse_server/common/parse_to_model.dart**:
+    - Updated parsing logic for `BGNameModel` and `MechanicModel` to use `id` instead of `bgId` or `psId`.
+
+17. **lib/repository/parse_server/ps_favorite_repository.dart**:
+    - Implemented `IFavoriteRepository` to manage favorite-related operations.
+
+18. **lib/repository/parse_server/ps_mechanics_repository.dart**:
+    - Modified `saveMechanic` method to use `mech.id` instead of `mech.psId`.
+
+19. **lib/repository/sqlite/bg_names_repository.dart**:
+    - Removed setting `bg.id` after adding a new boardgame to the SQLite database.
+
+20. **lib/repository/sqlite/mechanic_repository.dart**:
+    - Removed setting `mech.id` after adding a new mechanic to the SQLite database.
+
+21. **lib/store/constants/constants.dart**:
+    - Removed constants `mechPSId` and `bgBgId` as they are no longer required.
+
+22. **lib/store/constants/migration_sql_scripts.dart**:
+    - Removed migration scripts related to `mechPSId`.
+
+23. **lib/store/constants/sql_create_table.dart**:
+    - Updated `createBgNamesTable` to use `bgId` as a `TEXT PRIMARY KEY` instead of an auto-incrementing integer.
+
+24. **lib/store/stores/mechanics_store.dart**:
+    - Removed the `mechPSId` column from the query in the `get` method.
+
+25. **pubspec.yaml**:
+    - Updated version from `0.7.10+65` to `0.7.11+66`.
+
+### Conclusion:
+These changes simplify the data structure by eliminating redundant ID fields and aligning all models to use a single `id` field of type `String`. This unification improves code maintainability and consistency, while also reducing potential confusion regarding different types of IDs.
+
+
 ## 2024/11/01 - version: 0.7.10+65
 
 This commit introduces significant updates to the dependency injection setup and several repository classes to improve the consistency and scalability of the codebase. Notable changes include the introduction of new interfaces for repositories and the implementation of dependency inversion to ensure better separation of concerns.
