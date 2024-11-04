@@ -40,7 +40,6 @@ class EditBoardgameController {
 
     try {
       store.setStateLoading();
-      log(store.boardgame.toString());
 
       final result = store.boardgame.id != null
           ? await bgManager.update(store.boardgame)

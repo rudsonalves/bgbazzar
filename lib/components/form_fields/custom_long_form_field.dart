@@ -35,6 +35,7 @@ class CustomLongFormField extends StatefulWidget {
   final String? errorText;
   final String? suffixText;
   final String? prefixText;
+  final FocusNode? focusNode;
 
   const CustomLongFormField({
     super.key,
@@ -54,6 +55,7 @@ class CustomLongFormField extends StatefulWidget {
     this.textCapitalization,
     this.suffixText,
     this.prefixText,
+    this.focusNode,
   });
 
   @override
@@ -110,7 +112,7 @@ class _CustomFormFieldState extends State<CustomLongFormField> {
         child: TextFormField(
           controller: widget.controller,
           validator: widget.validator,
-          focusNode: _textFormFieldFocusNode,
+          focusNode: widget.focusNode ?? _textFormFieldFocusNode,
           keyboardType: widget.keyboardType,
           textInputAction: TextInputAction.none,
           maxLines: widget.maxLines,

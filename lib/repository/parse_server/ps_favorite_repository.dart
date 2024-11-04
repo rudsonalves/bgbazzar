@@ -33,8 +33,8 @@ class PSFavoriteRepository implements IFavoriteRepository {
       final parseAd = ParseObject(keyAdTable)..objectId = adId;
 
       parseFav
-        ..set(keyFavoriteOwner, userId)
-        ..set(keyFavoriteAd, parseAd.toPointer());
+        ..setNonNull(keyFavoriteOwner, userId)
+        ..setNonNull(keyFavoriteAd, parseAd.toPointer());
 
       final response = await parseFav.save();
       if (!response.success) {

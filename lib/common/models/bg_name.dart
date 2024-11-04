@@ -41,4 +41,14 @@ class BGNameModel {
 
   @override
   String toString() => 'BGNameModel(id: $id, name: $name)';
+
+  BGNameModel copyWith({
+    String? id,
+    String? name,
+  }) {
+    return BGNameModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

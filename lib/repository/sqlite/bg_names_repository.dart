@@ -23,9 +23,9 @@ import 'local_interfaces/i_bg_names_repository.dart';
 
 class SqliteBGNamesRepository implements IBgNamesRepository {
   @override
-  Future<List<BGNameModel>> get() async {
+  Future<List<BGNameModel>> getAll() async {
     try {
-      final result = await BGNamesStore.get();
+      final result = await BGNamesStore.getAll();
       if (result.isEmpty) return [];
 
       final bgs = result.map((item) => BGNameModel.fromMap(item)).toList();

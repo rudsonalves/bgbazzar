@@ -16,9 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:bgbazzar/repository/parse_server/common/ps_functions.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:path/path.dart';
 
@@ -35,8 +35,8 @@ class PSBoardgameRepository implements IBoardgameRepository {
   @override
   Future<DataResult<BoardgameModel?>> save(BoardgameModel bg) async {
     try {
-      final parseUser = await _parseCurrentUser();
-      final parseAcl = _createDefaultAcl(parseUser);
+      final parseUser = await PsFunctions.parseCurrentUser();
+      final parseAcl = PsFunctions.createDefaultAcl(parseUser);
       final parseImage = await _saveImage(path: bg.image, parseUser: parseUser);
 
       final parseBg = _prepareBgForSaveOrUpdate(
@@ -60,9 +60,9 @@ class PSBoardgameRepository implements IBoardgameRepository {
   @override
   Future<DataResult<BoardgameModel?>> update(BoardgameModel bg) async {
     try {
-      final parseUser = await _parseCurrentUser();
+      final parseUser = await PsFunctions.parseCurrentUser();
       final parseImage = await _saveImage(path: bg.image, parseUser: parseUser);
-      final parseAcl = _createDefaultAcl(parseUser);
+      final parseAcl = PsFunctions.createDefaultAcl(parseUser);
 
       final parseBg = _prepareBgForSaveOrUpdate(
         bg: bg,
@@ -131,28 +131,6 @@ class PSBoardgameRepository implements IBoardgameRepository {
     }
   }
 
-  /// Fetches the current logged-in user from Parse Server.
-  ///
-  /// Throws an [BoardgameRepositoryException] if no user is currently logged
-  /// in.
-  Future<ParseUser> _parseCurrentUser() async {
-    final parseUser = await ParseUser.currentUser() as ParseUser?;
-    if (parseUser == null) {
-      throw BoardgameRepositoryException('Current user access error');
-    }
-    return parseUser;
-  }
-
-  /// Creates a default ACL for an ad, allowing public read access and
-  /// restricted write access.
-  ///
-  /// [owner] - The user who will be the owner of the created ACL.
-  ParseACL _createDefaultAcl(ParseUser owner) {
-    return ParseACL(owner: owner)
-      ..setPublicReadAccess(allowed: true)
-      ..setPublicWriteAccess(allowed: false);
-  }
-
   /// Prepares a ParseObject for saving or updating an ad.
   ///
   /// [bg] - The BoardgameModel with boardgame information.
@@ -163,9 +141,12 @@ class PSBoardgameRepository implements IBoardgameRepository {
     required ParseFile parseImage,
     ParseACL? parseAcl,
   }) {
-    final parseBg =
-        bg.id == null ? ParseObject(keyBgTable) : ParseObject(keyBgTable)
-          ..objectId = bg.id!;
+    final ParseObject parseBg;
+    if (bg.id == null) {
+      parseBg = ParseObject(keyBgTable);
+    } else {
+      parseBg = ParseObject(keyBgTable)..objectId = bg.id!;
+    }
 
     if (parseAcl != null) {
       parseBg.setACL(parseAcl);
@@ -197,7 +178,7 @@ class PSBoardgameRepository implements IBoardgameRepository {
       if (!path.startsWith('http')) {
         // Create ParseFile from the local file path
         final parseImage = ParseFile(File(path), name: basename(path));
-        parseImage.setACL(_createDefaultAcl(parseUser));
+        parseImage.setACL(PsFunctions.createDefaultAcl(parseUser));
 
         // Save the file to the Parse server
         final response = await parseImage.save();
@@ -216,8 +197,6 @@ class PSBoardgameRepository implements IBoardgameRepository {
   }
 
   DataResult<T> _handleError<T>(String module, Object error) {
-    final fullMessage = 'PSBoardgameRepository.$module: $error';
-    log(fullMessage);
-    return DataResult.failure(GenericFailure(message: fullMessage));
+    return PsFunctions.handleError<T>('PSBoardgameRepository', module, error);
   }
 }
