@@ -23,9 +23,12 @@ import '../common/models/ad.dart';
 import '../common/models/favorite.dart';
 import '../common/singletons/current_user.dart';
 import '../get_it.dart';
+import '../repository/interfaces/i_favorite_repository.dart';
 import '../repository/parse_server/ps_favorite_repository.dart';
 
 class FavoritesManager {
+  final favoriteRepository = getIt<IFavoriteRepository>();
+
   final List<FavoriteModel> _favs = [];
   final List<AdModel> _ads = [];
   final List<String> _favIds = [];
@@ -91,7 +94,7 @@ class FavoritesManager {
 
   Future<void> _add(AdModel ad) async {
     try {
-      final fav = await PSFavoriteRepository.add(userId!, ad.id!);
+      final fav = await favoriteRepository.add(userId!, ad.id!);
 
       if (fav != null) {
         _ads.add(ad);
@@ -108,7 +111,7 @@ class FavoritesManager {
     try {
       final favId = _getFavId(ad);
       if (favId != null) {
-        await PSFavoriteRepository.delete(favId);
+        await favoriteRepository.delete(favId);
         _favs.removeWhere((f) => f.adId == ad.id);
         _ads.removeWhere((a) => a.id == ad.id);
         _favIds.removeWhere((id) => id == ad.id);

@@ -46,7 +46,6 @@ class SqliteMechanicRepository implements ILocalMechanicRepository {
       final id = await MechanicsStore.add(mech.toMap());
       if (id < 0) throw Exception('return id $id');
 
-      mech.id = id;
       return mech;
     } catch (err) {
       final message = 'MechanicRepository.add: $err';

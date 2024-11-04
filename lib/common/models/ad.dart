@@ -63,7 +63,7 @@ class AdModel {
   String get mechanicsString {
     final mechManager = getIt<MechanicsManager>();
     return mechManager.mechanics
-        .where((mec) => mechanicsIds.contains(mec.psId))
+        .where((mec) => mechanicsIds.contains(mec.id))
         .map((mec) => mec.name)
         .toList()
         .join(', ');

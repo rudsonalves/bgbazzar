@@ -99,7 +99,7 @@ class _CheckPageState extends State<CheckPage> {
                           child: ListView.builder(
                             itemCount: checkList.length,
                             itemBuilder: (context, index) => ListTile(
-                              leading: Text(checkList[index].mech.psId!),
+                              leading: Text(checkList[index].mech.id!),
                               title: Text(checkList[index].mech.name),
                               trailing: checkList[index].isChecked
                                   ? Icon(Icons.check, color: Colors.green)

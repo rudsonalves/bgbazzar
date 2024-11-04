@@ -17,14 +17,12 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 class MechanicModel {
-  int? id;
-  String? psId;
+  String? id;
   String name;
   String? description;
 
   MechanicModel({
     this.id,
-    this.psId,
     required this.name,
     this.description,
   });
@@ -32,7 +30,6 @@ class MechanicModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'psId': psId,
       'name': name,
       'description': description,
     };
@@ -40,8 +37,7 @@ class MechanicModel {
 
   factory MechanicModel.fromMap(Map<String, dynamic> map) {
     return MechanicModel(
-      id: map['id'] as int,
-      psId: map['psId'] as String?,
+      id: map['id'] as String?,
       name: map['name'] as String,
       description: map['description'] as String?,
     );
@@ -49,8 +45,7 @@ class MechanicModel {
 
   @override
   String toString() {
-    return 'MechanicModel(id: $id,'
-        ' psId: $psId,'
+    return 'MechanicModel( id: $id,'
         ' name: $name,'
         ' description: $description)';
   }

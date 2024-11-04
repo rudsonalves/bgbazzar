@@ -95,11 +95,11 @@ class MechanicsController extends ChangeNotifier {
   }
 
   bool isSelectedIndex(int index) {
-    return _selectedPsIds.contains(mechanics[index].psId!);
+    return _selectedPsIds.contains(mechanics[index].id!);
   }
 
   void toogleSelectionIndex(int index) {
-    final psId = mechanics[index].psId!;
+    final psId = mechanics[index].id!;
     if (_selectedPsIds.contains(psId)) {
       _selectedPsIds.remove(psId);
     } else {

@@ -23,7 +23,6 @@ const mechTable = 'Mechanics';
 const mechIndexName = 'mechNameIndex';
 const mechIndexPSId = 'mechIndexPSId';
 const mechId = 'id';
-const mechPSId = 'psId';
 const mechName = 'name';
 const mechDescription = 'description';
 
@@ -35,7 +34,6 @@ const dbBGList = 'bg_list';
 
 const bgNamesTable = 'bgNames';
 const bgId = 'id';
-const bgBgId = 'bgId';
 const bgName = 'name';
 
 const dbAppVersionValue = 1002;

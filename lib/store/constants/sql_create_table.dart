@@ -25,8 +25,7 @@ class SqlTable {
   static createBgNamesTable(Batch batch) {
     batch.execute(
       'CREATE TABLE IF NOT EXISTS $bgNamesTable ('
-      '   $bgId	INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'
-      '   $bgBgId	TEXT NOT NULL UNIQUE,'
+      '   $bgId	TEXT PRIMARY KEY NOT NULL,'
       '   $bgName	TEXT NOT NULL'
       ')',
     );
