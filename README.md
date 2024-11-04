@@ -9,6 +9,75 @@
 
 # ChangeLog
 
+## 2024/11/04 - version: 0.7.11+68
+
+This commit includes multiple updates and enhancements across various parts of the codebase, focusing on improving the consistency, maintainability, and reusability of the project components. Key changes include the addition of new methods, the replacement of repetitive code with utility functions, the introduction of a new utility class (`PsFunctions`), and modifications to existing functionalities for better adherence to best practices.
+
+### Changes made:
+
+1. **lib/common/models/bg_name.dart**:
+   - Added a `copyWith` method to create copies of `BGNameModel` instances with modified attributes.
+
+2. **lib/components/form_fields/custom_long_form_field.dart**:
+   - Added a `FocusNode` as an optional parameter to `CustomLongFormField` for better focus control.
+
+3. **lib/components/others_widgets/state_error_message.dart**:
+   - Removed `margin` from the `Container` widget and added it to the `Card` widget for better layout control.
+
+4. **lib/features/edit_boardgame/edit_boardgame_controller.dart**:
+   - Removed an unnecessary logging statement from the `EditBoardgameController`.
+
+5. **lib/features/edit_boardgame/edit_boardgame_form/edit_boardgame_form.dart**:
+   - Added a `nextFocusNode` parameter to `CustomLongFormField` for smooth focus transitions.
+   - Assigned the newly added `FocusNode` to `CustomLongFormField`.
+
+6. **lib/features/edit_boardgame/edit_boardgame_form/edit_boardgame_form_controller.dart**:
+   - Added a `FocusNode` (`descriptionFocus`) for managing the focus of the description field.
+   - Disposed of `descriptionFocus` in the `dispose` method.
+
+7. **lib/manager/boardgames_manager.dart**:
+   - Updated `_getLocalBgNames` to use `getAll` instead of `get` for fetching board game names.
+   - Modified `_sortingBGNames` to use a more optimized approach for sorting `_localBGsList`.
+
+8. **lib/repository/parse_server/common/ps_functions.dart** (new file):
+   - Introduced `PsFunctions` class with utility methods: `handleError`, `parseCurrentUser`, and `createDefaultAcl`.
+   - These utility methods centralize common operations like error handling, fetching the current user, and creating default ACLs, improving reusability.
+
+9. **lib/repository/parse_server/ps_ad_repository.dart**:
+   - Replaced repetitive code for fetching the current user, handling errors, and creating ACLs with the utility methods from `PsFunctions`.
+   - Removed redundant methods (`_parseCurrentUser`, `_handleError`, `_createDefaultAcl`) that were replaced by the `PsFunctions`.
+
+10. **lib/repository/parse_server/ps_address_repository.dart**:
+    - Updated `parseAddress` object setting by replacing standard `set` calls with `setNonNull` to ensure non-nullable fields are consistently handled.
+
+11. **lib/repository/parse_server/ps_boardgame_repository.dart**:
+    - Refactored methods to use `PsFunctions` for user retrieval, ACL creation, and error handling.
+    - Removed redundant implementations (`_parseCurrentUser`, `_createDefaultAcl`).
+
+12. **lib/repository/parse_server/ps_favorite_repository.dart**:
+    - Updated `parseFav` object setting by replacing standard `set` calls with `setNonNull` for consistent handling of non-nullable fields.
+
+13. **lib/repository/parse_server/ps_mechanics_repository.dart**:
+    - Used `PsFunctions` for common operations, including user retrieval and ACL creation.
+    - Removed redundant code (`_createDefaultAcl`, `_parseCurrentUser`, `_handleError`) that has been centralized in `PsFunctions`.
+
+14. **lib/repository/parse_server/ps_user_repository.dart**:
+    - Refactored the error handling to use `PsFunctions.handleError`.
+    - Updated user field settings to use `setNonNull` for improved consistency.
+
+15. **lib/repository/sqlite/bg_names_repository.dart**:
+    - Renamed method `get` to `getAll` to better reflect its functionality and improve readability.
+
+16. **lib/repository/sqlite/local_interfaces/i_bg_names_repository.dart**:
+    - Updated interface method name from `get` to `getAll` to align with the implementation.
+
+17. **lib/store/stores/bg_names_store.dart**:
+    - Renamed method `get` to `getAll` for consistency with the repository and interface changes.
+
+### Conclusion:
+This commit centralizes common functionalities into reusable components (`PsFunctions`), enhances code clarity, and reduces redundancy. These changes improve the overall maintainability of the codebase, ensuring consistency in error handling, user management, and data access control. Additionally, better focus control in form fields and optimized sorting of board games contribute to a more seamless user experience.
+
+
 ## 2024/11/04 - version: 0.7.11+66
 
 This commit introduces changes aimed at simplifying the data models and repository architecture, eliminating redundant fields and improving the overall consistency of the code. The modifications streamline the handling of IDs across models, ensuring a more uniform approach for data identification and storage.

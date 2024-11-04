@@ -44,15 +44,15 @@ class PSAddressRepository implements IAddressRepository {
       parseAcl.setPublicWriteAccess(allowed: false);
 
       parseAddress
-        ..set<ParseUser>(keyAddressOwner, parseUser)
-        ..set<String>(keyAddressName, address.name)
-        ..set<String>(keyAddressZipCode, address.zipCode)
-        ..set<String>(keyAddressStreet, address.street)
-        ..set<String>(keyAddressNumber, address.number)
-        ..set<String?>(keyAddressComplement, address.complement)
-        ..set<String>(keyAddressNeighborhood, address.neighborhood)
-        ..set<String>(keyAddressState, address.state)
-        ..set<String>(keyAddressCity, address.city)
+        ..setNonNull<ParseUser>(keyAddressOwner, parseUser)
+        ..setNonNull<String>(keyAddressName, address.name)
+        ..setNonNull<String>(keyAddressZipCode, address.zipCode)
+        ..setNonNull<String>(keyAddressStreet, address.street)
+        ..setNonNull<String>(keyAddressNumber, address.number)
+        ..setNonNull<String?>(keyAddressComplement, address.complement)
+        ..setNonNull<String>(keyAddressNeighborhood, address.neighborhood)
+        ..setNonNull<String>(keyAddressState, address.state)
+        ..setNonNull<String>(keyAddressCity, address.city)
         ..setACL(parseAcl);
 
       final response = await parseAddress.save();

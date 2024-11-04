@@ -24,7 +24,7 @@ import '../database/database_manager.dart';
 class BGNamesStore {
   static final _databaseManager = getIt<DatabaseManager>();
 
-  static Future<List<Map<String, dynamic>>> get() async {
+  static Future<List<Map<String, dynamic>>> getAll() async {
     final database = await _databaseManager.database;
 
     try {

@@ -15,13 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:developer';
-
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import '../../common/abstracts/data_result.dart';
-import '../../common/models/mechanic.dart';
 import '../interfaces/i_mechanic_repository.dart';
+import '/repository/parse_server/common/ps_functions.dart';
+import '/common/abstracts/data_result.dart';
+import '/common/models/mechanic.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 
@@ -29,8 +28,8 @@ class PSMechanicsRepository implements IMechanicRepository {
   @override
   Future<DataResult<MechanicModel>> add(MechanicModel mech) async {
     try {
-      final parseUser = await _parseCurrentUser();
-      final parseAcl = _createDefaultAcl(parseUser);
+      final parseUser = await PsFunctions.parseCurrentUser();
+      final parseAcl = PsFunctions.createDefaultAcl(parseUser);
 
       // Prepares a ParseObject representing the new mechanic for saving
       final parseMech = _prepareMechForSaveOrUpdate(
@@ -54,8 +53,8 @@ class PSMechanicsRepository implements IMechanicRepository {
   @override
   Future<DataResult<MechanicModel>> update(MechanicModel mech) async {
     try {
-      final parseUser = await _parseCurrentUser();
-      final parseAcl = _createDefaultAcl(parseUser);
+      final parseUser = await PsFunctions.parseCurrentUser();
+      final parseAcl = PsFunctions.createDefaultAcl(parseUser);
 
       // Prepares a ParseObject representing the new mechanic for saving
       final parse = _prepareMechForSaveOrUpdate(
@@ -199,68 +198,13 @@ class PSMechanicsRepository implements IMechanicRepository {
     }
 
     parseMech
-      ..set<String>(keyMechName, mech.name)
-      ..set<String>(keyMechDescription, mech.description ?? '');
+      ..setNonNull<String>(keyMechName, mech.name)
+      ..setNonNull<String>(keyMechDescription, mech.description ?? '');
 
     return parseMech;
   }
 
-  /// Creates a default ACL (Access Control List) for an object.
-  ///
-  /// The default ACL allows public read access but restricts write access to
-  /// only the [owner]. This is generally used to protect the integrity of data
-  /// while allowing other users to view it.
-  ///
-  /// Parameters:
-  /// - [owner]: The [ParseUser] who will be set as the owner of the ACL, and
-  ///   thus the one who will have full write permissions to the object.
-  ///
-  /// Returns:
-  /// A [ParseACL] instance with permissions set for public read access and
-  /// write access restricted to the owner.
-  ParseACL _createDefaultAcl(ParseUser owner) {
-    return ParseACL(owner: owner)
-      ..setPublicReadAccess(allowed: true)
-      ..setPublicWriteAccess(allowed: false);
-  }
-
-  /// Fetches the current logged-in user from Parse Server.
-  ///
-  /// This method attempts to get the current user that is authenticated
-  /// in the Parse server. If no user is logged in, it throws a
-  /// [MechanicRepositoryException].
-  ///
-  /// Throws:
-  /// - [MechanicRepositoryException]: If there is no current user logged in.
-  ///
-  /// Returns:
-  /// A [ParseUser] representing the current logged-in user.
-  Future<ParseUser> _parseCurrentUser() async {
-    final parseUser = await ParseUser.currentUser() as ParseUser?;
-    if (parseUser == null) {
-      throw MechanicRepositoryException('Current user access error');
-    }
-    return parseUser;
-  }
-
-  /// Handles errors by logging and wrapping them in a [DataResult] failure
-  /// response.
-  ///
-  /// This method takes the name of the method where the error occurred and the
-  /// actual error object.
-  /// It logs a detailed error message and returns a failure wrapped in
-  /// [DataResult].
-  ///
-  /// Parameters:
-  /// - [method]: The name of the method where the error occurred.
-  /// - [error]: The error object that describes what went wrong.
-  ///
-  /// Returns:
-  /// A [DataResult.failure] with a [GenericFailure] that includes a detailed
-  /// message.
   DataResult<T> _handleError<T>(String method, Object error) {
-    final fullMessage = 'MechanicsRepository.$method: $error';
-    log(fullMessage);
-    return DataResult.failure(GenericFailure(message: fullMessage));
+    return PsFunctions.handleError<T>('MechanicsRepository', method, error);
   }
 }

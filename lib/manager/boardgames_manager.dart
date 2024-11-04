@@ -478,7 +478,7 @@ class BoardgamesManager {
   /// Returns:
   /// - A [Future] with no return value.
   Future<void> _getLocalBgNames() async {
-    final bgs = await localBoardgameRepository.get();
+    final bgs = await localBoardgameRepository.getAll();
 
     // Clear the current list of board game names.
     _localBGsList.clear();
@@ -614,21 +614,24 @@ class BoardgamesManager {
   /// The purpose is to keep `_bgsList` in sync with an alphabetically sorted
   /// version of the board game names, maintaining the order consistency.
   void _sortingBGNames() {
-    // Return if leght <= 1
+    // Return if the list has 1 or fewer elements
     if (_localBGsList.length < 2) return;
+
     // Step 1: Make a copy of the `bgNames` list and sort it alphabetically.
-    List<String> names = bgNames;
+    List<String> names = List.from(bgNames);
     names.sort(); // Sorts the names in alphabetical order
 
-    // Step 2: Create an iterable of `_bgsList` elements based on the sorted
-    // names. Each element is found by matching the `name` attribute.
-    final sorted = names.map(
-      (name) => _localBGsList.firstWhere((item) => item.name == name),
-    );
+    // Step 2: Create a sorted list of `_localBGsList` elements based on the
+    // sorted names
+    final sortedList = names
+        .map(
+          (name) => _localBGsList.firstWhere((item) => item.name == name),
+        )
+        .toList();
 
-    // Step 3: Clear the original `_bgsList` and repopulate it with the sorted
-    // items.
-    _localBGsList.clear();
-    _localBGsList.addAll(sorted);
+    // Step 3: Replace `_localBGsList` with the newly sorted list
+    _localBGsList
+      ..clear()
+      ..addAll(sortedList);
   }
 }

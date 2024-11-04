@@ -42,6 +42,8 @@ class EditBoardgameFormController {
   final descriptionController = TextEditingController();
   final mechsController = TextEditingController();
 
+  final descriptionFocus = FocusNode();
+
   final List<String> _selectedMechPsIds = [];
 
   List<String> get bgNames => bgManager.bgNames;
@@ -64,6 +66,7 @@ class EditBoardgameFormController {
     artistController.dispose();
     descriptionController.dispose();
     mechsController.dispose();
+    descriptionFocus.dispose();
   }
 
   // Future<DataResult<void>> getBgInfo() async {

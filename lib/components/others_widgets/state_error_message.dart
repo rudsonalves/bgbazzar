@@ -34,7 +34,6 @@ class StateErrorMessage extends StatelessWidget {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      margin: const EdgeInsets.all(12),
       color: colorScheme.surface.withOpacity(0.7),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -43,6 +42,7 @@ class StateErrorMessage extends StatelessWidget {
           children: [
             Center(
               child: Card(
+                margin: EdgeInsets.all(12),
                 color: colorScheme.primaryContainer,
                 child: Padding(
                   padding: const EdgeInsets.all(12),

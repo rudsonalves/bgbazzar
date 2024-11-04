@@ -238,6 +238,7 @@ class _EditBoardgameFormState extends State<EditBoardgameForm> {
               fullBorder: false,
               controller: ctrl.artistController,
               onChanged: store.setArtist,
+              nextFocusNode: ctrl.descriptionFocus,
             ),
           ),
         ),
@@ -249,6 +250,7 @@ class _EditBoardgameFormState extends State<EditBoardgameForm> {
                 valueListenable: store.errorDescription,
                 builder: (context, errorDescription, _) {
                   return CustomLongFormField(
+                    focusNode: ctrl.descriptionFocus,
                     labelText: 'Descrição:',
                     labelStyle: AppTextStyle.font18Bold.copyWith(
                       color: colorScheme.primary,

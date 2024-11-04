@@ -36,7 +36,7 @@ abstract class IBgNamesRepository {
   /// Returns:
   /// - A [Future] containing a list of [BGNameModel] objects if successful.
   /// - Throws an exception if an error occurs during retrieval.
-  Future<List<BGNameModel>> get();
+  Future<List<BGNameModel>> getAll();
 
   /// Adds a new board game name to the SQLite database.
   ///

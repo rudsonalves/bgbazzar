@@ -15,8 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:developer';
-
+import 'package:bgbazzar/repository/parse_server/common/ps_functions.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import '../interfaces/i_user_repository.dart';
@@ -45,10 +44,10 @@ class PSUserRepository implements IUserRepository {
 
       // Set additional user details, such as nickname, phone, and user type.
       parseUser
-        ..set<String>(keyUserName, user.email)
-        ..set<String>(keyUserNickname, user.name!)
-        ..set<String>(keyUserPhone, user.phone!)
-        ..set<int>(keyUserType, user.userType.index);
+        ..setNonNull<String>(keyUserName, user.email)
+        ..setNonNull<String>(keyUserNickname, user.name!)
+        ..setNonNull<String>(keyUserPhone, user.phone!)
+        ..setNonNull<int>(keyUserType, user.userType.index);
 
       // Attempt to sign up the user on the Parse Server.
       final response = await parseUser.signUp();
@@ -141,21 +140,6 @@ class PSUserRepository implements IUserRepository {
     }
   }
 
-  Future<void> _checksPermissions(ParseUser parseUser) async {
-    final parseAcl = parseUser.getACL();
-    if (parseAcl.getPublicReadAccess() == true) return;
-
-    parseAcl.setPublicReadAccess(allowed: true);
-    parseAcl.setPublicWriteAccess(allowed: false);
-
-    parseUser.setACL(parseAcl);
-    final aclResponse = await parseUser.save();
-    if (!aclResponse.success) {
-      throw UserRepositoryException(
-          'error setting ACL permissions: ${aclResponse.error?.message ?? 'unknown error'}');
-    }
-  }
-
   @override
   Future<DataResult<void>> update(UserModel user) async {
     try {
@@ -225,24 +209,22 @@ class PSUserRepository implements IUserRepository {
     }
   }
 
-  /// Handles errors by logging and wrapping them in a [DataResult] failure
-  /// response.
-  ///
-  /// This method takes the name of the method where the error occurred and the
-  /// actual error object.
-  /// It logs a detailed error message and returns a failure wrapped in
-  /// [DataResult].
-  ///
-  /// Parameters:
-  /// - [method]: The name of the method where the error occurred.
-  /// - [error]: The error object that describes what went wrong.
-  ///
-  /// Returns:
-  /// A [DataResult.failure] with a [GenericFailure] that includes a detailed
-  /// message.
+  Future<void> _checksPermissions(ParseUser parseUser) async {
+    final parseAcl = parseUser.getACL();
+    if (parseAcl.getPublicReadAccess() == true) return;
+
+    parseAcl.setPublicReadAccess(allowed: true);
+    parseAcl.setPublicWriteAccess(allowed: false);
+
+    parseUser.setACL(parseAcl);
+    final aclResponse = await parseUser.save();
+    if (!aclResponse.success) {
+      throw UserRepositoryException(
+          'error setting ACL permissions: ${aclResponse.error?.message ?? 'unknown error'}');
+    }
+  }
+
   DataResult<T> _handleError<T>(String module, Object error) {
-    final fullMessage = 'UserRepository.$module: $error';
-    log(fullMessage);
-    return DataResult.failure(GenericFailure(message: fullMessage));
+    return PsFunctions.handleError<T>('UserRepository', module, error);
   }
 }

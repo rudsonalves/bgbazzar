@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:bgbazzar/repository/parse_server/common/ps_functions.dart';
 import 'package:path/path.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
@@ -233,12 +233,12 @@ class PSAdRepository implements IAdRepository {
   @override
   Future<DataResult<AdModel?>> save(AdModel ad) async {
     try {
-      final parseUser = await _parseCurrentUser();
+      final parseUser = await PsFunctions.parseCurrentUser();
       final List<ParseFile> parseImages =
           await _saveImages(ad.images, parseUser);
       final parseAddress = _parseAddress(ad.address!.id!);
       final parseBoardgame = _parseBoardgame(ad.boardgame);
-      final parseAcl = _createDefaultAcl(parseUser);
+      final parseAcl = PsFunctions.createDefaultAcl(parseUser);
 
       final parseAd = _prepareAdForSaveOrUpdate(
         ad: ad,
@@ -264,7 +264,7 @@ class PSAdRepository implements IAdRepository {
   @override
   Future<DataResult<AdModel?>> update(AdModel ad) async {
     try {
-      final parseUser = await _parseCurrentUser();
+      final parseUser = await PsFunctions.parseCurrentUser();
       final List<ParseFile> parseImages =
           await _saveImages(ad.images, parseUser);
       final parseAddress = _parseAddress(ad.address!.id!);
@@ -371,7 +371,7 @@ class PSAdRepository implements IAdRepository {
         if (!path.startsWith('http')) {
           // Create ParseFile from the local file path
           final parseFile = ParseFile(File(path), name: basename(path));
-          parseFile.setACL(_createDefaultAcl(parseUser));
+          parseFile.setACL(PsFunctions.createDefaultAcl(parseUser));
 
           // Save the file to the Parse server
           final response = await parseFile.save();
@@ -413,33 +413,7 @@ class PSAdRepository implements IAdRepository {
     return ParseObject(keyAddressTable)..objectId = id;
   }
 
-  /// Fetches the current logged-in user from Parse Server.
-  ///
-  /// Throws an [AdRepositoryException] if no user is currently logged in.
-  Future<ParseUser> _parseCurrentUser() async {
-    final parseUser = await ParseUser.currentUser() as ParseUser?;
-    if (parseUser == null) {
-      throw AdRepositoryException('Current user access error');
-    }
-    return parseUser;
-  }
-
-  /// Handles errors by logging the error message and returning a [DataResult] with failure.
-  ///
-  /// [module] - The name of the module or function where the error occurred.
-  /// [error] - The error object that was thrown.
   DataResult<T> _handleError<T>(String module, Object error) {
-    final fullMessage = 'PASdRepository.$module: $error';
-    log(fullMessage);
-    return DataResult.failure(GenericFailure(message: fullMessage));
-  }
-
-  /// Creates a default ACL for an ad, allowing public read access and restricted write access.
-  ///
-  /// [owner] - The user who will be the owner of the created ACL.
-  ParseACL _createDefaultAcl(ParseUser owner) {
-    return ParseACL(owner: owner)
-      ..setPublicReadAccess(allowed: true)
-      ..setPublicWriteAccess(allowed: false);
+    return PsFunctions.handleError('PASdRepository', module, error);
   }
 }
