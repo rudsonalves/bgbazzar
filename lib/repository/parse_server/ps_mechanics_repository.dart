@@ -134,6 +134,26 @@ class PSMechanicsRepository implements IMechanicRepository {
   }
 
   @override
+  Future<DataResult<void>> delete(String id) async {
+    try {
+      // Create a ParseObject representing the advertisement to be deleted
+      final parse = ParseObject(keyAdTable)..objectId = id;
+
+      // Attempt to delete the object from the Parse Server
+      final response = await parse.delete();
+
+      // Check if the response is successful
+      if (!response.success) {
+        throw Exception(
+            response.error?.toString() ?? 'delete mechanic table error');
+      }
+      return DataResult.success(null);
+    } catch (err) {
+      return _handleError('delete', err);
+    }
+  }
+
+  @override
   Future<DataResult<List<String>>> getIds() async {
     final query = QueryBuilder<ParseObject>(ParseObject(keyMechTable));
 
@@ -188,10 +208,11 @@ class PSMechanicsRepository implements IMechanicRepository {
     required MechanicModel mech,
     ParseACL? parseAcl,
   }) {
-    final parseMech = mech.id == null
-        ? ParseObject(keyMechanicTable)
-        : ParseObject(keyMechanicTable)
-      ..objectId = mech.id!;
+    final parseMech = ParseObject(keyMechanicTable);
+
+    if (mech.id != null) {
+      parseMech.objectId = mech.id!;
+    }
 
     if (parseAcl != null) {
       parseMech.setACL(parseAcl);

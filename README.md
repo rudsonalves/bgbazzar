@@ -4,10 +4,66 @@
 
 - Set a fexed size for ad images and perform other optimizations on images to reduce resource consumption on the Parse Server.
 
-## Getting Started
-
 
 # ChangeLog
+
+## 2024/11/05 - version: 0.7.11+69
+
+This commit refactors various parts of the mechanics feature, significantly simplifying the controller logic by utilizing the newly introduced `MechanicsStore` class for state management. In addition, several deprecated files were removed, and redundant methods were replaced to improve maintainability and efficiency.
+
+### Changes made:
+
+1. **assets/old/bgBazzar.db**:
+   - Removed the old database file `bgBazzar.db`.
+
+2. **lib/features/mechanics/mechanics_controller.dart**:
+   - Replaced `MechanicsState` with `MechanicsStore` for managing mechanics.
+   - Removed `ChangeNotifier` and other state-related code, making `MechanicsController` lighter and more focused on business logic.
+
+3. **lib/features/mechanics/mechanics_screen.dart**:
+   - Updated to use `MechanicsStore` for state management instead of the previous `MechanicsState` approach.
+   - Added `_removeMechanic` method to remove mechanics, which also logs the operation for debugging purposes.
+
+4. **lib/features/mechanics/mechanics_state.dart** (deleted):
+   - Removed `MechanicsState` and its various states (`Initial`, `Loading`, `Success`, `Error`).
+   - These states are now replaced by the new state management using `MechanicsStore`.
+
+5. **lib/features/mechanics/mechanics_store.dart** (new file):
+   - Added `MechanicsStore` to handle the mechanics selection, count, UI flags, and state management.
+   - Contains utility methods for selecting/deselecting mechanics, managing UI states, and interacting with `MechanicsController`.
+
+6. **lib/features/mechanics/widgets/search_mechs_delegate.dart**:
+   - Updated `SearchMechsDelegate` to use `MechanicsManager` directly for fetching mechanics names, removing the need to pass `mechsNames` as a parameter.
+
+7. **lib/features/mechanics/widgets/show_all_mechs.dart**:
+   - Converted `ShowAllMechs` into a stateful widget to work with `MechanicsStore`.
+   - Integrated the `MechanicsStore` for managing selections and toggling descriptions.
+
+8. **lib/features/mechanics/widgets/show_only_selected_mechs.dart**:
+   - Updated to use `MechanicsStore` for state management and handling the display of selected mechanics.
+   - Replaced static parameter passing with dynamic state updates from `MechanicsStore`.
+
+9. **lib/features/my_account/my_account_screen.dart**:
+   - Removed duplicate rendering of `AdminHooks`, ensuring only one instance is displayed on the `MyAccountScreen`.
+
+10. **lib/repository/interfaces/i_mechanic_repository.dart**:
+    - Added a new `delete(String id)` method to `IMechanicRepository` for deleting mechanics.
+
+11. **lib/repository/parse_server/ps_ad_repository.dart**:
+    - Renamed the `delete` method parameter from `ad` to `id` for better clarity.
+    - Modified the `_prepareAdForSaveOrUpdate` method to use a simpler conditional structure when setting the `objectId`.
+
+12. **lib/repository/parse_server/ps_boardgame_repository.dart**:
+    - Simplified the `_prepareBgForSaveOrUpdate` method by optimizing the way `ParseObject` is initialized.
+    - Updated object field setting to use `setNonNull` to ensure non-null values are handled correctly.
+
+13. **lib/repository/parse_server/ps_mechanics_repository.dart**:
+    - Added a new `delete(String id)` method to delete a mechanic from the server.
+    - Updated `_prepareMechForSaveOrUpdate` to simplify setting the `objectId`.
+
+### Conclusion:
+This refactor simplifies the codebase by reducing redundant state management logic and replacing it with a more consistent state management approach using `MechanicsStore`. The overall maintainability and scalability of the mechanics feature are improved, as the store centralizes all state-related functionalities. Additionally, the removal of deprecated files and redundant methods results in a cleaner and more efficient codebase.
+
 
 ## 2024/11/04 - version: 0.7.11+68
 

@@ -15,14 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
-import '../../common/singletons/current_user.dart';
-import '../../components/others_widgets/state_error_message.dart';
-import '../../components/others_widgets/state_loading_message.dart';
-import '../../get_it.dart';
+import '/common/singletons/current_user.dart';
+import '/components/others_widgets/state_error_message.dart';
+import '/components/others_widgets/state_loading_message.dart';
+import '/get_it.dart';
+import 'mechanics_store.dart';
 import 'mechanics_controller.dart';
-import 'mechanics_state.dart';
 import 'widgets/mechanic_dialog.dart';
 import 'widgets/search_mechs_delegate.dart';
 import 'widgets/show_only_selected_mechs.dart';
@@ -44,22 +46,24 @@ class MechanicsScreen extends StatefulWidget {
 
 class _MechanicsScreenState extends State<MechanicsScreen> {
   final ctrl = MechanicsController();
+  final store = MechanicsStore();
 
   @override
   void initState() {
     super.initState();
 
-    ctrl.init(widget.selectedPsIds);
+    ctrl.init(store, widget.selectedPsIds);
   }
 
   @override
   void dispose() {
-    ctrl.dispose();
+    store.dispose();
+
     super.dispose();
   }
 
   void _closeMechanicsPage() {
-    Navigator.pop(context, ctrl.selectedPsIds);
+    Navigator.pop(context, store.selectedMechIds);
   }
 
   Future<void> _addMechanic() async {
@@ -67,19 +71,48 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
     if (mech != null) ctrl.add(mech);
   }
 
+  Future<void> _removeMechanic() async {
+    final result = await showDialog<bool?>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Remover Mecânica'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Remover as mecânicas selecionadas?'),
+              ],
+            ),
+            actions: [
+              FilledButton.tonalIcon(
+                onPressed: () => Navigator.pop(context, false),
+                label: Text('Remover'),
+              ),
+              FilledButton.tonalIcon(
+                onPressed: () => Navigator.pop(context, false),
+                label: Text('Cancelar'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+    if (result) {
+      log('ctrl.remove(mech)');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return ListenableBuilder(
-      listenable: ctrl,
+      listenable: store.state,
       builder: (context, _) {
         return Stack(
           children: [
             Scaffold(
               appBar: AppBar(
                 title: ValueListenableBuilder(
-                    valueListenable: ctrl.counter,
+                    valueListenable: store.counter,
                     builder: (context, value, _) {
                       return Text('Mecânicas [$value]');
                     }),
@@ -94,34 +127,42 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                       showSearch(
                         context: context,
                         delegate: SearchMechsDelegate(
-                          mechsNames: ctrl.mechsNames,
-                          selectMechByName: ctrl.selectMechByName,
+                          ctrl.selectMechByName,
                         ),
                       );
                     },
                     icon: const Icon(Icons.search),
                   ),
-                  IconButton(
-                    onPressed: ctrl.toogleDescription,
-                    tooltip: ctrl.hideDescription
-                        ? 'Mostrar Descrição'
-                        : 'Ocultar Descrição',
-                    icon: Icon(
-                      ctrl.hideDescription
-                          ? Icons.description_outlined
-                          : Icons.insert_drive_file_outlined,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: ctrl.toogleShowSelection,
-                    tooltip:
-                        ctrl.showSelected ? 'Mostrar Todos' : 'Mostrar Seleção',
-                    icon: Icon(
-                      ctrl.showSelected
-                          ? Icons.ballot_rounded
-                          : Icons.ballot_outlined,
-                    ),
-                  ),
+                  ValueListenableBuilder(
+                      valueListenable: store.hideDescription,
+                      builder: (context, hideDescription, _) {
+                        return IconButton(
+                          onPressed: store.toggleHideDescription,
+                          tooltip: hideDescription
+                              ? 'Mostrar Descrição'
+                              : 'Ocultar Descrição',
+                          icon: Icon(
+                            hideDescription
+                                ? Icons.description_outlined
+                                : Icons.insert_drive_file_outlined,
+                          ),
+                        );
+                      }),
+                  ValueListenableBuilder(
+                      valueListenable: store.showSelected,
+                      builder: (context, showSelected, _) {
+                        return IconButton(
+                          onPressed: store.toggleShowSelected,
+                          tooltip: showSelected
+                              ? 'Mostrar Todos'
+                              : 'Mostrar Seleção',
+                          icon: Icon(
+                            showSelected
+                                ? Icons.ballot_rounded
+                                : Icons.ballot_outlined,
+                          ),
+                        );
+                      }),
                 ],
               ),
               floatingActionButton: OverflowBar(
@@ -137,7 +178,7 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                       child: const Icon(Icons.arrow_back_ios_new_rounded),
                     ),
                   ),
-                  if (getIt<CurrentUser>().isAdmin)
+                  if (getIt<CurrentUser>().isAdmin) ...[
                     Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: FloatingActionButton(
@@ -149,6 +190,18 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                         child: const Icon(Icons.add),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: FloatingActionButton(
+                        heroTag: 'hero-3',
+                        backgroundColor:
+                            colorScheme.primaryContainer.withOpacity(0.85),
+                        onPressed: _removeMechanic,
+                        tooltip: 'Remover',
+                        child: const Icon(Icons.remove),
+                      ),
+                    ),
+                  ],
                   FloatingActionButton(
                     backgroundColor:
                         colorScheme.primaryContainer.withOpacity(0.85),
@@ -161,26 +214,20 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
               body: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: (!ctrl.showSelected)
+                child: (!store.showSelected.value)
                     ? ShowAllMechs(
-                        mechanics: ctrl.mechanics,
-                        isSelectedIndex: ctrl.isSelectedIndex,
-                        toogleSelectionIndex: ctrl.toogleSelectionIndex,
-                        hideDescription: ctrl.hideDescription,
+                        store: store,
                       )
                     : ShowOnlySelectedMechs(
-                        selectedPsIds: ctrl.selectedPsIds,
-                        mechanicOfPsId: ctrl.mechanicOfPsId,
-                        toogleSelectedInIndex: ctrl.removeSelectionIndex,
-                        hideDescription: ctrl.hideDescription,
+                        store: store,
                       ),
               ),
             ),
-            if (ctrl.state is MechanicsStateLoading)
+            if (store.isLoading)
               const Positioned.fill(
                 child: StateLoadingMessage(),
               ),
-            if (ctrl.state is MechanicsStateError)
+            if (store.isError)
               Positioned.fill(
                 child: StateErrorMessage(
                   closeDialog: ctrl.closeDialog,

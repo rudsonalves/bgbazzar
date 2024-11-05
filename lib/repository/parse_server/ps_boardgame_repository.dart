@@ -141,11 +141,9 @@ class PSBoardgameRepository implements IBoardgameRepository {
     required ParseFile parseImage,
     ParseACL? parseAcl,
   }) {
-    final ParseObject parseBg;
-    if (bg.id == null) {
-      parseBg = ParseObject(keyBgTable);
-    } else {
-      parseBg = ParseObject(keyBgTable)..objectId = bg.id!;
+    final ParseObject parseBg = ParseObject(keyBgTable);
+    if (bg.id != null) {
+      parseBg.objectId = bg.id!;
     }
 
     if (parseAcl != null) {
@@ -153,18 +151,18 @@ class PSBoardgameRepository implements IBoardgameRepository {
     }
 
     parseBg
-      ..set<String>(keyBgName, bg.name)
-      ..set<ParseFile>(keyBgImage, parseImage)
-      ..set<int>(keyBgPublishYear, bg.publishYear)
-      ..set<int>(keyBgMinPlayers, bg.minPlayers)
-      ..set<int>(keyBgMaxPlayers, bg.maxPlayers)
-      ..set<int>(keyBgMinTime, bg.minTime)
-      ..set<int>(keyBgMaxTime, bg.maxTime)
-      ..set<int>(keyBgMinAge, bg.minAge)
-      ..set<String?>(keyBgDesigner, bg.designer)
-      ..set<String?>(keyBgArtist, bg.artist)
-      ..set<String?>(keyBgDescription, bg.description)
-      ..set<List<String>>(keyBgMechanics, bg.mechsPsIds);
+      ..setNonNull<String>(keyBgName, bg.name)
+      ..setNonNull<ParseFile>(keyBgImage, parseImage)
+      ..setNonNull<int>(keyBgPublishYear, bg.publishYear)
+      ..setNonNull<int>(keyBgMinPlayers, bg.minPlayers)
+      ..setNonNull<int>(keyBgMaxPlayers, bg.maxPlayers)
+      ..setNonNull<int>(keyBgMinTime, bg.minTime)
+      ..setNonNull<int>(keyBgMaxTime, bg.maxTime)
+      ..setNonNull<int>(keyBgMinAge, bg.minAge)
+      ..setNonNull<String?>(keyBgDesigner, bg.designer)
+      ..setNonNull<String?>(keyBgArtist, bg.artist)
+      ..setNonNull<String?>(keyBgDescription, bg.description)
+      ..setNonNull<List<String>>(keyBgMechanics, bg.mechsPsIds);
 
     return parseBg;
   }

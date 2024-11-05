@@ -152,4 +152,6 @@ abstract class IMechanicRepository {
   ///   Otherwise, returns a failure wrapped in a [DataResult] with the relevant
   ///   error message.
   Future<DataResult<List<String>>> getIds();
+
+  Future<DataResult<void>> delete(String id);
 }

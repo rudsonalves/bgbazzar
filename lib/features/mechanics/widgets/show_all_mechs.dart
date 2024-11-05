@@ -17,43 +17,60 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../common/models/mechanic.dart';
+import '../../../get_it.dart';
+import '../../../manager/mechanics_manager.dart';
+import '../mechanics_store.dart';
 
-class ShowAllMechs extends StatelessWidget {
-  final List<MechanicModel> mechanics;
-  final bool Function(int) isSelectedIndex;
-  final void Function(int) toogleSelectionIndex;
-  final bool hideDescription;
+class ShowAllMechs extends StatefulWidget {
+  final MechanicsStore store;
 
   const ShowAllMechs({
     super.key,
-    required this.mechanics,
-    required this.isSelectedIndex,
-    required this.toogleSelectionIndex,
-    this.hideDescription = false,
+    required this.store,
   });
+
+  @override
+  State<ShowAllMechs> createState() => _ShowAllMechsState();
+}
+
+class _ShowAllMechsState extends State<ShowAllMechs> {
+  final mechanicManager = getIt<MechanicsManager>();
+  MechanicsStore get store => widget.store;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final mechs = mechanicManager.mechanics;
 
     return ListView.separated(
       padding: const EdgeInsets.only(bottom: 70),
-      itemCount: mechanics.length,
+      itemCount: mechs.length,
       separatorBuilder: (context, index) =>
           const Divider(indent: 24, endIndent: 24),
-      itemBuilder: (context, index) => Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: isSelectedIndex(index) ? colorScheme.tertiaryContainer : null,
-        ),
-        child: ListTile(
-          title: Text(mechanics[index].name),
-          subtitle:
-              hideDescription ? null : Text(mechanics[index].description ?? ''),
-          onTap: () => toogleSelectionIndex(index),
-        ),
-      ),
+      itemBuilder: (context, index) {
+        final mech = mechs[index];
+        final isSelected = store.isSelectedId(mech.id!);
+
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: isSelected ? colorScheme.tertiaryContainer : null,
+          ),
+          child: ValueListenableBuilder(
+              valueListenable: store.hideDescription,
+              builder: (context, hideDescription, _) {
+                return ListTile(
+                  title: Text(mech.name),
+                  subtitle:
+                      hideDescription ? null : Text(mech.description ?? ''),
+                  onTap: () {
+                    store.setMech(mech);
+                    setState(() {});
+                  },
+                );
+              }),
+        );
+      },
     );
   }
 }
