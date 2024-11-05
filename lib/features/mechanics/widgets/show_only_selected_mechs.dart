@@ -17,33 +17,38 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../common/models/mechanic.dart';
+import '../../../get_it.dart';
+import '../../../manager/mechanics_manager.dart';
+import '../mechanics_store.dart';
 
-class ShowOnlySelectedMechs extends StatelessWidget {
-  final List<String> selectedPsIds;
-  final MechanicModel Function(String) mechanicOfPsId;
-  final void Function(int) toogleSelectedInIndex;
-  final bool hideDescription;
+class ShowOnlySelectedMechs extends StatefulWidget {
+  final MechanicsStore store;
 
   const ShowOnlySelectedMechs({
     super.key,
-    required this.selectedPsIds,
-    required this.mechanicOfPsId,
-    required this.toogleSelectedInIndex,
-    this.hideDescription = false,
+    required this.store,
   });
+
+  @override
+  State<ShowOnlySelectedMechs> createState() => _ShowOnlySelectedMechsState();
+}
+
+class _ShowOnlySelectedMechsState extends State<ShowOnlySelectedMechs> {
+  final mechanicManager = getIt<MechanicsManager>();
+  MechanicsStore get store => widget.store;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final mechs = store.selectedMechIds;
 
     return ListView.separated(
       padding: const EdgeInsets.only(bottom: 70),
-      itemCount: selectedPsIds.length,
+      itemCount: mechs.length,
       separatorBuilder: (context, index) =>
           const Divider(indent: 24, endIndent: 24),
       itemBuilder: (context, index) {
-        final mech = mechanicOfPsId(selectedPsIds[index]);
+        final mech = store.selectedsMechs[index];
 
         return Container(
           decoration: BoxDecoration(
@@ -52,8 +57,13 @@ class ShowOnlySelectedMechs extends StatelessWidget {
           ),
           child: ListTile(
             title: Text(mech.name),
-            subtitle: hideDescription ? null : Text(mech.description ?? ''),
-            onTap: () => toogleSelectedInIndex(index),
+            subtitle: store.hideDescription.value
+                ? null
+                : Text(mech.description ?? ''),
+            onTap: () {
+              store.setMech(mech);
+              setState(() {});
+            },
           ),
         );
       },

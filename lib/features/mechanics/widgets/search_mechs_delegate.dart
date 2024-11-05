@@ -19,22 +19,24 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-class SearchMechsDelegate extends SearchDelegate {
-  final List<String> mechsNames;
-  final void Function(String name) selectMechByName;
+import '../../../get_it.dart';
+import '../../../manager/mechanics_manager.dart';
 
-  SearchMechsDelegate({
-    required this.mechsNames,
-    required this.selectMechByName,
-  });
+class SearchMechsDelegate extends SearchDelegate {
+  final void Function(String) selectMechByName;
+
+  SearchMechsDelegate(
+    this.selectMechByName,
+  );
 
   final _matchCase = ValueNotifier<bool>(false);
 
   _toogleMatchCase(BuildContext context) {
     _matchCase.value = !_matchCase.value;
     query = query;
-    // showSuggestions(context);
   }
+
+  final mechanicManager = getIt<MechanicsManager>();
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -86,14 +88,14 @@ class SearchMechsDelegate extends SearchDelegate {
   List<String> _filterNames() {
     if (query.isEmpty) return [];
     if (_matchCase.value) {
-      return mechsNames
+      return mechanicManager.mechanicsNames
           .where(
             (mech) => mech.contains(query),
           )
           .toList();
     } else {
       final search = query.toLowerCase();
-      return mechsNames
+      return mechanicManager.mechanicsNames
           .where(
             (mech) => mech.toLowerCase().contains(search),
           )

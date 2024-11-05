@@ -291,10 +291,10 @@ class PSAdRepository implements IAdRepository {
   }
 
   @override
-  Future<DataResult<void>> delete(String ad) async {
+  Future<DataResult<void>> delete(String id) async {
     try {
       // Create a ParseObject representing the advertisement to be deleted
-      final parse = ParseObject(keyAdTable)..objectId = ad;
+      final parse = ParseObject(keyAdTable)..objectId = id;
 
       // Attempt to delete the object from the Parse Server
       final response = await parse.delete();
@@ -326,9 +326,10 @@ class PSAdRepository implements IAdRepository {
     ParseObject? parseBoardgame,
     ParseACL? parseAcl,
   }) {
-    final parseAd =
-        ad.id == null ? ParseObject(keyAdTable) : ParseObject(keyAdTable)
-          ..objectId = ad.id!;
+    final parseAd = ParseObject(keyAdTable);
+    if (ad.id != null) {
+      parseAd.objectId = ad.id!;
+    }
 
     if (parseAcl != null) {
       parseAd.setACL(parseAcl);

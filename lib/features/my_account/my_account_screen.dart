@@ -91,7 +91,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
               if (user.isAdmin) const AdminHooks(),
               const Divider(),
               const ConfigHooks(),
-              if (user.isAdmin) const AdminHooks(),
               const ShoppingHooks(),
               const SalesHooks(),
             ],
