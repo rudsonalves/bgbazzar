@@ -15,12 +15,18 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-abstract class MyAdsState {}
+import '../../../common/models/address.dart';
 
-class MyAdsStateInitial extends MyAdsState {}
+class AddressRepositoryException implements Exception {
+  final String message;
+  AddressRepositoryException(this.message);
 
-class MyAdsStateLoading extends MyAdsState {}
+  @override
+  String toString() => 'AdRepositoryException: $message';
+}
 
-class MyAdsStateSuccess extends MyAdsState {}
-
-class MyAdsStateError extends MyAdsState {}
+abstract class IAddressRepository {
+  Future<AddressModel?> save(AddressModel address);
+  Future<bool> delete(String addressId);
+  Future<List<AddressModel>?> getUserAddresses(String userId);
+}

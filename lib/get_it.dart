@@ -19,6 +19,8 @@ import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 
+import 'repository/share_preferences/app_share_preferences_repository.dart';
+import 'repository/share_preferences/i_app_preferences_repository.dart';
 import 'common/singletons/app_settings.dart';
 import 'common/singletons/current_user.dart';
 import 'common/singletons/search_filter.dart';
@@ -27,12 +29,12 @@ import 'manager/address_manager.dart';
 import 'manager/boardgames_manager.dart';
 import 'manager/favorites_manager.dart';
 import 'manager/mechanics_manager.dart';
-import 'repository/interfaces/i_ad_repository.dart';
-import 'repository/interfaces/i_address_repository.dart';
-import 'repository/interfaces/i_boardgame_repository.dart';
-import 'repository/interfaces/i_favorite_repository.dart';
-import 'repository/interfaces/i_mechanic_repository.dart';
-import 'repository/interfaces/i_user_repository.dart';
+import 'repository/parse_server/interfaces/i_ad_repository.dart';
+import 'repository/parse_server/interfaces/i_address_repository.dart';
+import 'repository/parse_server/interfaces/i_boardgame_repository.dart';
+import 'repository/parse_server/interfaces/i_favorite_repository.dart';
+import 'repository/parse_server/interfaces/i_mechanic_repository.dart';
+import 'repository/parse_server/interfaces/i_user_repository.dart';
 import 'repository/parse_server/ps_address_repository.dart';
 import 'repository/parse_server/ps_boardgame_repository.dart';
 import '/repository/parse_server/ps_ad_repository.dart';
@@ -40,8 +42,8 @@ import 'repository/parse_server/ps_favorite_repository.dart';
 import 'repository/parse_server/ps_mechanics_repository.dart';
 import 'repository/parse_server/ps_user_repository.dart';
 import 'repository/sqlite/bg_names_repository.dart';
-import 'repository/sqlite/local_interfaces/i_bg_names_repository.dart';
-import 'repository/sqlite/local_interfaces/i_local_mechanic_repository.dart';
+import 'repository/sqlite/interfaces/i_bg_names_repository.dart';
+import 'repository/sqlite/interfaces/i_local_mechanic_repository.dart';
 import 'repository/sqlite/mechanic_repository.dart';
 import 'services/parse_server_server.dart';
 import 'store/database/database_manager.dart';
@@ -51,6 +53,8 @@ final getIt = GetIt.instance;
 void setupDependencies() {
   try {
     // Singletons
+    getIt.registerSingleton<IAppPreferencesRepository>(
+        AppSharePreferencesRepository());
     getIt.registerSingleton<AppSettings>(AppSettings());
 
     // Lazy Singletons

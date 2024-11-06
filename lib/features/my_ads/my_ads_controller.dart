@@ -17,44 +17,53 @@
 
 import 'dart:developer';
 
-import '../../common/basic_controller/basic_state.dart';
 import '../../common/models/ad.dart';
 import '../../common/models/filter.dart';
+import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
-import '../../repository/interfaces/i_ad_repository.dart';
-import '../../common/basic_controller/basic_controller.dart';
+import '../../repository/parse_server/interfaces/i_ad_repository.dart';
 import '../../repository/parse_server/common/constants.dart';
+import 'my_ads_store.dart';
 
-class MyAdsController extends BasicController {
-  AdStatus _productStatus = AdStatus.active;
-  AdStatus get productStatus => _productStatus;
+class MyAdsController {
+  late final MyAdsStore store;
+
   final adRepository = getIt<IAdRepository>();
 
+  final currentUser = getIt<CurrentUser>().user!;
+
+  AdStatus _productStatus = AdStatus.active;
+  AdStatus get productStatus => _productStatus;
+
   int _adPage = 0;
+
+  final List<AdModel> _ads = [];
+  List<AdModel> get ads => _ads;
 
   bool _getMorePages = true;
   bool get getMorePages => _getMorePages;
 
-  @override
-  void init() {
+  void init(MyAdsStore store) {
+    store = MyAdsStore();
+
     setProductStatus(AdStatus.active);
   }
 
-  @override
   Future<void> getAds() async {
     try {
-      changeState(BasicStateLoading());
+      store.setStateLoading();
       await _getAds();
-      changeState(BasicStateSuccess());
+      store.setStateSuccess();
     } catch (err) {
-      log(err.toString());
-      changeState(BasicStateError());
+      final message = err.toString();
+      log(message);
+      store.setError(message);
     }
   }
 
   Future<void> _getAds() async {
     final result = await adRepository.getMyAds(
-      currentUser.user!,
+      currentUser,
       _productStatus.index,
     );
     if (result.isFailure) {
@@ -77,16 +86,16 @@ class MyAdsController extends BasicController {
     getAds();
   }
 
-  @override
   Future<void> getMoreAds() async {
     if (!_getMorePages) return;
     try {
-      changeState(BasicStateLoading());
+      store.setStateLoading();
       await _getMoreAds();
-      changeState(BasicStateSuccess());
+      store.setStateSuccess();
     } catch (err) {
-      log(err.toString());
-      changeState(BasicStateError());
+      final message = err.toString();
+      log(message);
+      store.setError(message);
     }
   }
 
@@ -110,11 +119,10 @@ class MyAdsController extends BasicController {
     }
   }
 
-  @override
   Future<bool> updateAdStatus(AdModel ad) async {
     int atePage = _adPage;
     try {
-      changeState(BasicStateLoading());
+      store.setStateLoading();
       final result = await adRepository.updateStatus(ad);
       if (result.isFailure) {
         throw Exception(result.error);
@@ -124,12 +132,12 @@ class MyAdsController extends BasicController {
         await _getMoreAds();
         atePage--;
       }
-      changeState(BasicStateSuccess());
+      store.setStateSuccess();
       return true;
     } catch (err) {
       final message = 'MyAdsController.updateAdStatus error: $err';
       log(message);
-      changeState(BasicStateError());
+      store.setError(message);
       return false;
     }
   }
@@ -140,18 +148,19 @@ class MyAdsController extends BasicController {
 
   Future<void> deleteAd(AdModel ad) async {
     try {
-      changeState(BasicStateLoading());
+      store.setStateLoading();
       ad.status = AdStatus.deleted;
       await adRepository.updateStatus(ad);
       await _getAds();
-      changeState(BasicStateSuccess());
+      store.setStateSuccess();
     } catch (err) {
-      log(err.toString());
-      changeState(BasicStateError());
+      final message = 'MyAdsController.deleteAd error: $err';
+      log(message);
+      store.setError(message);
     }
   }
 
   void closeErroMessage() {
-    changeState(BasicStateSuccess());
+    store.setStateSuccess();
   }
 }

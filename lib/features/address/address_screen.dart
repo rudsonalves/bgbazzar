@@ -23,7 +23,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../components/others_widgets/state_error_message.dart';
 import '../../components/others_widgets/state_loading_message.dart';
 import '../../get_it.dart';
-import '../../repository/interfaces/i_ad_repository.dart';
+import '../../repository/parse_server/interfaces/i_ad_repository.dart';
 import '../new_address/new_address_screen.dart';
 import 'address_controller.dart';
 import 'address_store.dart';

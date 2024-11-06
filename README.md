@@ -7,6 +7,88 @@
 
 # ChangeLog
 
+## 2024/11/06 - version: 0.7.12+70
+
+This commit introduces several structural changes to improve modularity, reduce redundancy, and enhance clarity within the bgbazzar codebase. It includes refactoring, renaming, and deletion of obsolete components, along with the migration of repository interfaces to more organized locations.
+
+### Changes made:
+
+1. **lib/common/basic_controller/basic_controller.dart**:
+   - Deleted the `BasicController` class as part of streamlining the codebase. This class was no longer necessary after refactoring the controllers.
+
+2. **lib/common/singletons/app_settings.dart**:
+   - Removed direct usage of `SharedPreferences` and replaced it with a dependency-injected `IAppPreferencesRepository`.
+   - Updated the `_readAppSettings` and `_saveBright` methods to use the new repository for managing preferences.
+
+3. **lib/common/singletons/current_user.dart**:
+   - Updated import paths to reflect the new location of `i_user_repository` within the `parse_server` directory.
+
+4. **lib/common/singletons/search_history.dart**:
+   - Removed the `SharedPreferences` dependency and integrated `IAppPreferencesRepository`.
+   - Changed `init` and `getHistory` to use `prefs` from `IAppPreferencesRepository`.
+
+5. **lib/components/others_widgets/ad_list_view/ad_list_view.dart**:
+   - Removed dependency on `BasicController` and replaced it with direct interactions with `ads`, `getMoreAds`, and `updateAdStatus`.
+
+6. **lib/features/address/address_controller.dart**:
+   - Updated import paths to use the `parse_server` directory for `i_ad_repository`.
+
+7. **lib/features/address/address_screen.dart**:
+   - Updated repository import paths for consistency with new directory structure.
+
+8. **lib/features/favorites/favorite_store.dart**:
+   - Renamed and restructured `shared_preferenses.dart` to `favorite_store.dart` and commented out legacy code to prepare for further modularization.
+
+9. **lib/features/favorites/favorites_controller.dart**:
+   - Commented out the old implementation of `FavoritesController`, preparing for a new modular approach.
+
+10. **lib/features/my_ads/my_ads_controller.dart**:
+    - Removed `BasicController` inheritance and integrated a new store-based approach for state management.
+    - Created a dedicated `MyAdsStore` for managing state, enhancing separation of concerns.
+    - Refactored various methods to use `store` for handling states such as loading, success, and error.
+
+11. **lib/features/my_ads/my_ads_screen.dart**:
+    - Integrated `MyAdsStore` with the UI using `ListenableBuilder` to listen to state changes.
+    - Adjusted initialization to work with the newly refactored controller and store.
+
+12. **lib/features/my_ads/widgets/my_tab_bar_view.dart**:
+    - Updated `AdListView` instantiation to use the new properties `ads` and `getMoreAds` from the controller.
+
+13. **lib/get_it.dart**:
+    - Added registration for `IAppPreferencesRepository` to `GetIt`.
+    - Updated various repository paths to align with the new organized structure under `parse_server` and `sqlite`.
+
+14. **lib/main.dart**:
+    - Added initialization of `IAppPreferencesRepository`.
+    - Changed the order of initialization calls to ensure dependencies are set up correctly.
+
+15. **lib/manager/address_manager.dart**:
+    - Updated import paths to reflect changes in repository organization.
+
+16. **lib/manager/boardgames_manager.dart**:
+    - Renamed `init` method to `initialize` for clarity.
+    - Updated repository import paths.
+
+17. **lib/manager/favorites_manager.dart**:
+    - Updated import paths to use repositories from the `parse_server` directory.
+
+18. **lib/manager/mechanics_manager.dart**:
+    - Renamed `init` to `initialize` for consistency.
+    - Updated import paths for repository interfaces.
+
+19. **lib/repository/share_preferences/app_share_preferences_repository.dart**:
+    - Created a new `AppSharePreferencesRepository` class to manage shared preferences using dependency injection. This new approach improves testing capabilities and reduces direct dependency on `SharedPreferences`.
+
+20. **lib/repository/share_preferences/i_app_preferences_repository.dart**:
+    - Defined the `IAppPreferencesRepository` interface to abstract preference management operations, making it easier to replace or mock during testing.
+
+21. **Renamed repository interfaces**:
+    - Moved repository interfaces from `lib/repository/interfaces` to `lib/repository/parse_server/interfaces`, and updated all references to match this change. This reorganization helps in categorizing the different data sources and their responsibilities.
+
+### Conclusion:
+This commit simplifies the code structure by refactoring legacy components, organizing repositories, and separating concerns for better maintainability. The use of dependency injection for shared preferences ensures that future changes in preference management can be handled without impacting multiple parts of the codebase. The improved modularity also facilitates better testing and reduces redundancy.
+
+
 ## 2024/11/05 - version: 0.7.11+69
 
 This commit refactors various parts of the mechanics feature, significantly simplifying the controller logic by utilizing the newly introduced `MechanicsStore` class for state management. In addition, several deprecated files were removed, and redundant methods were replaced to improve maintainability and efficiency.

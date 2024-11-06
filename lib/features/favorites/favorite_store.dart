@@ -15,6 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-const keySearchHistory = 'SearchHistory';
-const keyLocalDBVersion = 'LocalDBVersion';
-const keyBrightness = 'Brightness';
+// import 'package:bgbazzar/common/state_store/state_store.dart';
+
+// class FavoriteStore extends StateStore {}

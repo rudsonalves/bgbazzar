@@ -19,7 +19,7 @@ import 'dart:developer';
 
 import '../../common/models/mechanic.dart';
 import '../../store/stores/mechanics_store.dart';
-import 'local_interfaces/i_local_mechanic_repository.dart';
+import 'interfaces/i_local_mechanic_repository.dart';
 
 class SqliteMechanicRepository implements ILocalMechanicRepository {
   @override

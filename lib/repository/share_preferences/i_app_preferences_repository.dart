@@ -15,9 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../common/models/favorite.dart';
+abstract class IAppPreferencesRepository {
+  late int dbVersion;
+  late String brightness;
+  late List<String> history;
 
-abstract class IFavoriteRepository {
-  Future<FavoriteModel?> add(String userId, String adId);
-  Future<void> delete(String favId);
+  Future<void> initialize();
+  Future<void> setBright(String value);
+  Future<void> setDBVersion(int value);
+  Future<void> setHistory(List<String> value);
 }

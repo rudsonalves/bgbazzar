@@ -17,11 +17,11 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/basic_controller/basic_state.dart';
 import '../../common/models/ad.dart';
 import '../edit_ad/edit_ad_screen.dart';
 import '../product/widgets/title_product.dart';
 import 'my_ads_controller.dart';
+import 'my_ads_store.dart';
 import 'widgets/my_tab_bar.dart';
 import 'widgets/my_tab_bar_view.dart';
 import '/components/others_widgets/state_error_message.dart';
@@ -37,14 +37,15 @@ class MyAdsScreen extends StatefulWidget {
 }
 
 class _MyAdsScreenState extends State<MyAdsScreen> {
-  final MyAdsController ctrl = MyAdsController();
+  final ctrl = MyAdsController();
+  final store = MyAdsStore();
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
 
-    ctrl.init();
+    ctrl.init(store);
   }
 
   void _backPage() {
@@ -126,9 +127,9 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           label: const Text('Adicionar anúncio'),
         ),
         body: ListenableBuilder(
-          listenable: ctrl,
+          listenable: store.state,
           builder: (context, _) {
-            if (ctrl.state is BasicStateSuccess) {
+            if (store.isSuccess) {
               if (ctrl.ads.isEmpty) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -159,7 +160,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                 editAd: _editAd,
                 deleteAd: _deleteAd,
               );
-            } else if (ctrl.state is BasicStateLoading) {
+            } else if (store.isLoading) {
               return const StateLoadingMessage();
             }
             return StateErrorMessage(

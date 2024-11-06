@@ -18,10 +18,10 @@
 import 'package:bgbazzar/repository/parse_server/common/ps_functions.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import '../interfaces/i_user_repository.dart';
+import 'interfaces/i_user_repository.dart';
 import '../../common/abstracts/data_result.dart';
 import '../../common/models/user.dart';
-import '../../common/parse_server/errors_mensages.dart';
+import 'common/errors_mensages.dart';
 import '../../common/singletons/current_user.dart';
 import '../../get_it.dart';
 import 'common/constants.dart';

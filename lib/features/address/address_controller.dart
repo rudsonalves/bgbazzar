@@ -20,7 +20,7 @@ import 'dart:developer';
 import '../../common/models/address.dart';
 import '../../get_it.dart';
 import '../../manager/address_manager.dart';
-import '../../repository/interfaces/i_ad_repository.dart';
+import '../../repository/parse_server/interfaces/i_ad_repository.dart';
 import 'address_store.dart';
 
 class AddressController {

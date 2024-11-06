@@ -16,33 +16,31 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constants/shared_preferenses.dart';
+import '../../get_it.dart';
+import '../../repository/share_preferences/i_app_preferences_repository.dart';
 
 const historyMaxLength = 20;
 
 class SearchHistory {
   final List<String> _history = [];
   final search = SearchController();
-  late final SharedPreferences prefs;
+  final prefs = getIt<IAppPreferencesRepository>();
 
   bool _started = false;
 
   List<String> get history => _history;
 
-  Future<void> init() async {
+  void init() {
     if (_started) return;
     _started = true;
-    prefs = await SharedPreferences.getInstance();
-    await getHistory();
+
+    getHistory();
   }
 
-  Future<void> getHistory() async {
-    if (prefs.containsKey(keySearchHistory)) {
-      _history.clear();
-      _history.addAll(prefs.getStringList(keySearchHistory) ?? []);
-    }
+  void getHistory() {
+    _history.clear();
+    _history.addAll(prefs.history);
   }
 
   Future<void> saveHistory(String? value) async {
@@ -61,7 +59,7 @@ class SearchHistory {
     }
 
     // save history
-    await prefs.setStringList(keySearchHistory, _history);
+    await prefs.setHistory(_history);
   }
 
   Iterable<String> searchInHistory(String value) {

@@ -21,7 +21,7 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import '../../common/models/ad.dart';
 import '../../common/models/favorite.dart';
-import '../interfaces/i_favorite_repository.dart';
+import 'interfaces/i_favorite_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 

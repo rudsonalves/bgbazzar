@@ -18,14 +18,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/basic_controller/basic_controller.dart';
 import '../../../common/models/ad.dart';
 import '../../../features/product/product_screen.dart';
 import 'widgets/ad_card_view.dart';
 import 'widgets/dismissible_ad.dart';
 
 class AdListView extends StatefulWidget {
-  final BasicController ctrl;
+  final List<AdModel> ads;
+  final Future<void> Function() getMoreAds;
+  final Future<bool> Function(AdModel)? updateAdStatus;
   final ScrollController scrollController;
   final bool buttonBehavior;
   final bool enableDismissible;
@@ -42,7 +43,9 @@ class AdListView extends StatefulWidget {
 
   const AdListView({
     super.key,
-    required this.ctrl,
+    required this.ads,
+    required this.getMoreAds,
+    this.updateAdStatus,
     required this.scrollController,
     required this.buttonBehavior,
     this.enableDismissible = false,
@@ -64,15 +67,13 @@ class AdListView extends StatefulWidget {
 
 class _AdListViewState extends State<AdListView> {
   late ScrollController _scrollController;
-  late final BasicController ctrl;
+  List<AdModel> get ads => widget.ads;
   double _scrollPosition = 0;
   bool _isScrolling = false;
 
   @override
   initState() {
     super.initState();
-
-    ctrl = widget.ctrl;
     _scrollController = widget.scrollController;
     _scrollController.addListener(_scrollListener);
   }
@@ -91,7 +92,7 @@ class _AdListViewState extends State<AdListView> {
       if (isBottom) {
         _scrollPosition = _scrollController.position.pixels;
         _isScrolling = true;
-        await ctrl.getMoreAds();
+        await widget.getMoreAds();
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // _scrollController.animateTo(
           //   _scrollPosition,
@@ -159,16 +160,16 @@ class _AdListViewState extends State<AdListView> {
 
     return ListView.builder(
       controller: _scrollController,
-      itemCount: ctrl.ads.length,
+      itemCount: ads.length,
       itemBuilder: (context, index) => SizedBox(
         height: 150,
         child: Stack(
           children: [
             InkWell(
-              onTap: () => _showAd(ctrl.ads[index]),
+              onTap: () => _showAd(ads[index]),
               child: widget.enableDismissible
                   ? DismissibleAd(
-                      ad: ctrl.ads[index],
+                      ad: ads[index],
                       colorLeft: widget.colorLeft,
                       colorRight: widget.colorRight,
                       iconLeft: widget.iconLeft,
@@ -177,10 +178,10 @@ class _AdListViewState extends State<AdListView> {
                       labelRight: widget.labelRight,
                       statusLeft: widget.statusLeft,
                       statusRight: widget.statusRight,
-                      updateAdStatus: ctrl.updateAdStatus,
+                      updateAdStatus: widget.updateAdStatus,
                     )
                   : AdCardView(
-                      ads: ctrl.ads[index],
+                      ads: ads[index],
                     ),
             ),
             if (widget.buttonBehavior)
@@ -195,8 +196,8 @@ class _AdListViewState extends State<AdListView> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _editButon(ctrl.ads[index]),
-                        _deleteButton(ctrl.ads[index]),
+                        _editButon(ads[index]),
+                        _deleteButton(ads[index]),
                       ],
                     ),
                   ),

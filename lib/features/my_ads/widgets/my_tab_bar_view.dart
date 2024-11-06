@@ -137,7 +137,8 @@ class _MyTabBarViewState extends State<MyTabBarView> {
         (tabIndex) => Padding(
           padding: const EdgeInsets.all(8),
           child: AdListView(
-            ctrl: widget.ctrl,
+            ads: widget.ctrl.ads,
+            getMoreAds: widget.ctrl.getMoreAds,
             scrollController: widget.scrollController,
             enableDismissible: true,
             colorLeft: getColorLeft(tabIndex),

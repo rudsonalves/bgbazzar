@@ -21,8 +21,8 @@ import 'package:bgbazzar/get_it.dart';
 
 import '/common/abstracts/data_result.dart';
 import '/common/models/mechanic.dart';
-import '/repository/interfaces/i_mechanic_repository.dart';
-import '/repository/sqlite/local_interfaces/i_local_mechanic_repository.dart';
+import '../repository/parse_server/interfaces/i_mechanic_repository.dart';
+import '../repository/sqlite/interfaces/i_local_mechanic_repository.dart';
 
 enum ManagerStatus { ok, error, duplicated }
 
@@ -38,7 +38,7 @@ class MechanicsManager {
   List<String> get mechanicsNames =>
       _mechanics.map((item) => item.name).toList();
 
-  Future<void> init() async {
+  Future<void> initialize() async {
     await getAllMechanics();
   }
 
