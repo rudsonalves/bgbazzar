@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../common/abstracts/data_result.dart';
-import '../../common/models/mechanic.dart';
+import '../../../common/abstracts/data_result.dart';
+import '../../../common/models/mechanic.dart';
 
 class MechanicRepositoryException implements Exception {
   final String message;

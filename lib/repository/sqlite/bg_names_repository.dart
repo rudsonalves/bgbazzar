@@ -19,7 +19,7 @@ import 'dart:developer';
 
 import '../../store/stores/bg_names_store.dart';
 import '/common/models/bg_name.dart';
-import 'local_interfaces/i_bg_names_repository.dart';
+import 'interfaces/i_bg_names_repository.dart';
 
 class SqliteBGNamesRepository implements IBgNamesRepository {
   @override

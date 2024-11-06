@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:bgbazzar/repository/interfaces/i_user_repository.dart';
+import 'package:bgbazzar/repository/parse_server/interfaces/i_user_repository.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../get_it.dart';

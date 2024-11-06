@@ -15,12 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-abstract class BasicState {}
+import '../../../common/models/favorite.dart';
 
-class BasicStateInitial extends BasicState {}
-
-class BasicStateLoading extends BasicState {}
-
-class BasicStateSuccess extends BasicState {}
-
-class BasicStateError extends BasicState {}
+abstract class IFavoriteRepository {
+  Future<FavoriteModel?> add(String userId, String adId);
+  Future<void> delete(String favId);
+}

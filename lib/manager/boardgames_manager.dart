@@ -27,8 +27,8 @@ import '../common/abstracts/data_result.dart';
 import '../common/models/bg_name.dart';
 import '../common/models/boardgame.dart';
 import '../get_it.dart';
-import '../repository/interfaces/i_boardgame_repository.dart';
-import '../repository/sqlite/local_interfaces/i_bg_names_repository.dart';
+import '../repository/parse_server/interfaces/i_boardgame_repository.dart';
+import '../repository/sqlite/interfaces/i_bg_names_repository.dart';
 import '../services/parse_server_server.dart';
 import '../common/utils/utils.dart';
 
@@ -57,7 +57,7 @@ class BoardgamesManager {
   // List of names
   List<String> get bgNames => _localBGsList.map((bg) => bg.name!).toList();
 
-  Future<void> init() async {
+  Future<void> initialize() async {
     await _initializeBGNames();
   }
 

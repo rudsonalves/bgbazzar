@@ -26,7 +26,7 @@ import '../../common/models/ad.dart';
 import '../../common/models/boardgame.dart';
 import '../../common/models/filter.dart';
 import '../../common/models/user.dart';
-import '../interfaces/i_ad_repository.dart';
+import 'interfaces/i_ad_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 

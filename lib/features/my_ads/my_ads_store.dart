@@ -15,18 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../common/models/address.dart';
+import 'package:bgbazzar/common/state_store/state_store.dart';
 
-class AddressRepositoryException implements Exception {
-  final String message;
-  AddressRepositoryException(this.message);
-
-  @override
-  String toString() => 'AdRepositoryException: $message';
-}
-
-abstract class IAddressRepository {
-  Future<AddressModel?> save(AddressModel address);
-  Future<bool> delete(String addressId);
-  Future<List<AddressModel>?> getUserAddresses(String userId);
-}
+class MyAdsStore extends StateStore {}

@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../common/abstracts/data_result.dart';
-import '../../common/models/bg_name.dart';
-import '../../common/models/boardgame.dart';
+import '../../../common/abstracts/data_result.dart';
+import '../../../common/models/bg_name.dart';
+import '../../../common/models/boardgame.dart';
 
 class BoardgameRepositoryException implements Exception {
   final String message;

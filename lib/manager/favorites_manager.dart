@@ -23,7 +23,7 @@ import '../common/models/ad.dart';
 import '../common/models/favorite.dart';
 import '../common/singletons/current_user.dart';
 import '../get_it.dart';
-import '../repository/interfaces/i_favorite_repository.dart';
+import '../repository/parse_server/interfaces/i_favorite_repository.dart';
 import '../repository/parse_server/ps_favorite_repository.dart';
 
 class FavoritesManager {

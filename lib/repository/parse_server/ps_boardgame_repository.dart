@@ -22,7 +22,7 @@ import 'package:bgbazzar/repository/parse_server/common/ps_functions.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:path/path.dart';
 
-import '/repository/interfaces/i_boardgame_repository.dart';
+import 'interfaces/i_boardgame_repository.dart';
 import '../../common/abstracts/data_result.dart';
 import '../../common/models/bg_name.dart';
 import '../../common/models/boardgame.dart';

@@ -16,11 +16,13 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constants/shared_preferenses.dart';
+import '../../get_it.dart';
+import '../../repository/share_preferences/i_app_preferences_repository.dart';
 
 class AppSettings {
+  final prefs = getIt<IAppPreferencesRepository>();
+
   final ValueNotifier<Brightness> _brightness =
       ValueNotifier<Brightness>(Brightness.dark);
 
@@ -35,29 +37,19 @@ class AppSettings {
   }
 
   Future<void> _readAppSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(keyLocalDBVersion)) {
-      _localDBVersion = prefs.getInt(keyLocalDBVersion) ?? 1000;
-    }
-    if (prefs.containsKey(keyBrightness)) {
-      final brightness = prefs.getString(keyBrightness) ?? 'dark';
-      _brightness.value =
-          brightness == 'dark' ? Brightness.dark : Brightness.light;
-    }
+    _localDBVersion = prefs.dbVersion;
+
+    _brightness.value =
+        prefs.brightness == 'dark' ? Brightness.dark : Brightness.light;
   }
 
   Future<void> _saveBright() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(
-      keyBrightness,
-      _brightness.value == Brightness.dark ? 'dark' : 'light',
-    );
+    prefs.setBright(_brightness.value == Brightness.dark ? 'dark' : 'light');
   }
 
   Future<void> setLocalDBVersion(int version) async {
     _localDBVersion = version;
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(keyLocalDBVersion, version);
+    prefs.setDBVersion(version);
   }
 
   void toggleBrightnessMode() {

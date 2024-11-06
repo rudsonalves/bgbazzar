@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../repository/interfaces/i_user_repository.dart';
+import '../../repository/parse_server/interfaces/i_user_repository.dart';
 import '../../common/models/user.dart';
 import '../../common/singletons/app_settings.dart';
 import '../../get_it.dart';

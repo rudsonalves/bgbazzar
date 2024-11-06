@@ -27,7 +27,7 @@ import 'database_migration.dart';
 class DatabaseProvider {
   DatabaseProvider._();
 
-  static Future<void> init() async {
+  static Future<void> initialize() async {
     final database = await getIt<DatabaseManager>().database;
 
     final app = getIt<AppSettings>();

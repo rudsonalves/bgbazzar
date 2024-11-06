@@ -25,7 +25,7 @@ import '../../common/singletons/app_settings.dart';
 import '../../common/singletons/current_user.dart';
 import '../../common/singletons/search_filter.dart';
 import '../../get_it.dart';
-import '../../repository/interfaces/i_ad_repository.dart';
+import '../../repository/parse_server/interfaces/i_ad_repository.dart';
 import '../../repository/parse_server/common/constants.dart';
 import 'shop_store.dart';
 

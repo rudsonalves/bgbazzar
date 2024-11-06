@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'repository/share_preferences/i_app_preferences_repository.dart';
 import 'services/parse_server_server.dart';
 import 'common/singletons/search_history.dart';
 import 'get_it.dart';
@@ -17,12 +18,18 @@ void main() async {
 
   setupDependencies();
 
+  await getIt<IAppPreferencesRepository>().initialize();
+
   final parseServer = getIt<ParseServerService>();
   parseServer.init(isLocalServer);
-  await DatabaseProvider.init();
-  await getIt<SearchHistory>().init();
-  await getIt<BoardgamesManager>().init();
-  await getIt<MechanicsManager>().init();
+
+  await getIt<IAppPreferencesRepository>().initialize();
+
+  await DatabaseProvider.initialize();
+
+  getIt<SearchHistory>().init();
+  await getIt<BoardgamesManager>().initialize();
+  await getIt<MechanicsManager>().initialize();
 
   runApp(const MyMaterialApp());
 }
