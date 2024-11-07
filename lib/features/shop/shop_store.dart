@@ -15,11 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:bgbazzar/common/state_store/state_store.dart';
+import 'package:bgbazzar/core/state/state_store.dart';
 import 'package:flutter/material.dart';
 
-import '../../common/app_info.dart';
-import '../../common/singletons/search_filter.dart';
+import '../../core/config/app_info.dart';
+import '../../core/singletons/search_filter.dart';
 import '../../get_it.dart';
 
 class ShopStore extends StateStore {

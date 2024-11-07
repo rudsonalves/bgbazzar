@@ -19,9 +19,9 @@ import 'package:bgbazzar/features/check_mechanics/check_page.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../boardgame/boardgame_screen.dart';
-import '../../mechanics/mechanics_screen.dart';
-import '../../product/widgets/title_product.dart';
+import '../boardgames/boardgames_screen.dart';
+import '../mechanics/mechanics_screen.dart';
+import '../../shop/product/widgets/title_product.dart';
 
 class AdminHooks extends StatelessWidget {
   const AdminHooks({
@@ -66,7 +66,7 @@ class AdminHooks extends StatelessWidget {
           ),
           onTap: () => Navigator.pushNamed(
             context,
-            BoardgameScreen.routeName,
+            BoardgamesScreen.routeName,
           ),
         ),
         ListTile(

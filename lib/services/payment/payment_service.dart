@@ -20,8 +20,8 @@ import 'dart:developer';
 
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import '../../common/abstracts/data_result.dart';
-import '../../common/models/payment.dart';
+import '../../core/abstracts/data_result.dart';
+import '../../core/models/payment.dart';
 
 class PaymentService {
   PaymentService._();

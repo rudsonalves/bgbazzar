@@ -18,31 +18,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'common/models/address.dart';
-import 'common/models/ad.dart';
-import 'common/models/boardgame.dart';
-import 'common/models/filter.dart';
-import 'common/singletons/app_settings.dart';
-import 'common/theme/theme.dart';
-import 'common/theme/util.dart';
-import 'features/boardgame/boardgame_screen.dart';
-import 'features/boardgame/widgets/view_boardgame.dart';
-import 'features/edit_boardgame/edit_boardgame_screen.dart';
+import 'core/models/address.dart';
+import 'core/models/ad.dart';
+import 'core/models/boardgame.dart';
+import 'core/models/filter.dart';
+import 'core/singletons/app_settings.dart';
+import 'core/theme/theme.dart';
+import 'core/theme/util.dart';
+import 'features/my_account/boardgames/boardgames_screen.dart';
+import 'features/my_account/boardgames/widgets/view_boardgame.dart';
+import 'features/my_account/boardgames/edit_boardgame/edit_boardgame_screen.dart';
 import 'features/favorites/favorites_screen.dart';
 import 'features/my_account/my_account_screen.dart';
-import 'features/address/address_screen.dart';
-import 'features/my_ads/my_ads_screen.dart';
-import 'features/my_data/my_data_screen.dart';
+import 'features/addresses/addresses_screen.dart';
+import 'features/my_account/my_ads/my_ads_screen.dart';
+import 'features/my_account/my_data/my_data_screen.dart';
 import 'features/payment_web_view/payment_page.dart';
-import 'features/product/product_screen.dart';
+import 'features/shop/product/product_screen.dart';
 import 'features/filters/filters_screen.dart';
-import 'features/mechanics/mechanics_screen.dart';
+import 'features/my_account/mechanics/mechanics_screen.dart';
 import 'features/chat/chat_screen.dart';
 import 'features/check_mechanics/check_page.dart';
 import 'features/shop/shop_screen.dart';
 import 'features/edit_ad/edit_ad_screen.dart';
 import 'features/signin/signin_screen.dart';
-import 'features/new_address/new_address_screen.dart';
+import 'features/addresses/edit_address/edit_address_screen.dart';
 import 'features/signup/signup_screen.dart';
 import 'get_it.dart';
 
@@ -83,12 +83,12 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               MyAccountScreen.routeName: (_) => const MyAccountScreen(),
               SignInScreen.routeName: (_) => const SignInScreen(),
               SignUpScreen.routeName: (_) => const SignUpScreen(),
-              AddressScreen.routeName: (_) => const AddressScreen(),
+              AddressesScreen.routeName: (_) => const AddressesScreen(),
               ShopScreen.routeName: (_) => const ShopScreen(),
               MyAdsScreen.routeName: (_) => const MyAdsScreen(),
               MyDataScreen.routeName: (_) => const MyDataScreen(),
               FavoritesScreen.routeName: (_) => const FavoritesScreen(),
-              BoardgameScreen.routeName: (_) => const BoardgameScreen(),
+              BoardgamesScreen.routeName: (_) => const BoardgamesScreen(),
               CheckPage.routeName: (_) => const CheckPage(),
             },
             onGenerateRoute: (settings) {
@@ -132,11 +132,11 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                     );
                   });
 
-                case NewAddressScreen.routeName:
+                case EditAddressScreen.routeName:
                   return MaterialPageRoute(builder: (context) {
                     final address = settings.arguments as AddressModel?;
 
-                    return NewAddressScreen(
+                    return EditAddressScreen(
                       address: address,
                     );
                   });

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'repository/share_preferences/i_app_preferences_repository.dart';
-import 'services/parse_server_server.dart';
-import 'common/singletons/search_history.dart';
+import 'repository/app_data/interfaces/i_app_preferences_repository.dart';
+import 'services/parse_server/parse_server_server.dart';
+import 'core/singletons/search_history.dart';
 import 'get_it.dart';
-import 'manager/boardgames_manager.dart';
-import 'manager/mechanics_manager.dart';
+import 'data_managers/boardgames_manager.dart';
+import 'data_managers/mechanics_manager.dart';
 import 'my_material_app.dart';
-import 'store/database/database_provider.dart';
+import 'store/database/providers/database_provider.dart';
 
 void main() async {
   const isLocalServer = false;

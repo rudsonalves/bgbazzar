@@ -17,10 +17,10 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/models/ad.dart';
+import '../../core/models/ad.dart';
 import '../../components/buttons/big_button.dart';
-import '../../components/others_widgets/state_error_message.dart';
-import '../../components/others_widgets/state_loading_message.dart';
+import '../../components/widgets/state_error_message.dart';
+import '../../components/widgets/state_loading_message.dart';
 import 'edit_ad_form/edit_ad_form.dart';
 import 'edit_ad_store.dart';
 import 'image_list/image_list_view.dart';

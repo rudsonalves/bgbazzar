@@ -7,6 +7,95 @@
 
 # ChangeLog
 
+## 2024/11/07 - version: 0.7.12+72
+
+This commit focuses on reorganizing the project's folder structure, renaming files, and updating import paths to enhance the modularity and maintainability of the codebase. The changes consolidate core components, data managers, and UI features, making the structure more intuitive and easier to navigate.
+
+### Changes made:
+
+1. **lib/features/my_data/my_data_controller.dart**:
+   - Moved to `lib/features/my_account/my_data/my_data_controller.dart`.
+   - Updated import paths for models, singletons, and utilities, reflecting the new structure in `core`, `data_managers`, and `components`.
+
+2. **lib/features/my_data/my_data_screen.dart**:
+   - Relocated to `lib/features/my_account/my_data/my_data_screen.dart`.
+   - Adjusted imports to match the updated folder structure and renamed paths.
+
+3. **lib/features/my_account/widgets/admin_hooks.dart**:
+   - Updated imports, reflecting renamed paths for `BoardgamesScreen`, `MechanicsScreen`, and product widgets.
+
+4. **lib/features/my_account/widgets/config_hooks.dart**:
+   - Renamed and reorganized imports for `AddressesScreen` and `MyDataScreen`, aligning them with the new modular paths.
+
+5. **lib/features/my_account/widgets/sales_hooks.dart**:
+   - Adjusted import paths for `MyAdsScreen` and product widgets.
+
+6. **lib/features/my_account/widgets/shopping_hooks.dart**:
+   - Modified import paths to integrate updated `shop/product` widgets.
+
+7. **lib/features/payment_web_view/payment_store.dart**:
+   - Updated import path for `StateStore` to reflect its new location in `core/state`.
+
+8. **lib/features/product/product_screen.dart**:
+   - Moved to `lib/features/shop/product/product_screen.dart` and adjusted imports to reflect the restructured paths.
+
+9. **lib/features/product/widgets/** (multiple files):
+   - Files under `widgets` were moved to `lib/features/shop/product/widgets/` and updated to reference models, themes, and components under `core` and `components`.
+
+10. **lib/features/shop/shop_controller.dart**:
+    - Updated imports to utilize `core` and `data_managers` for app settings, current user, and repositories.
+
+11. **lib/features/shop/shop_screen.dart**:
+    - Updated import paths for core singletons, theme components, and renamed collection views, aligning with the new modular organization.
+
+12. **lib/get_it.dart**:
+    - Reorganized dependency injections to align with the new `data_managers` and `repository` paths.
+    - Changed `AddressManager` to `AddressesManager` in singleton registration.
+
+13. **lib/main.dart**:
+    - Updated import paths for managers and providers, moving shared preferences and services under `app_data` and `parse_server` respectively.
+
+14. **lib/my_material_app.dart**:
+    - Updated route names and imports to match the new structure, including paths for screens such as `MyAccountScreen`, `ShopScreen`, and `BoardgamesScreen`.
+    - Replaced `NewAddressScreen` with `EditAddressScreen` and `AddressScreen` with `AddressesScreen` for consistency.
+
+15. **lib/repository/parse_server** (multiple files):
+    - Moved interfaces and repository files to `lib/repository/data/parse_server`.
+    - Updated all imports for models and abstracts to align with `core`, and restructured files to reflect the modular setup.
+
+16. **lib/repository/gov_api/ibge_repository.dart**:
+    - Moved to `lib/repository/gov_apis/ibge_repository.dart` and updated imports for models to reference `core`.
+
+17. **lib/repository/gov_api/viacep_repository.dart**:
+    - Moved to `lib/repository/gov_apis/viacep_repository.dart` and adjusted imports.
+
+18. **lib/repository/sqlite/** (multiple files):
+    - Moved SQLite repositories to `lib/repository/local_data/sqlite`, consolidating all local data repositories under `local_data`.
+    - Updated imports to align with `core` and the new paths for interfaces.
+
+19. **lib/services/parse_server_server.dart**:
+    - Moved to `lib/services/parse_server/parse_server_server.dart`.
+
+20. **lib/services/payment/payment_service.dart**:
+    - Updated imports to align with the `core` structure.
+
+21. **lib/store/database/** (multiple files):
+    - Refactored folders within `database` to include `backup`, `migration`, and `providers` subfolders.
+    - Updated imports across files to ensure consistency with the `core` and `data_managers` structure.
+
+22. **test/common/abstracts/data_result_test.dart**:
+    - Updated import path for `DataResult` to `core`.
+
+23. **test/common/utils/utils_test.dart**:
+    - Adjusted import for `Utils` to reflect the new path in `core`.
+
+24. **test/repository/ibge_repository_test.dart**:
+    - Modified import path for `ibge_repository.dart` to match the new organization under `gov_apis`.
+
+### Conclusion:
+This reorganization enhances the modularity and clarity of the project's folder structure, separating core logic from feature-specific code and improving maintainability. The new structure facilitates future expansion and simplifies the navigation and management of dependencies within the project.
+
+
 ## 2024/11/07 - version: 0.7.12+71
 
 This commit focuses on cleaning up and refining the existing codebase of the bgbazzar application. It includes deletions of unused components, renaming classes for better clarity, and making structural changes to enhance code readability and maintainability.

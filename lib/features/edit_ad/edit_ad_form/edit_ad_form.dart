@@ -19,14 +19,14 @@ import 'package:flutter/material.dart';
 
 import '../edit_ad_store.dart';
 import '/get_it.dart';
-import '../../../manager/mechanics_manager.dart';
+import '../../../data_managers/mechanics_manager.dart';
 import '/components/buttons/big_button.dart';
-import '/common/models/ad.dart';
+import '../../../core/models/ad.dart';
 import '/components/form_fields/custom_form_field.dart';
-import '/components/others_widgets/fitted_button_segment.dart';
-import '../../address/address_screen.dart';
-import '../../boardgame/boardgame_screen.dart';
-import '../../mechanics/mechanics_screen.dart';
+import '../../../components/widgets/fitted_button_segment.dart';
+import '../../addresses/addresses_screen.dart';
+import '../../my_account/boardgames/boardgames_screen.dart';
+import '../../my_account/mechanics/mechanics_screen.dart';
 import 'edit_ad_form_controller.dart';
 
 class EditAdForm extends StatefulWidget {
@@ -75,14 +75,14 @@ class _EditAdFormState extends State<EditAdForm> {
 
   Future<void> _addAddress() async {
     final addressName =
-        await Navigator.pushNamed(context, AddressScreen.routeName) as String;
+        await Navigator.pushNamed(context, AddressesScreen.routeName) as String;
     ctrl.setSelectedAddress(addressName);
   }
 
   Future<void> _getBGGInfo() async {
     final bgId = await Navigator.pushNamed(
       context,
-      BoardgameScreen.routeName,
+      BoardgamesScreen.routeName,
     ) as String?;
 
     if (bgId != null) {

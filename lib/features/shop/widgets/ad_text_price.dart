@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../common/utils/extensions.dart';
-import '../../../common/theme/app_text_style.dart';
+import '../../../core/utils/extensions.dart';
+import '../../../core/theme/app_text_style.dart';
 
 class AdTextPrice extends StatelessWidget {
   final double value;

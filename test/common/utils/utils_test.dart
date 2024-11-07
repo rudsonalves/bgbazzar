@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bgbazzar/common/utils/utils.dart';
+import 'package:bgbazzar/core/utils/utils.dart';
 
 void main() {
   group('Utils.title', () {

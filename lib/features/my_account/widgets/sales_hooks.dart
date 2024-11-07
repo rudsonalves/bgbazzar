@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../my_ads/my_ads_screen.dart';
-import '../../product/widgets/title_product.dart';
+import '../my_ads/my_ads_screen.dart';
+import '../../shop/product/widgets/title_product.dart';
 
 class SalesHooks extends StatelessWidget {
   const SalesHooks({

@@ -18,7 +18,7 @@
 import 'package:flutter/material.dart';
 
 import '../../favorites/favorites_screen.dart';
-import '../../product/widgets/title_product.dart';
+import '../../shop/product/widgets/title_product.dart';
 
 class ShoppingHooks extends StatelessWidget {
   const ShoppingHooks({

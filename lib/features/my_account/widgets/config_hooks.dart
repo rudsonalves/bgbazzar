@@ -17,9 +17,9 @@
 
 import 'package:flutter/material.dart';
 
-import '../../address/address_screen.dart';
-import '../../my_data/my_data_screen.dart';
-import '../../product/widgets/title_product.dart';
+import '../../addresses/addresses_screen.dart';
+import '../my_data/my_data_screen.dart';
+import '../../shop/product/widgets/title_product.dart';
 
 class ConfigHooks extends StatelessWidget {
   const ConfigHooks({
@@ -42,7 +42,7 @@ class ConfigHooks extends StatelessWidget {
         ListTile(
           leading: Icon(Icons.contact_mail_rounded, color: primary),
           title: Text('Endereços', style: TextStyle(color: primary)),
-          onTap: () => Navigator.pushNamed(context, AddressScreen.routeName),
+          onTap: () => Navigator.pushNamed(context, AddressesScreen.routeName),
         ),
       ],
     );
