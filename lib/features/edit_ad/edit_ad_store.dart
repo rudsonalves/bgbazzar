@@ -17,11 +17,11 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/models/ad.dart';
-import '../../common/models/address.dart';
-import '../../common/models/boardgame.dart';
-import '../../common/others/validators.dart';
-import '../../common/state_store/state_store.dart';
+import '../../core/models/ad.dart';
+import '../../core/models/address.dart';
+import '../../core/models/boardgame.dart';
+import '../../core/utils/validators.dart';
+import '../../core/state/state_store.dart';
 
 class EditAdStore extends StateStore {
   late AdModel ad;

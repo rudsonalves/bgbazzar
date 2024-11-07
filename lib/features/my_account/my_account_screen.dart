@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/singletons/app_settings.dart';
-import '../../common/singletons/current_user.dart';
+import '../../core/singletons/app_settings.dart';
+import '../../core/singletons/current_user.dart';
 import '../../get_it.dart';
 import 'widgets/admin_hooks.dart';
 import 'widgets/config_hooks.dart';

@@ -21,12 +21,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '/features/my_account/my_account_screen.dart';
-import '../../common/singletons/current_user.dart';
-import '../../common/theme/app_text_style.dart';
-import '../../components/custom_drawer/custom_drawer.dart';
-import '../../components/others_widgets/shop_grid_view/shop_grid_view.dart';
-import '../../components/others_widgets/state_error_message.dart';
-import '../../components/others_widgets/state_loading_message.dart';
+import '../../core/singletons/current_user.dart';
+import '../../core/theme/app_text_style.dart';
+import '../../components/drawers/custom_drawer.dart';
+import '../../components/collection_views/shop_grid_view/shop_grid_view.dart';
+import '../../components/widgets/state_error_message.dart';
+import '../../components/widgets/state_loading_message.dart';
 import '../../get_it.dart';
 import '../edit_ad/edit_ad_screen.dart';
 import '../signin/signin_screen.dart';

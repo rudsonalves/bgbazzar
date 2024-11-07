@@ -17,16 +17,16 @@
 
 import 'dart:developer';
 
-import '../../common/app_info.dart';
-import '../../common/models/ad.dart';
-import '../../common/models/filter.dart';
-import '../../common/models/user.dart';
-import '../../common/singletons/app_settings.dart';
-import '../../common/singletons/current_user.dart';
-import '../../common/singletons/search_filter.dart';
+import '../../core/config/app_info.dart';
+import '../../core/models/ad.dart';
+import '../../core/models/filter.dart';
+import '../../core/models/user.dart';
+import '../../core/singletons/app_settings.dart';
+import '../../core/singletons/current_user.dart';
+import '../../core/singletons/search_filter.dart';
 import '../../get_it.dart';
-import '../../repository/parse_server/interfaces/i_ad_repository.dart';
-import '../../repository/parse_server/common/constants.dart';
+import '../../repository/data/interfaces/i_ad_repository.dart';
+import '../../repository/data/parse_server/common/constants.dart';
 import 'shop_store.dart';
 
 class ShopController {

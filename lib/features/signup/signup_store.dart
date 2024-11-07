@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/others/validators.dart';
-import '../../common/state_store/state_store.dart';
+import '../../core/utils/validators.dart';
+import '../../core/state/state_store.dart';
 
 class SignupStore extends StateStore {
   final errorName = ValueNotifier<String?>(null);

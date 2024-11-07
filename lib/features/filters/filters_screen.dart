@@ -17,10 +17,10 @@
 
 import 'package:flutter/material.dart';
 
-import '../../common/models/ad.dart';
-import '../../common/models/filter.dart';
+import '../../core/models/ad.dart';
+import '../../core/models/filter.dart';
 import '../../components/buttons/big_button.dart';
-import '../mechanics/mechanics_screen.dart';
+import '../my_account/mechanics/mechanics_screen.dart';
 import 'filters_controller.dart';
 import 'filters_states.dart';
 import 'widgets/text_form_dropdown.dart';

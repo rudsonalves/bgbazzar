@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '/components/custon_field_controllers/masked_text_controller.dart';
+import '../custon_controllers/masked_text_controller.dart';
 
 class CustomMaskField extends StatefulWidget {
   final String? labelText;

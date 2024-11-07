@@ -19,14 +19,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '../../common/models/ad.dart';
-import '../../common/models/city.dart';
-import '../../common/models/filter.dart';
-import '../../common/models/state.dart';
-import '../../components/custon_field_controllers/currency_text_controller.dart';
+import '../../core/models/ad.dart';
+import '../../core/models/city.dart';
+import '../../core/models/filter.dart';
+import '../../core/models/state.dart';
+import '../../components/custon_controllers/currency_text_controller.dart';
 import '../../get_it.dart';
-import '../../manager/mechanics_manager.dart';
-import '../../repository/gov_api/ibge_repository.dart';
+import '../../data_managers/mechanics_manager.dart';
+import '../../repository/gov_apis/ibge_repository.dart';
 import 'filters_states.dart';
 
 class FiltersController extends ChangeNotifier {

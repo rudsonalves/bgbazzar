@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../components/others_widgets/shop_grid_view/shop_grid_view.dart';
-import '../../components/others_widgets/state_loading_message.dart';
+import '../../components/collection_views/shop_grid_view/shop_grid_view.dart';
+import '../../components/widgets/state_loading_message.dart';
 import '../shop/shop_controller.dart';
 import '../shop/shop_store.dart';
 
@@ -62,18 +62,19 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: AnimatedBuilder(
-            animation: store.state,
-            builder: (context, _) {
-              return Stack(
-                children: [
-                  ShopGridView(
-                    ctrl: ctrl,
-                    scrollController: _scrollController,
-                  ),
-                  if (store.isLoading) const StateLoadingMessage()
-                ],
-              );
-            }),
+          animation: store.state,
+          builder: (context, _) {
+            return Stack(
+              children: [
+                ShopGridView(
+                  ctrl: ctrl,
+                  scrollController: _scrollController,
+                ),
+                if (store.isLoading) const StateLoadingMessage()
+              ],
+            );
+          },
+        ),
       ),
     );
   }
