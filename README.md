@@ -1,11 +1,119 @@
-# bgbazzar
+# BGBazzar
 
-## TODO List
+## Visão Geral do Projeto
 
-- Set a fexed size for ad images and perform other optimizations on images to reduce resource consumption on the Parse Server.
+Este projeto é um aplicativo de compra, venda e troca de jogos de tabuleiro usados (board games). A estrutura do projeto foi organizada para garantir modularização, manutenção fácil e expansão futura. O foco principal da arquitetura foi garantir a separação clara entre lógica de negócio, gestão de estado, interface do usuário e a manipulação de dados.
+
+Abaixo está descrita a estrutura do projeto, organizada de acordo com os principais diretórios e suas responsabilidades.
+
+## Estrutura de Pastas
+
+### 1. `components`
+Este diretório armazena componentes reutilizáveis que são usados em diferentes partes da aplicação. É dividido em:
+- **buttons**: Botões customizados, como `big_button.dart`.
+- **collection_views**: Visualizações de coleções, como listas e grades.
+  - **ad_list_view** e **shop_grid_view** contêm widgets como cartões de anúncio, exibição de imagem e ratings.
+- **custon_controllers**: Controladores para entrada de texto com máscaras ou formatação especial, como valores monetários.
+- **dialogs**: Diálogos simples para mensagens e perguntas.
+- **drawers**: Componentes para barra lateral (drawer) do aplicativo.
+- **form_fields**: Campos de formulário personalizados, incluindo campos com máscaras e senhas.
+- **texts**: Componentes relacionados a textos longos, como `read_more_text.dart`.
+- **widgets**: Componentes diversos, como botões de favoritos, mensagens de carregamento e containers dismissíveis.
+
+### 2. `core`
+Responsável pelas funcionalidades centrais e comuns à aplicação.
+- **abstracts**: Classes abstratas que fornecem padronizações, como `data_result.dart`.
+- **config**: Configurações gerais da aplicação, como `app_info.dart`, que armazena dados sobre a versão do app.
+  - **theme**: Configuração de temas e estilos visuais, como cores e fontes.
+- **models**: Definições dos modelos de dados do aplicativo (ex.: `ad.dart`, `boardgame.dart`). Esses modelos representam os objetos principais do app.
+- **singletons**: Armazenamento de estados persistentes na aplicação, como `app_settings.dart` e `current_user.dart`.
+- **state**: Classe básica de controle de estado, utilizada por outras telas.
+- **utils**: Utilitários e extensões diversas para facilitar o desenvolvimento, como métodos de formatação e validação.
+
+### 3. `data_managers`
+Contém os gerenciadores de dados do aplicativo. Estes elementos fazem a mediação entre a interface do usuário e os repositórios, carregando e armazenando dados necessários para a operação da aplicação.
+- Inclui arquivos como `addresses_manager.dart`, `boardgames_manager.dart` e `favorites_manager.dart`.
+
+### 4. `features`
+Este diretório é o mais detalhado, contendo as diferentes funcionalidades da aplicação organizadas por área.
+- **addresses**: Implementação do cadastro e edição de endereços. Inclui controle de lógica, interface e widgets.
+- **chat**: Tela de chat (ainda não implementado).
+- **edit_ad**: Funções para criar e editar anúncios. Divide-se em controladores de formulário, visualização de imagens e widgets específicos.
+- **favorites**: Tela para exibição dos anúncios marcados como favoritos.
+- **filters**: Controle dos filtros utilizados na pesquisa de jogos, com widgets específicos de filtragem.
+- **my_account**: Inclui várias subfuncionalidades relacionadas à conta do usuário, como `boardgames`, `mechanics`, `my_ads` e `my_data`.
+  - **boardgames** e **mechanics**: Gerenciamento dos jogos cadastrados e suas mecânicas.
+  - **my_ads**: Gerenciamento dos anúncios do usuário.
+- **payment**: Implementação do sistema de pagamento.
+- **shop**: Apresentação dos produtos em grade e detalhes do produto selecionado.
+- **signin** e **signup**: Telas de login e cadastro de usuários.
+
+### 5. `repository`
+Contém os repositórios que interagem diretamente com as fontes de dados.
+- **app_data**: Repositórios que armazenam preferências internas da aplicação, como tema.
+- **data**: Repositórios que interagem com o servidor Parse Server para dados principais do app.
+- **gov_apis**: Repositórios que interagem com APIs governamentais, como `ibge_repository.dart`.
+- **local_data**: Repositórios que usam SQLite para armazenar dados localmente, reduzindo consultas ao servidor.
+
+### 6. `services`
+Serviços auxiliares utilizados na aplicação.
+- **parse_server**: Métodos para interação com o servidor Parse Server.
+- **payment**: Implementação do serviço de pagamento usando Mercado Pago.
+
+### 7. `store`
+Esta camada é uma abstração para o banco de dados SQLite.
+- **constants**: Contém nomes de tabelas, versões de esquema e scripts de criação/migração.
+- **database**: Contém classes para gerenciar, migrar e inicializar o banco de dados.
+- **stores**: Classes para operações CRUD em tabelas específicas, como `bg_names_store.dart` e `mechanics_store.dart`.
+
+## Boas Práticas e Padrões Utilizados
+- **Modularização e Encapsulamento**: Cada funcionalidade é separada em subpastas dedicadas, garantindo que a manutenção de um módulo seja independente dos outros.
+- **Separar Lógica de Negócio, UI e Controle de Estado**: Cada tela (“feature”) é dividida em três componentes principais: `controller` (lógica de negócio), `screen` (interface de usuário) e `store` (gestão de estado e reatividade).
+- **Reutilização de Componentes**: Componentes compartilháveis estão localizados na pasta `components`, tornando-os facilmente reutilizáveis entre diferentes partes do projeto.
+- **Gestão de Estado Centralizada**: Utilização de stores e singletons, conforme o caso, para gerenciar o estado da aplicação e manter consistência.
+
+## Considerações Finais
+A estrutura apresentada permite uma manutenção eficiente do código, tornando as futuras melhorias ou adaptações mais simples de serem realizadas. Componentes reutilizáveis estão claramente organizados, enquanto os dados, a lógica de negócio e a interface do usuário estão devidamente desacoplados. Desta forma, o projeto está preparado para evoluir em complexidade sem comprometer a sua compreensão ou a qualidade do código.
 
 
 # ChangeLog
+
+## 2024/11/07 - version: 0.7.13+73
+
+This commit enhances the project structure by expanding documentation in the `README.md` file, reorganizing files related to mechanics and payment, and updating the navigation and import paths accordingly. These changes improve clarity and make the codebase easier to navigate, while the new documentation provides a comprehensive overview for future developers.
+
+### Changes made:
+
+1. **README.md**:
+   - Expanded project documentation, including an overview, folder structure, and best practices.
+   - Added a detailed description of each main directory and its responsibilities, such as `components`, `core`, `data_managers`, `features`, `repository`, `services`, and `store`.
+   - Outlined the modular approach to organizing UI components, state management, and business logic, emphasizing code reusability and maintainability.
+
+2. **lib/features/check_mechanics/check_controller.dart**:
+   - Moved to `lib/features/my_account/mechanics/check_mechanics/check_controller.dart`.
+   - Updated import paths to point to the new structure for `mechanics_manager` and core models.
+
+3. **lib/features/check_mechanics/check_page.dart**:
+   - Relocated to `lib/features/my_account/mechanics/check_mechanics/check_page.dart`.
+   - Updated import paths for widgets, aligning with the new folder structure.
+
+4. **lib/features/check_mechanics/check_store.dart**:
+   - Moved to `lib/features/my_account/mechanics/check_mechanics/check_store.dart`.
+   - Adjusted imports to reflect the reorganization, including paths for `mechanic` models and `state_store`.
+
+5. **lib/features/my_account/widgets/admin_hooks.dart**:
+   - Updated import paths to accommodate the new location of `check_mechanics/check_page.dart`.
+
+6. **lib/features/payment_web_view/**:
+   - Renamed `payment_web_view` to `payment` for simplicity and consistency.
+   - Relocated files such as `payment_controller.dart`, `payment_page.dart`, and `payment_store.dart` under `lib/features/payment/`.
+
+7. **lib/my_material_app.dart**:
+   - Updated import paths for `payment_page` and `check_mechanics/check_page` to reflect the new directory structure.
+
+### Conclusion:
+The expanded README and structural changes improve the documentation and modularity of the codebase. By clearly defining folder responsibilities and enhancing navigation paths, the project is now more maintainable, with a foundation for efficient future development. The refined structure ensures that components, state management, and logic are properly organized, supporting scalability and ease of collaboration.
+
 
 ## 2024/11/07 - version: 0.7.12+72
 
