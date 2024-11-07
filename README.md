@@ -7,6 +7,53 @@
 
 # ChangeLog
 
+## 2024/11/07 - version: 0.7.12+71
+
+This commit focuses on cleaning up and refining the existing codebase of the bgbazzar application. It includes deletions of unused components, renaming classes for better clarity, and making structural changes to enhance code readability and maintainability.
+
+### Changes made:
+
+1. **Deleted Files**:
+   - **lib/common/app_constants.dart**: Removed unused constants, such as `AppPage` and `appTitle`.
+   - **lib/components/form_fields/custom_long_form_field.dart**: Deleted the custom form field widget as part of refactoring the form elements.
+   - **lib/components/others_widgets/custom_input_formatter.dart**: Removed `CustomInputFormatter` as it was no longer needed in the application.
+
+2. **lib/common/app_info.dart**:
+   - Updated `name` from `'xlo_mobx'` to `'BGBazzar'`.
+   - Reformatted `privacyPolicyUrl` for better readability.
+
+3. **lib/components/form_fields/custom_mask_field.dart**:
+   - Updated import statements to reflect path changes for consistency.
+
+4. **lib/components/others_widgets/fav_button.dart**:
+   - **Renamed to `favorite_button.dart`**: The class `FavStackButton` was also renamed to `FavoriteStackButton` to improve readability.
+
+5. **lib/components/others_widgets/fitted_button_segment.dart**:
+   - Added detailed documentation to describe the usage and parameters of `FittedButtonSegment`. This aims to improve the understanding of the component for future developers.
+
+6. **lib/components/others_widgets/image_view.dart**:
+   - Added detailed documentation to the `ImageView` widget, describing the logic for image loading and the available parameters, improving code clarity.
+
+7. **lib/components/others_widgets/shop_grid_view/widgets/ad_shop_view.dart**:
+   - Updated import statement for `favorite_button.dart`.
+   - Replaced instances of `FavStackButton` with `FavoriteStackButton`.
+
+8. **lib/features/edit_boardgame/edit_boardgame_form/edit_boardgame_form.dart**:
+   - Replaced `CustomLongFormField` with `CustomFormField`, and added a `FIXME` comment noting the replacement for future refactoring.
+
+9. **lib/features/product/product_screen.dart**:
+   - Updated the import and usage of `FavStackButton` to `FavoriteStackButton`.
+
+10. **lib/features/shop/shop_controller.dart**:
+    - Replaced usage of `appTitle` from `app_constants.dart` with `AppInfo.name` from `app_info.dart` to streamline constant references.
+
+11. **lib/features/shop/shop_store.dart**:
+    - Updated the initialization of `pageTitle` to use `AppInfo.name` instead of `appTitle`.
+
+### Conclusion:
+This commit removes redundant components, enhances the code's readability by renaming classes, and updates documentation to improve maintainability. The cleanup also ensures that constants and reusable widgets are organized efficiently, contributing to a more consistent and maintainable codebase.
+
+
 ## 2024/11/06 - version: 0.7.12+70
 
 This commit introduces several structural changes to improve modularity, reduce redundancy, and enhance clarity within the bgbazzar codebase. It includes refactoring, renaming, and deletion of obsolete components, along with the migration of repository interfaces to more organized locations.

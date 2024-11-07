@@ -22,7 +22,7 @@ import 'package:flutter/material.dart';
 import '../../../../common/models/ad.dart';
 import '../../../../common/singletons/current_user.dart';
 import '../../../../get_it.dart';
-import '../../fav_button.dart';
+import '../../favorite_button.dart';
 import 'owner_rating.dart';
 import 'shop_text_price.dart';
 import 'shop_text_title.dart';
@@ -61,7 +61,7 @@ class AdShopView extends StatelessWidget {
                 size: (MediaQuery.of(context).size.width - 8) / 2,
               ),
               if (isLogged)
-                FavStackButton(
+                FavoriteStackButton(
                   ad: ad,
                 ),
             ],

@@ -24,7 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../common/models/ad.dart';
 import '../../common/singletons/current_user.dart';
-import '../../components/others_widgets/fav_button.dart';
+import '../../components/others_widgets/favorite_button.dart';
 import '../../get_it.dart';
 import 'widgets/description_product.dart';
 import 'widgets/duo_segmented_button.dart';
@@ -163,7 +163,7 @@ class _ProductScreenState extends State<ProductScreen>
               Stack(
                 children: [
                   ImageCarousel(ad: ad),
-                  if (isLogged) FavStackButton(ad: ad),
+                  if (isLogged) FavoriteStackButton(ad: ad),
                 ],
               ),
               Padding(

@@ -6,14 +6,15 @@ import 'package:url_launcher/url_launcher.dart' as launcher;
 class AppInfo {
   AppInfo._();
 
-  static const name = 'xlo_mobx';
+  static const name = 'BGBazzar';
   static const description = 'A new Flutter project.';
   static const version = '0.4.0+12';
 
   static get pageUrl => 'https://rralves.dev.br/en/$name/';
   static const email = 'alvesdev67@gmail.com';
-  static const privacyPolicyUrl = 'https://rralves.dev.br/en/privacy-policy-en/';
-  
+  static const privacyPolicyUrl =
+      'https://rralves.dev.br/en/privacy-policy-en/';
+
   static Future<void> launchUrl(String url) async {
     final uri = Uri.parse(url);
 

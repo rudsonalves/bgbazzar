@@ -21,10 +21,10 @@ import '../../common/models/ad.dart';
 import '../../get_it.dart';
 import '../../manager/favorites_manager.dart';
 
-class FavStackButton extends StatelessWidget {
+class FavoriteStackButton extends StatelessWidget {
   final AdModel ad;
 
-  FavStackButton({
+  FavoriteStackButton({
     super.key,
     required this.ad,
   });

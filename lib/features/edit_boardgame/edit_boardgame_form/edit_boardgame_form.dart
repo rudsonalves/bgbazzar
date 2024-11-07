@@ -23,7 +23,6 @@ import '../get_image/get_image.dart';
 import 'edit_boardgame_form_controller.dart';
 import '/common/theme/app_text_style.dart';
 import '/components/form_fields/custom_form_field.dart';
-import '/components/form_fields/custom_long_form_field.dart';
 import '/components/form_fields/custom_names_form_field.dart';
 import '/components/others_widgets/image_view.dart';
 import '/components/others_widgets/spin_box_field.dart';
@@ -249,7 +248,8 @@ class _EditBoardgameFormState extends State<EditBoardgameForm> {
             child: ValueListenableBuilder(
                 valueListenable: store.errorDescription,
                 builder: (context, errorDescription, _) {
-                  return CustomLongFormField(
+                  return CustomFormField(
+                    // FIXME: This was a CustomLongFormField
                     focusNode: ctrl.descriptionFocus,
                     labelText: 'Descrição:',
                     labelStyle: AppTextStyle.font18Bold.copyWith(

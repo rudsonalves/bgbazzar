@@ -17,7 +17,7 @@
 
 import 'dart:developer';
 
-import '../../common/app_constants.dart';
+import '../../common/app_info.dart';
 import '../../common/models/ad.dart';
 import '../../common/models/filter.dart';
 import '../../common/models/user.dart';
@@ -88,7 +88,7 @@ class ShopController {
       searchFilter.searchString.isNotEmpty
           ? searchFilter.searchString
           : user == null
-              ? appTitle
+              ? AppInfo.name
               : user!.name!,
     );
   }

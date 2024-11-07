@@ -18,14 +18,14 @@
 import 'package:bgbazzar/common/state_store/state_store.dart';
 import 'package:flutter/material.dart';
 
-import '../../common/app_constants.dart';
+import '../../common/app_info.dart';
 import '../../common/singletons/search_filter.dart';
 import '../../get_it.dart';
 
 class ShopStore extends StateStore {
   final searchFilter = getIt<SearchFilter>();
 
-  final ValueNotifier<String> pageTitle = ValueNotifier<String>(appTitle);
+  final ValueNotifier<String> pageTitle = ValueNotifier<String>(AppInfo.name);
 
   ValueNotifier<bool> get filterNotifier => searchFilter.filterNotifier;
 

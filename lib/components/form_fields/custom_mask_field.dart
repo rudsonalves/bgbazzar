@@ -15,8 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:bgbazzar/components/custon_field_controllers/masked_text_controller.dart';
 import 'package:flutter/material.dart';
+
+import '/components/custon_field_controllers/masked_text_controller.dart';
 
 class CustomMaskField extends StatefulWidget {
   final String? labelText;
