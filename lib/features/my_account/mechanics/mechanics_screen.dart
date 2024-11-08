@@ -18,14 +18,13 @@
 import 'package:flutter/material.dart';
 
 import '/core/models/mechanic.dart';
-import '/core/singletons/current_user.dart';
 import '/components/widgets/state_error_message.dart';
 import '/components/widgets/state_loading_message.dart';
-import '/get_it.dart';
 import 'mechanics_store.dart';
 import 'mechanics_controller.dart';
+import 'widgets/mach_floating_action_button.dart';
+import 'widgets/mech_app_bar.dart';
 import 'widgets/mechanic_dialog.dart';
-import 'widgets/search_mechs_delegate.dart';
 import 'widgets/show_mechs/show_only_selected_mechs.dart';
 import 'widgets/show_mechs/show_all_mechs.dart';
 
@@ -70,6 +69,14 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
     if (mech != null) ctrl.add(mech);
   }
 
+  Future<void> _editMechanic(MechanicModel mech) async {
+    final editedMech = await MechanicDialog.open(context, mech.copyWith());
+
+    if (editedMech != null && mech != editedMech) {
+      await ctrl.update(editedMech);
+    }
+  }
+
   Future<bool> _deleteMechanic(MechanicModel mech) async {
     final result = await showDialog<bool?>(
           context: context,
@@ -103,104 +110,21 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return ListenableBuilder(
       listenable: store.state,
       builder: (context, _) {
         return Stack(
           children: [
             Scaffold(
-              appBar: AppBar(
-                title: ValueListenableBuilder(
-                    valueListenable: store.counter,
-                    builder: (context, value, _) {
-                      return Text('Mecânicas [$value]');
-                    }),
-                centerTitle: true,
-                leading: IconButton(
-                  onPressed: _closeMechanicsPage,
-                  icon: const Icon(Icons.arrow_back_ios_new),
-                ),
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      showSearch(
-                        context: context,
-                        delegate: SearchMechsDelegate(
-                          ctrl.selectMechByName,
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.search),
-                  ),
-                  ValueListenableBuilder(
-                    valueListenable: store.hideDescription,
-                    builder: (context, hideDescription, _) {
-                      return IconButton(
-                        onPressed: store.toggleHideDescription,
-                        tooltip: hideDescription
-                            ? 'Mostrar Descrição'
-                            : 'Ocultar Descrição',
-                        icon: Icon(
-                          hideDescription
-                              ? Icons.description_outlined
-                              : Icons.insert_drive_file_outlined,
-                        ),
-                      );
-                    },
-                  ),
-                  ValueListenableBuilder(
-                    valueListenable: store.showSelected,
-                    builder: (context, showSelected, _) {
-                      return IconButton(
-                        onPressed: store.toggleShowSelected,
-                        tooltip:
-                            showSelected ? 'Mostrar Todos' : 'Mostrar Seleção',
-                        icon: Icon(
-                          showSelected
-                              ? Icons.ballot_rounded
-                              : Icons.ballot_outlined,
-                        ),
-                      );
-                    },
-                  ),
-                ],
+              appBar: MechAppBar(
+                ctrl: ctrl,
+                store: store,
+                onPressed: _closeMechanicsPage,
               ),
-              floatingActionButton: OverflowBar(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: FloatingActionButton(
-                      heroTag: 'hero-1',
-                      backgroundColor:
-                          colorScheme.primaryContainer.withOpacity(0.85),
-                      onPressed: _closeMechanicsPage,
-                      tooltip: 'Voltar',
-                      child: const Icon(Icons.arrow_back_ios_new_rounded),
-                    ),
-                  ),
-                  if (getIt<CurrentUser>().isAdmin) ...[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: FloatingActionButton(
-                        heroTag: 'hero-2',
-                        backgroundColor:
-                            colorScheme.primaryContainer.withOpacity(0.85),
-                        onPressed: _addMechanic,
-                        tooltip: 'Adicionar',
-                        child: const Icon(Icons.add),
-                      ),
-                    ),
-                  ],
-                  FloatingActionButton(
-                    backgroundColor:
-                        colorScheme.primaryContainer.withOpacity(0.85),
-                    onPressed: ctrl.deselectAll,
-                    tooltip: 'Deselecionar',
-                    child: const Icon(Icons.deselect),
-                  ),
-                ],
+              floatingActionButton: MechFloatingActionButton(
+                onPressBack: _closeMechanicsPage,
+                onPressAdd: _addMechanic,
+                onPressDeselect: ctrl.deselectAll,
               ),
               body: Padding(
                 padding:
@@ -209,6 +133,7 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                     ? ShowAllMechs(
                         store: store,
                         deleteMech: _deleteMechanic,
+                        editMechanic: _editMechanic,
                       )
                     : ShowOnlySelectedMechs(
                         store: store,

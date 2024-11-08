@@ -21,12 +21,20 @@ import '../../../../core/models/mechanic.dart';
 import '../../../../components/form_fields/custom_form_field.dart';
 
 class MechanicDialog extends StatefulWidget {
-  const MechanicDialog({super.key});
+  final MechanicModel? mech;
 
-  static Future<MechanicModel?> open(BuildContext context) async {
+  const MechanicDialog({
+    super.key,
+    this.mech,
+  });
+
+  static Future<MechanicModel?> open(
+    BuildContext context, [
+    MechanicModel? mech,
+  ]) async {
     final result = await showDialog<MechanicModel?>(
       context: context,
-      builder: (context) => const MechanicDialog(),
+      builder: (context) => MechanicDialog(mech: mech),
     );
     return result;
   }
@@ -38,6 +46,20 @@ class MechanicDialog extends StatefulWidget {
 class _MechanicDialogState extends State<MechanicDialog> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+  late final bool isEdit;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.mech != null) {
+      nameController.text = widget.mech!.name;
+      descriptionController.text = widget.mech!.description ?? '';
+      isEdit = true;
+    } else {
+      isEdit = false;
+    }
+  }
 
   @override
   void dispose() {
@@ -49,6 +71,7 @@ class _MechanicDialogState extends State<MechanicDialog> {
 
   _addButton() {
     final mech = MechanicModel(
+      id: widget.mech?.id,
       name: nameController.text,
       description: descriptionController.text,
     );
@@ -65,14 +88,16 @@ class _MechanicDialogState extends State<MechanicDialog> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return SimpleDialog(
+      insetPadding: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       backgroundColor: colorScheme.surfaceContainerHigh,
-      contentPadding: const EdgeInsets.fromLTRB(12, 12.0, 12, 16.0),
-      title: const Text('Nova Mecânica'),
+      contentPadding: const EdgeInsets.all(12),
+      title: Text(isEdit ? 'Editar Mecânica' : 'Nova Mecânica'),
       children: [
         CustomFormField(
           controller: nameController,
           labelText: 'Mecânica',
-          hintText: 'Adicione um nome para a mecânica',
+          hintText: 'Nome da mecânica',
           fullBorder: false,
         ),
         CustomFormField(
@@ -88,8 +113,8 @@ class _MechanicDialogState extends State<MechanicDialog> {
           children: [
             FilledButton.tonalIcon(
               onPressed: _addButton,
-              label: const Text('Adicionar'),
-              icon: const Icon(Icons.add),
+              label: Text(isEdit ? 'Atualizar' : 'Adicionar'),
+              icon: Icon(isEdit ? Icons.update : Icons.add),
             ),
             FilledButton.tonalIcon(
               onPressed: _cancelButton,
