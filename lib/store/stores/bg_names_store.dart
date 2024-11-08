@@ -17,16 +17,24 @@
 
 import 'dart:developer';
 
+import 'package:bgbazzar/store/stores/interfaces/i_bg_names_store.dart';
+import 'package:sqflite/sqflite.dart';
+
 import '../../get_it.dart';
 import '../constants/constants.dart';
 import '../database/database_manager.dart';
 
-class BGNamesStore {
-  static final _databaseManager = getIt<DatabaseManager>();
+class BGNamesStore implements IBgNamesStore {
+  final _databaseManager = getIt<DatabaseManager>();
+  late final Database database;
 
-  static Future<List<Map<String, dynamic>>> getAll() async {
-    final database = await _databaseManager.database;
+  @override
+  Future<void> initialize() async {
+    database = await _databaseManager.database;
+  }
 
+  @override
+  Future<List<Map<String, dynamic>>> getAll() async {
     try {
       List<Map<String, dynamic>> result = await database.query(
         bgNamesTable,
@@ -40,9 +48,8 @@ class BGNamesStore {
     }
   }
 
-  static Future<int> add(Map<String, dynamic> map) async {
-    final database = await _databaseManager.database;
-
+  @override
+  Future<int> add(Map<String, dynamic> map) async {
     try {
       final id = await database.insert(
         bgNamesTable,
@@ -58,9 +65,8 @@ class BGNamesStore {
     }
   }
 
-  static Future<int> update(Map<String, dynamic> map) async {
-    final database = await _databaseManager.database;
-
+  @override
+  Future<int> update(Map<String, dynamic> map) async {
     try {
       final result = await database.update(
         bgNamesTable,

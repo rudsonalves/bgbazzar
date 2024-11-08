@@ -47,6 +47,8 @@ import 'repository/local_data/interfaces/i_local_mechanic_repository.dart';
 import 'repository/local_data/sqlite/mechanic_repository.dart';
 import 'services/parse_server/parse_server_server.dart';
 import 'store/database/database_manager.dart';
+import 'store/stores/bg_names_store.dart';
+import 'store/stores/interfaces/i_bg_names_store.dart';
 
 final getIt = GetIt.instance;
 
@@ -74,15 +76,26 @@ void setupDependencies() {
     getIt.registerFactory<IAdRepository>(() => PSAdRepository());
     getIt.registerFactory<IBoardgameRepository>(() => PSBoardgameRepository());
     getIt.registerFactory<IAddressRepository>(() => PSAddressRepository());
+    getIt.registerFactory<IFavoriteRepository>(() => PSFavoriteRepository());
 
-    // SQFLite Repositories
-    getIt.registerFactory<IBgNamesRepository>(() => SqliteBGNamesRepository());
+    // SQFLite Store
+    getIt.registerFactoryAsync<IBgNamesStore>(() async {
+      final store = BGNamesStore();
+      await store.initialize();
+      return store;
+    });
+
+    // Local SqfLite Repositories
+    getIt.registerFactoryAsync<IBgNamesRepository>(() async {
+      final repository = SqliteBGNamesRepository();
+      await repository.initialize();
+      return repository;
+    });
     getIt.registerFactoryAsync<ILocalMechanicRepository>(() async {
       final repository = SqliteMechanicRepository();
       await repository.initialize();
       return repository;
     });
-    getIt.registerFactory<IFavoriteRepository>(() => PSFavoriteRepository());
   } catch (err) {
     log('GetIt Locator Error: $err');
   }

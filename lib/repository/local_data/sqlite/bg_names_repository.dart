@@ -17,15 +17,23 @@
 
 import 'dart:developer';
 
-import '../../../store/stores/bg_names_store.dart';
+import '../../../get_it.dart';
 import '../../../core/models/bg_name.dart';
+import '../../../store/stores/interfaces/i_bg_names_store.dart';
 import '../interfaces/i_bg_names_repository.dart';
 
 class SqliteBGNamesRepository implements IBgNamesRepository {
+  late final IBgNamesStore bgNamesStore;
+
+  @override
+  Future<void> initialize() async {
+    bgNamesStore = await getIt.getAsync<IBgNamesStore>();
+  }
+
   @override
   Future<List<BGNameModel>> getAll() async {
     try {
-      final result = await BGNamesStore.getAll();
+      final result = await bgNamesStore.getAll();
       if (result.isEmpty) return [];
 
       final bgs = result.map((item) => BGNameModel.fromMap(item)).toList();
@@ -40,7 +48,7 @@ class SqliteBGNamesRepository implements IBgNamesRepository {
   @override
   Future<BGNameModel> add(BGNameModel bg) async {
     try {
-      final id = await BGNamesStore.add(bg.toMap());
+      final id = await bgNamesStore.add(bg.toMap());
       if (id < 0) throw Exception('retrun id $id');
 
       return bg;
@@ -54,7 +62,7 @@ class SqliteBGNamesRepository implements IBgNamesRepository {
   @override
   Future<int> update(BGNameModel bg) async {
     try {
-      final result = await BGNamesStore.update(bg.toMap());
+      final result = await bgNamesStore.update(bg.toMap());
       return result;
     } catch (err) {
       final message = 'BGNamesRepository.update: $err';

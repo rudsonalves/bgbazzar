@@ -74,7 +74,7 @@ class MechanicsStore implements IMechanicsStore {
 
       return result;
     } catch (err) {
-      log('MechanicsStore.add: $err');
+      log('MechanicsStore.update: $err');
       return -1;
     }
   }
@@ -84,13 +84,13 @@ class MechanicsStore implements IMechanicsStore {
     try {
       final result = await _database.delete(
         mechTable,
-        where: '$mechId: ?',
+        where: '$mechId = ?',
         whereArgs: [id],
       );
 
       return result;
     } catch (err) {
-      log('MechanicsStore.add: $err');
+      log('MechanicsStore.delete: $err');
       return -1;
     }
   }
