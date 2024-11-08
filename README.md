@@ -78,6 +78,43 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/08 - version: 0.7.13+76
+
+This commit introduces several updates to the mechanics feature, including UI enhancements, model functionality improvements, and better modularity in code structure. Notable updates are the addition of the `copyWith` method to `MechanicModel`, the implementation of a new `MechAppBar` and `MechFloatingActionButton`, and updates to `MechanicDialog` for edit functionality.
+
+### Changes made:
+
+1. **lib/core/models/mechanic.dart**:
+   - Added a `copyWith` method to allow easy cloning and updating of `MechanicModel` instances.
+   - Overridden `==` and `hashCode` for more reliable equality checks, comparing `id`, `name`, and `description` fields.
+
+2. **lib/data_managers/mechanics_manager.dart**:
+   - Removed an unnecessary log statement to clean up the code.
+
+3. **lib/features/my_account/mechanics/mechanics_controller.dart**:
+   - Added an `update` method to handle updates to `MechanicModel` instances, including setting states for loading, success, and error.
+
+4. **lib/features/my_account/mechanics/mechanics_screen.dart**:
+   - Replaced the custom app bar and floating action button with modularized widgets: `MechAppBar` and `MechFloatingActionButton`.
+   - Added `_editMechanic` function to allow editing a mechanic by opening `MechanicDialog` with pre-filled data from the selected mechanic.
+
+5. **lib/features/my_account/mechanics/widgets/mach_floating_action_button.dart**:
+   - Created `MechFloatingActionButton` to encapsulate floating action button functionalities, including options to add, deselect, and go back. Access is controlled based on user role.
+
+6. **lib/features/my_account/mechanics/widgets/mech_app_bar.dart**:
+   - Developed `MechAppBar` to encapsulate app bar functionalities, including title display, search, hide/show description, and filter selected mechanics.
+
+7. **lib/features/my_account/mechanics/widgets/mechanic_dialog.dart**:
+   - Updated `MechanicDialog` to support both add and edit functionalities. Now, when editing, it displays the current values and adjusts button text and icons based on the `isEdit` state.
+   - Adjusted dialog layout to improve usability, including setting padding and customizing dialog shapes.
+
+8. **lib/features/my_account/mechanics/widgets/show_mechs/show_all_mechs.dart**:
+   - Updated `ShowAllMechs` to support the new `editMechanic` callback, allowing items to be edited directly.
+
+### Conclusion:
+These updates enhance the user experience and maintainability of the mechanics feature. By modularizing components and adding edit functionality, the UI becomes more intuitive and flexible, and the code becomes easier to manage and extend.
+
+
 ## 2024/11/08 - version: 0.7.13+75
 
 This commit refines and extends various database-related classes and dependency registrations, enhancing modularity, initialization control, and error handling. Notable changes include the introduction of `initialize` methods for deferred asynchronous initialization, interface updates, and error message corrections.

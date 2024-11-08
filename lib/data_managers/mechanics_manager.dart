@@ -187,7 +187,6 @@ class MechanicsManager {
       localMechRepository.update(newMech);
     }
     int index = _mechanics.indexWhere((m) => m.id == mech.id);
-    log('Indec: $index');
     _mechanics[index] = newMech;
 
     return newMech;

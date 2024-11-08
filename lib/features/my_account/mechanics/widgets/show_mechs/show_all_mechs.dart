@@ -25,13 +25,13 @@ import 'widgets/dismissible_mech.dart';
 
 class ShowAllMechs extends StatefulWidget {
   final MechanicsStore store;
-  final Future<void> Function(MechanicModel)? saveMech;
+  final Future<void> Function(MechanicModel)? editMechanic;
   final Future<bool> Function(MechanicModel)? deleteMech;
 
   const ShowAllMechs({
     super.key,
     required this.store,
-    this.saveMech,
+    this.editMechanic,
     this.deleteMech,
   });
 
@@ -72,7 +72,7 @@ class _ShowAllMechsState extends State<ShowAllMechs> {
             builder: (context, hideDescription, _) => DismissibleMech(
               mech: mech,
               onTap: onTap,
-              saveMech: widget.saveMech,
+              saveMech: widget.editMechanic,
               deleteMech: widget.deleteMech,
             ),
           ),

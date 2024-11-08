@@ -49,4 +49,28 @@ class MechanicModel {
         ' name: $name,'
         ' description: $description)';
   }
+
+  MechanicModel copyWith({
+    String? id,
+    String? name,
+    String? description,
+  }) {
+    return MechanicModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+    );
+  }
+
+  @override
+  bool operator ==(covariant MechanicModel other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.name == name &&
+        other.description == description;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode ^ description.hashCode;
 }

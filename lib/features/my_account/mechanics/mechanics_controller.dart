@@ -46,6 +46,17 @@ class MechanicsController {
     }
   }
 
+  Future<void> update(MechanicModel mech) async {
+    try {
+      store.setStateLoading();
+      await mechanicManager.update(mech);
+      store.setStateSuccess();
+    } catch (err) {
+      log('add mechanic error: $err');
+      store.setError('Erro ao adicionar uma mecânica.');
+    }
+  }
+
   /// Selects a mechanic by its [name]. If found, adds it to the store's
   /// selected list.
   void selectMechByName(String name) {
