@@ -17,10 +17,10 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/ad.dart';
-import '../../../../features/shop/widgets/ad_text_info.dart';
-import '../../../../features/shop/widgets/ad_text_price.dart';
-import '../../../../features/shop/widgets/ad_text_title.dart';
+import '/core/models/ad.dart';
+import '/features/shop/widgets/ad_text_info.dart';
+import '/features/shop/widgets/ad_text_price.dart';
+import '/features/shop/widgets/ad_text_title.dart';
 import 'show_image.dart';
 
 class AdCardView extends StatelessWidget {

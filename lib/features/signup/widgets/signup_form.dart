@@ -17,10 +17,10 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/validators.dart';
-import '../../../components/form_fields/custom_form_field.dart';
-import '../../../components/form_fields/custom_mask_field.dart';
-import '../../../components/form_fields/password_form_field.dart';
+import '/core/utils/validators.dart';
+import '/components/form_fields/custom_form_field.dart';
+import '/components/form_fields/custom_mask_field.dart';
+import '/components/form_fields/password_form_field.dart';
 import '../signup_store.dart';
 
 class SignUpForm extends StatefulWidget {

@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:bgbazzar/core/theme/app_text_style.dart';
 import 'package:flutter/material.dart';
 
+import '/core/theme/app_text_style.dart';
 import '../edit_ad_store.dart';
 import 'image_list_controller.dart';
 import '../widgets/horizontal_image_gallery.dart';

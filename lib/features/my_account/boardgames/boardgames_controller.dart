@@ -15,12 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../../core/abstracts/data_result.dart';
-import '../../../core/models/bg_name.dart';
-import '../../../core/models/boardgame.dart';
-import '../../../core/singletons/current_user.dart';
-import '../../../get_it.dart';
-import '../../../data_managers/boardgames_manager.dart';
+import '/core/abstracts/data_result.dart';
+import '/core/models/bg_name.dart';
+import '/core/models/boardgame.dart';
+import '/core/singletons/current_user.dart';
+import '/get_it.dart';
+import '/data_managers/boardgames_manager.dart';
 import 'boardgames_store.dart';
 
 class BoardgamesController {

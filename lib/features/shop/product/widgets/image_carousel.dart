@@ -19,7 +19,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 
-import '../../../../core/models/ad.dart';
+import '/core/models/ad.dart';
 
 class ImageCarousel extends StatelessWidget {
   final AdModel ad;

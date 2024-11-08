@@ -17,10 +17,10 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/models/mechanic.dart';
-import '../../../core/state/state_store.dart';
-import '../../../data_managers/mechanics_manager.dart';
-import '../../../get_it.dart';
+import '/core/models/mechanic.dart';
+import '/core/state/state_store.dart';
+import '/data_managers/mechanics_manager.dart';
+import '/get_it.dart';
 
 /// A state management store for managing mechanics selection and UI flags.
 ///

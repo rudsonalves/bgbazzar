@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../../core/models/address.dart';
+import '/core/models/address.dart';
 
 class AddressRepositoryException implements Exception {
   final String message;

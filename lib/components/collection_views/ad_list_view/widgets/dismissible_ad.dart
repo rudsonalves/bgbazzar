@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/ad.dart';
+import '/core/models/ad.dart';
 import '../../../widgets/base_dismissible_container.dart';
 import 'ad_card_view.dart';
 

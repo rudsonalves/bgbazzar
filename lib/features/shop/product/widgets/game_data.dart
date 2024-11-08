@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/ad.dart';
-import '../../../../core/theme/app_text_style.dart';
+import '/core/models/ad.dart';
+import '/core/theme/app_text_style.dart';
 import 'sub_title_product.dart';
 
 class GameData extends StatelessWidget {

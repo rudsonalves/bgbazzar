@@ -19,12 +19,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../core/models/filter.dart';
+import '/core/models/filter.dart';
 import '../../../filters/filters_screen.dart';
 import '../../shop_controller.dart';
-import '../../../../core/singletons/app_settings.dart';
-import '../../../../core/singletons/search_history.dart';
-import '../../../../get_it.dart';
+import '/core/singletons/app_settings.dart';
+import '/core/singletons/search_history.dart';
+import '/get_it.dart';
 
 class SearchDialog extends SearchDelegate<String> {
   final searchHistory = getIt<SearchHistory>();

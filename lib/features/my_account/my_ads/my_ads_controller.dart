@@ -17,12 +17,12 @@
 
 import 'dart:developer';
 
-import '../../../core/models/ad.dart';
-import '../../../core/models/filter.dart';
-import '../../../core/singletons/current_user.dart';
-import '../../../get_it.dart';
-import '../../../repository/data/interfaces/i_ad_repository.dart';
-import '../../../repository/data/parse_server/common/constants.dart';
+import '/core/models/ad.dart';
+import '/core/models/filter.dart';
+import '/core/singletons/current_user.dart';
+import '/get_it.dart';
+import '/repository/data/interfaces/i_ad_repository.dart';
+import '/repository/data/parse_server/common/constants.dart';
 import 'my_ads_store.dart';
 
 class MyAdsController {

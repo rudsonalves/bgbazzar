@@ -18,8 +18,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/models/ad.dart';
-import '../../../features/shop/product/product_screen.dart';
+import '/core/models/ad.dart';
+import '/features/shop/product/product_screen.dart';
 import 'widgets/ad_card_view.dart';
 import 'widgets/dismissible_ad.dart';
 

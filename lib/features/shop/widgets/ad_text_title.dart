@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_text_style.dart';
+import '/core/theme/app_text_style.dart';
 
 class AdTextTitle extends StatelessWidget {
   final String text;

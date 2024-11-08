@@ -17,11 +17,11 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/boardgame.dart';
-import '../../../../core/theme/app_text_style.dart';
-import '../../../../components/widgets/image_view.dart';
-import '../../../../get_it.dart';
-import '../../../../data_managers/mechanics_manager.dart';
+import '/core/models/boardgame.dart';
+import '/core/theme/app_text_style.dart';
+import '/components/widgets/image_view.dart';
+import '/get_it.dart';
+import '/data_managers/mechanics_manager.dart';
 import '../../../shop/product/widgets/description_product.dart';
 import '../../../shop/product/widgets/sub_title_product.dart';
 import '../../../shop/product/widgets/title_product.dart';

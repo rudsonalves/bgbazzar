@@ -17,11 +17,11 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../../components/custon_controllers/numeric_edit_controller.dart';
-import '../../../../../core/models/boardgame.dart';
+import '/components/custon_controllers/numeric_edit_controller.dart';
+import '/core/models/boardgame.dart';
 import '/get_it.dart';
-import '../../../../../data_managers/boardgames_manager.dart';
-import '../../../../../data_managers/mechanics_manager.dart';
+import '/data_managers/boardgames_manager.dart';
+import '/data_managers/mechanics_manager.dart';
 import '../edit_boardgame_store.dart';
 
 class EditBoardgameFormController {

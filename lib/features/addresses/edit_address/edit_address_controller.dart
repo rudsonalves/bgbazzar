@@ -19,11 +19,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '../../../core/models/address.dart';
-import '../../../core/singletons/current_user.dart';
-import '../../../components/custon_controllers/masked_text_controller.dart';
-import '../../../get_it.dart';
-import '../../../repository/gov_apis/viacep_repository.dart';
+import '/core/models/address.dart';
+import '/core/singletons/current_user.dart';
+import '/components/custon_controllers/masked_text_controller.dart';
+import '/get_it.dart';
+import '/repository/gov_apis/viacep_repository.dart';
 import 'edit_address_state.dart';
 
 class EditAddressController extends ChangeNotifier {

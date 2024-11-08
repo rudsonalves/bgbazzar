@@ -17,9 +17,9 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_text_style.dart';
-import '../../../get_it.dart';
-import '../../../data_managers/addresses_manager.dart';
+import '/core/theme/app_text_style.dart';
+import '/get_it.dart';
+import '/data_managers/addresses_manager.dart';
 import '../../filters/widgets/text_title.dart';
 
 class DestinyAddressDialog extends StatefulWidget {

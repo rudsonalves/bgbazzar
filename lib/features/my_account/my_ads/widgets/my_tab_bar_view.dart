@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/ad.dart';
-import '../../../../components/collection_views/ad_list_view/ad_list_view.dart';
+import '/core/models/ad.dart';
+import '/components/collection_views/ad_list_view/ad_list_view.dart';
 import '../my_ads_controller.dart';
 
 class MyTabBarView extends StatefulWidget {

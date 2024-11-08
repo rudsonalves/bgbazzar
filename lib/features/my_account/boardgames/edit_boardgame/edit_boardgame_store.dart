@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/boardgame.dart';
-import '../../../../core/state/state_store.dart';
+import '/core/models/boardgame.dart';
+import '/core/state/state_store.dart';
 
 class EditBoardgameStore extends StateStore {
   late final BoardgameModel bg;

@@ -17,9 +17,9 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/singletons/current_user.dart';
-import '../../../core/utils/utils.dart';
-import '../../../get_it.dart';
+import '/core/singletons/current_user.dart';
+import '/core/utils/utils.dart';
+import '/get_it.dart';
 
 class CustomDrawerHeader extends StatelessWidget {
   const CustomDrawerHeader({

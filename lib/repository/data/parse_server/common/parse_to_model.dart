@@ -17,13 +17,13 @@
 
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import '../../../../core/models/mechanic.dart';
-import '../../../../core/models/address.dart';
-import '../../../../core/models/ad.dart';
-import '../../../../core/models/bg_name.dart';
-import '../../../../core/models/boardgame.dart';
-import '../../../../core/models/favorite.dart';
-import '../../../../core/models/user.dart';
+import '/core/models/mechanic.dart';
+import '/core/models/address.dart';
+import '/core/models/ad.dart';
+import '/core/models/bg_name.dart';
+import '/core/models/boardgame.dart';
+import '/core/models/favorite.dart';
+import '/core/models/user.dart';
 import 'constants.dart';
 
 extension ParseObjectExtensions on ParseObject {

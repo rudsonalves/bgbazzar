@@ -15,6 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../../core/state/state_store.dart';
+import '/core/state/state_store.dart';
 
 class BoardgamesStore extends StateStore {}

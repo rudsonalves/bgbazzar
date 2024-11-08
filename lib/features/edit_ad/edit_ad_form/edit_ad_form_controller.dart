@@ -19,14 +19,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '../../../components/custon_controllers/currency_text_controller.dart';
+import '/components/custon_controllers/currency_text_controller.dart';
 import '../edit_ad_store.dart';
-import '../../../core/singletons/current_user.dart';
-import '../../../core/models/ad.dart';
-import '../../../core/models/mechanic.dart';
+import '/core/singletons/current_user.dart';
+import '/core/models/ad.dart';
+import '/core/models/mechanic.dart';
 import '/get_it.dart';
-import '../../../data_managers/boardgames_manager.dart';
-import '../../../data_managers/mechanics_manager.dart';
+import '/data_managers/boardgames_manager.dart';
+import '/data_managers/mechanics_manager.dart';
 
 class EditAdFormController {
   late final EditAdStore store;

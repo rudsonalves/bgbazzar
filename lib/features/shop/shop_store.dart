@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:bgbazzar/core/state/state_store.dart';
 import 'package:flutter/material.dart';
 
+import '/core/state/state_store.dart';
 import '../../core/config/app_info.dart';
 import '../../core/singletons/search_filter.dart';
 import '../../get_it.dart';

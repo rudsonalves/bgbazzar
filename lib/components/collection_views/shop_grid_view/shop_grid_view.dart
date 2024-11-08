@@ -18,9 +18,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/models/ad.dart';
-import '../../../features/shop/product/product_screen.dart';
-import '../../../features/shop/shop_controller.dart';
+import '/core/models/ad.dart';
+import '/features/shop/product/product_screen.dart';
+import '/features/shop/shop_controller.dart';
 import 'widgets/ad_shop_view.dart';
 
 enum ButtonBehavior { edit, delete }

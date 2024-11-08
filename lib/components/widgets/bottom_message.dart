@@ -17,7 +17,7 @@
 
 import 'dart:io';
 
-import 'package:bgbazzar/features/shop/product/widgets/title_product.dart';
+import '/features/shop/product/widgets/title_product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

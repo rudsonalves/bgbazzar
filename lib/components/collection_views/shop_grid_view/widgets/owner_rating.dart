@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/singletons/app_settings.dart';
-import '../../../../get_it.dart';
+import '/core/singletons/app_settings.dart';
+import '/get_it.dart';
 
 class OwnerRating extends StatelessWidget {
   final String? owner;

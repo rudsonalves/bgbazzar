@@ -19,9 +19,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/ad.dart';
-import '../../../../core/singletons/current_user.dart';
-import '../../../../get_it.dart';
+import '/core/models/ad.dart';
+import '/core/singletons/current_user.dart';
+import '/get_it.dart';
 import '../../../widgets/favorite_button.dart';
 import 'owner_rating.dart';
 import 'shop_text_price.dart';

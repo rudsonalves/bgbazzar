@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/models/address.dart';
+import '/core/models/address.dart';
 import 'widgets/address_form.dart';
 import 'edit_address_controller.dart';
 import 'edit_address_state.dart';
