@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../../../core/models/mechanic.dart';
-import '../../../../get_it.dart';
-import '../../../../data_managers/mechanics_manager.dart';
+import '../../../core/models/mechanic.dart';
+import '../../../get_it.dart';
+import '../../../data_managers/mechanics_manager.dart';
 import 'check_store.dart';
 
 class CheckController {

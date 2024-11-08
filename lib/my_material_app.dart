@@ -38,7 +38,7 @@ import 'features/shop/product/product_screen.dart';
 import 'features/filters/filters_screen.dart';
 import 'features/my_account/mechanics/mechanics_screen.dart';
 import 'features/chat/chat_screen.dart';
-import 'features/my_account/mechanics/check_mechanics/check_page.dart';
+import 'features/my_account/check_mechanics/check_page.dart';
 import 'features/shop/shop_screen.dart';
 import 'features/edit_ad/edit_ad_screen.dart';
 import 'features/signin/signin_screen.dart';

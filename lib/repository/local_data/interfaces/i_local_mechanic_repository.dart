@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import '../../../core/abstracts/data_result.dart';
 import '../../../core/models/mechanic.dart';
 
 /// A repository class for handling operations related to game mechanics using
@@ -26,6 +27,8 @@ import '../../../core/models/mechanic.dart';
 /// It interacts with a store (`MechanicsStore`) which performs the actual
 /// database operations.
 abstract class ILocalMechanicRepository {
+  Future<void> initialize();
+
   /// Retrieves all game mechanics from the SQLite database.
   ///
   /// This method attempts to get the list of all game mechanics using
@@ -35,7 +38,7 @@ abstract class ILocalMechanicRepository {
   /// Returns:
   /// - A [Future] containing a list of [MechanicModel] objects if successful.
   /// - Throws an exception if an error occurs during retrieval.
-  Future<List<MechanicModel>> get();
+  Future<DataResult<List<MechanicModel>>> getAll();
 
   /// Adds a new game mechanic to the SQLite database.
   ///
@@ -50,7 +53,7 @@ abstract class ILocalMechanicRepository {
   /// Returns:
   /// - A [Future] containing the added [MechanicModel] with the assigned ID.
   /// - Returns `null` if an error occurs during the addition.
-  Future<MechanicModel?> add(MechanicModel mech);
+  Future<DataResult<MechanicModel>> add(MechanicModel mech);
 
   /// Updates an existing game mechanic in the SQLite database.
   ///
@@ -65,5 +68,19 @@ abstract class ILocalMechanicRepository {
   /// Returns:
   /// - A [Future] containing the number of affected rows.
   /// - Throws an exception if an error occurs during the update.
-  Future<int> update(MechanicModel mech);
+  Future<DataResult<void>> update(MechanicModel mech);
+
+  /// Delete a new game mechanic to the SQLite database.
+  ///
+  /// This method takes a mechanic [id] and remove it from database
+  /// If the deletation returns an ID less than zero, it throws an exception.
+  /// If an error occurs, it logs the error and returns `null`.
+  ///
+  /// Parameters:
+  /// - [mech]: The [MechanicModel] to be added to the database.
+  ///
+  /// Returns:
+  /// - A [Future] containing the added [MechanicModel] with the assigned ID.
+  /// - Returns `null` if an error occurs during the addition.
+  Future<DataResult<void>> delete(String id);
 }

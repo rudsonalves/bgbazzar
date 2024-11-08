@@ -15,20 +15,19 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
-import '../../../core/singletons/current_user.dart';
-import '../../../components/widgets/state_error_message.dart';
-import '../../../components/widgets/state_loading_message.dart';
+import '/core/models/mechanic.dart';
+import '/core/singletons/current_user.dart';
+import '/components/widgets/state_error_message.dart';
+import '/components/widgets/state_loading_message.dart';
 import '/get_it.dart';
 import 'mechanics_store.dart';
 import 'mechanics_controller.dart';
 import 'widgets/mechanic_dialog.dart';
 import 'widgets/search_mechs_delegate.dart';
-import 'widgets/show_only_selected_mechs.dart';
-import 'widgets/show_all_mechs.dart';
+import 'widgets/show_mechs/show_only_selected_mechs.dart';
+import 'widgets/show_mechs/show_all_mechs.dart';
 
 class MechanicsScreen extends StatefulWidget {
   final List<String> selectedPsIds;
@@ -71,7 +70,7 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
     if (mech != null) ctrl.add(mech);
   }
 
-  Future<void> _removeMechanic() async {
+  Future<bool> _deleteMechanic(MechanicModel mech) async {
     final result = await showDialog<bool?>(
           context: context,
           builder: (context) => AlertDialog(
@@ -79,12 +78,12 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Remover as mecânicas selecionadas?'),
+                Text('Remover a mecânica "${mech.name}"?'),
               ],
             ),
             actions: [
               FilledButton.tonalIcon(
-                onPressed: () => Navigator.pop(context, false),
+                onPressed: () => Navigator.pop(context, true),
                 label: Text('Remover'),
               ),
               FilledButton.tonalIcon(
@@ -96,8 +95,10 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
         ) ??
         false;
     if (result) {
-      log('ctrl.remove(mech)');
+      final result = await ctrl.deleteMech(mech);
+      return result;
     }
+    return false;
   }
 
   @override
@@ -134,35 +135,36 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                     icon: const Icon(Icons.search),
                   ),
                   ValueListenableBuilder(
-                      valueListenable: store.hideDescription,
-                      builder: (context, hideDescription, _) {
-                        return IconButton(
-                          onPressed: store.toggleHideDescription,
-                          tooltip: hideDescription
-                              ? 'Mostrar Descrição'
-                              : 'Ocultar Descrição',
-                          icon: Icon(
-                            hideDescription
-                                ? Icons.description_outlined
-                                : Icons.insert_drive_file_outlined,
-                          ),
-                        );
-                      }),
+                    valueListenable: store.hideDescription,
+                    builder: (context, hideDescription, _) {
+                      return IconButton(
+                        onPressed: store.toggleHideDescription,
+                        tooltip: hideDescription
+                            ? 'Mostrar Descrição'
+                            : 'Ocultar Descrição',
+                        icon: Icon(
+                          hideDescription
+                              ? Icons.description_outlined
+                              : Icons.insert_drive_file_outlined,
+                        ),
+                      );
+                    },
+                  ),
                   ValueListenableBuilder(
-                      valueListenable: store.showSelected,
-                      builder: (context, showSelected, _) {
-                        return IconButton(
-                          onPressed: store.toggleShowSelected,
-                          tooltip: showSelected
-                              ? 'Mostrar Todos'
-                              : 'Mostrar Seleção',
-                          icon: Icon(
-                            showSelected
-                                ? Icons.ballot_rounded
-                                : Icons.ballot_outlined,
-                          ),
-                        );
-                      }),
+                    valueListenable: store.showSelected,
+                    builder: (context, showSelected, _) {
+                      return IconButton(
+                        onPressed: store.toggleShowSelected,
+                        tooltip:
+                            showSelected ? 'Mostrar Todos' : 'Mostrar Seleção',
+                        icon: Icon(
+                          showSelected
+                              ? Icons.ballot_rounded
+                              : Icons.ballot_outlined,
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
               floatingActionButton: OverflowBar(
@@ -190,17 +192,6 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                         child: const Icon(Icons.add),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: FloatingActionButton(
-                        heroTag: 'hero-3',
-                        backgroundColor:
-                            colorScheme.primaryContainer.withOpacity(0.85),
-                        onPressed: _removeMechanic,
-                        tooltip: 'Remover',
-                        child: const Icon(Icons.remove),
-                      ),
-                    ),
                   ],
                   FloatingActionButton(
                     backgroundColor:
@@ -217,6 +208,7 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                 child: (!store.showSelected.value)
                     ? ShowAllMechs(
                         store: store,
+                        deleteMech: _deleteMechanic,
                       )
                     : ShowOnlySelectedMechs(
                         store: store,

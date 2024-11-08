@@ -56,7 +56,7 @@ class MechanicsController {
     );
     if (mech.id == null) return;
     store.setStateLoading();
-    store.setMech(mech);
+    store.addMech(mech);
     store.setStateSuccess();
   }
 
@@ -71,5 +71,17 @@ class MechanicsController {
   /// closed.
   void closeDialog() {
     store.setStateSuccess();
+  }
+
+  Future<bool> deleteMech(MechanicModel mech) async {
+    try {
+      store.setStateLoading();
+      await mechanicManager.delete(mech);
+      store.setStateSuccess();
+      return true;
+    } catch (err) {
+      store.setError('Teve algum problema no servidor. Tente mais tarde.');
+      return false;
+    }
   }
 }

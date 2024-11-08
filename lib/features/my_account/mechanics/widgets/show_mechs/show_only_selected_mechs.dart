@@ -17,30 +17,30 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../get_it.dart';
-import '../../../../data_managers/mechanics_manager.dart';
-import '../mechanics_store.dart';
+import '../../../../../get_it.dart';
+import '../../../../../data_managers/mechanics_manager.dart';
+import '../../mechanics_store.dart';
 
-class ShowAllMechs extends StatefulWidget {
+class ShowOnlySelectedMechs extends StatefulWidget {
   final MechanicsStore store;
 
-  const ShowAllMechs({
+  const ShowOnlySelectedMechs({
     super.key,
     required this.store,
   });
 
   @override
-  State<ShowAllMechs> createState() => _ShowAllMechsState();
+  State<ShowOnlySelectedMechs> createState() => _ShowOnlySelectedMechsState();
 }
 
-class _ShowAllMechsState extends State<ShowAllMechs> {
+class _ShowOnlySelectedMechsState extends State<ShowOnlySelectedMechs> {
   final mechanicManager = getIt<MechanicsManager>();
   MechanicsStore get store => widget.store;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final mechs = mechanicManager.mechanics;
+    final mechs = store.selectedMechIds;
 
     return ListView.separated(
       padding: const EdgeInsets.only(bottom: 70),
@@ -48,27 +48,26 @@ class _ShowAllMechsState extends State<ShowAllMechs> {
       separatorBuilder: (context, index) =>
           const Divider(indent: 24, endIndent: 24),
       itemBuilder: (context, index) {
-        final mech = mechs[index];
-        final isSelected = store.isSelectedId(mech.id!);
+        final mech = store.selectedMechs[index];
 
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: isSelected ? colorScheme.tertiaryContainer : null,
+            color: colorScheme.tertiaryContainer,
           ),
-          child: ValueListenableBuilder(
-              valueListenable: store.hideDescription,
-              builder: (context, hideDescription, _) {
-                return ListTile(
-                  title: Text(mech.name),
-                  subtitle:
-                      hideDescription ? null : Text(mech.description ?? ''),
-                  onTap: () {
-                    store.setMech(mech);
-                    setState(() {});
-                  },
-                );
-              }),
+          child: ListTile(
+            title: Text(mech.name),
+            subtitle: store.hideDescription.value
+                ? null
+                : Text(mech.description ?? ''),
+            onTap: () {
+              store.addMech(mech);
+              if (store.selectedMechs.isEmpty) {
+                store.toggleShowSelected();
+              }
+              setState(() {});
+            },
+          ),
         );
       },
     );

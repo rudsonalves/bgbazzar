@@ -28,7 +28,7 @@ import '../../../core/state/state_store.dart';
 /// - [hideDescription]: Controls visibility of descriptions.
 /// - [showSelected]: Toggles visibility of selected mechanics.
 class MechanicsStore extends StateStore {
-  List<MechanicModel> selectedsMechs = [];
+  List<MechanicModel> selectedMechs = [];
 
   final counter = ValueNotifier<int>(0);
   final hideDescription = ValueNotifier<bool>(false);
@@ -36,11 +36,11 @@ class MechanicsStore extends StateStore {
 
   /// Retrieves the names of all selected mechanics.
   List<String> get mechsNames =>
-      selectedsMechs.map((mech) => mech.name).toList();
+      selectedMechs.map((mech) => mech.name).toList();
 
   /// Retrieves the IDs of all selected mechanics.
   List<String> get selectedMechIds =>
-      selectedsMechs.map((mech) => mech.id!).toList();
+      selectedMechs.map((mech) => mech.id!).toList();
 
   /// Disposes all [ValueNotifier]s to free resources.
   @override
@@ -63,25 +63,31 @@ class MechanicsStore extends StateStore {
   /// Toggles the [showSelected] flag with loading and success states.
   void toggleShowSelected() {
     setStateLoading();
-    showSelected.value = !showSelected.value;
+    final newValue = !showSelected.value;
+    if (selectedMechs.isEmpty) {
+      showSelected.value = false;
+    } else {
+      showSelected.value = newValue;
+    }
+
     Future.delayed(const Duration(microseconds: 50));
     setStateSuccess();
   }
 
-  /// Adds or removes a mechanic from [selectedsMechs].
+  /// Adds or removes a mechanic from [selectedMechs].
   /// Updates [counter] with the current count of selected mechanics.
-  void setMech(MechanicModel value) {
+  void addMech(MechanicModel value) {
     if (!isSelectedId(value.id!)) {
-      selectedsMechs.add(value);
+      selectedMechs.add(value);
     } else {
-      selectedsMechs.removeWhere((mech) => mech.id == value.id);
+      selectedMechs.removeWhere((mech) => mech.id == value.id);
     }
-    counter.value = selectedsMechs.length;
+    counter.value = selectedMechs.length;
   }
 
   /// Clears all selected mechanics and resets [counter].
   void cleanMech() {
-    selectedsMechs.clear();
+    selectedMechs.clear();
     counter.value = 0;
   }
 
