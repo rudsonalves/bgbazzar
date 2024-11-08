@@ -49,7 +49,7 @@ class ImageConversionResult {
 class BoardgamesManager {
   final parseServer = getIt<ParseServerService>();
   final boardgameRepository = getIt<IBoardgameRepository>();
-  final localBoardgameRepository = getIt<IBgNamesRepository>();
+  late final IBgNamesRepository localBoardgameRepository;
 
   final List<BGNameModel> _localBGsList = [];
 
@@ -58,6 +58,7 @@ class BoardgamesManager {
   List<String> get bgNames => _localBGsList.map((bg) => bg.name!).toList();
 
   Future<void> initialize() async {
+    localBoardgameRepository = await getIt.getAsync<IBgNamesRepository>();
     await _initializeBGNames();
   }
 

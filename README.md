@@ -78,6 +78,45 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/08 - version: 0.7.13+75
+
+This commit refines and extends various database-related classes and dependency registrations, enhancing modularity, initialization control, and error handling. Notable changes include the introduction of `initialize` methods for deferred asynchronous initialization, interface updates, and error message corrections.
+
+### Changes made:
+
+1. **lib/data_managers/boardgames_manager.dart**:
+   - Modified `localBoardgameRepository` to be a late final variable.
+   - Added an asynchronous initialization of `localBoardgameRepository` within the `initialize` method.
+
+2. **lib/data_managers/mechanics_manager.dart**:
+   - Renamed `_localAdd` to `_addLocalMechanicData` for clarity.
+   - Adjusted the error-checking logic to ensure mechanics are only added when the `id` is `null`.
+
+3. **lib/get_it.dart**:
+   - Registered `IBgNamesStore` and `IBgNamesRepository` asynchronously with `initialize` methods to ensure deferred loading.
+
+4. **lib/repository/local_data/interfaces/i_bg_names_repository.dart**:
+   - Added an `initialize` method to `IBgNamesRepository`, enabling asynchronous setup of repositories.
+
+5. **lib/repository/local_data/sqlite/bg_names_repository.dart**:
+   - Introduced `initialize` to set up `bgNamesStore` asynchronously.
+   - Updated calls to `bgNamesStore` methods, replacing previous static calls with instance-based calls.
+
+6. **lib/store/stores/bg_names_store.dart**:
+   - Implemented `initialize` to prepare the database instance asynchronously.
+   - Transitioned static methods (`getAll`, `add`, `update`) to instance methods, aligning with the `IBgNamesStore` interface.
+
+7. **lib/store/stores/interfaces/i_bg_names_store.dart**:
+   - Created a new interface `IBgNamesStore`, defining methods `initialize`, `getAll`, `add`, and `update`.
+
+8. **lib/store/stores/mechanics_store.dart**:
+   - Corrected error log messages to improve consistency and accuracy.
+   - Fixed an issue in the `delete` method, adjusting the `where` clause syntax for SQL query correctness.
+
+### Conclusion:
+These changes improve the flexibility and structure of the database management modules by introducing asynchronous initialization, refined method naming, and enhanced error handling. These updates will facilitate smoother integration and setup of repositories while promoting a more modular codebase.
+
+
 ## 2024/11/08 - version: 0.7.13+74
 
 This commit introduces substantial improvements and refactoring to the mechanics-related features, including enhanced modularization, dependency management, and data handling. Additionally, redundant API repositories were removed, and the setup for local repositories and SQLite operations was optimized for better maintainability and performance.

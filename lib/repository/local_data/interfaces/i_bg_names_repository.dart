@@ -26,6 +26,8 @@ import '../../../core/models/bg_name.dart';
 /// It interacts with a store (`BGNamesStore`) which performs the actual
 /// database operations.
 abstract class IBgNamesRepository {
+  Future<void> initialize();
+
   /// Retrieves all board game names from the SQLite database.
   ///
   /// This method attempts to get the list of all board game names using

@@ -143,7 +143,7 @@ class MechanicsManager {
     if (newMech == null || newMech.id == null) return ManagerStatus.error;
 
     // add in local database
-    final result = await _localAdd(newMech);
+    final result = await _addLocalMechanicData(newMech);
     if (result == null) {
       return ManagerStatus.error;
     }
@@ -198,9 +198,9 @@ class MechanicsManager {
   }
 
   // Add mechanic in local sqlite database
-  Future<MechanicModel?> _localAdd(MechanicModel mech) async {
+  Future<MechanicModel?> _addLocalMechanicData(MechanicModel mech) async {
     if (mechanicsNames.contains(mech.name)) return null;
-    if (mech.id != null) return null;
+    if (mech.id == null) return null;
 
     final result = await localMechRepository.add(mech);
     if (result.isFailure) {
