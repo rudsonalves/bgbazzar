@@ -29,11 +29,11 @@ import 'widgets/show_mechs/show_only_selected_mechs.dart';
 import 'widgets/show_mechs/show_all_mechs.dart';
 
 class MechanicsScreen extends StatefulWidget {
-  final List<String> selectedPsIds;
+  final List<String>? selectedMechIds;
 
   const MechanicsScreen({
     super.key,
-    required this.selectedPsIds,
+    required this.selectedMechIds,
   });
 
   static const routeName = '/mechanics';
@@ -49,8 +49,8 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
   @override
   void initState() {
     super.initState();
-
-    ctrl.init(store, widget.selectedPsIds);
+    store.init(widget.selectedMechIds);
+    ctrl.init(store);
   }
 
   @override

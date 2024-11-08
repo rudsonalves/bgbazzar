@@ -78,17 +78,19 @@ class BoardgamesController {
     return [];
   }
 
-  Future<void> selectBGId(BGNameModel bg) async {
+  void selectBGId(BGNameModel bg) {
     store.setStateLoading();
     _selectedBGId = (_selectedBGId == bg.id) ? null : bg.id;
     store.setStateSuccess();
   }
 
-  Future<DataResult<BoardgameModel?>> getBoardgameSelected() async {
-    if (_selectedBGId == null) {
+  Future<DataResult<BoardgameModel?>> getBoardgameSelected(
+      [String? bgId]) async {
+    final id = bgId ?? _selectedBGId;
+    if (id == null) {
       return DataResult.failure(const GenericFailure());
     }
 
-    return await bgManager.getBoardgameId(_selectedBGId!);
+    return await bgManager.getBoardgameId(id);
   }
 }

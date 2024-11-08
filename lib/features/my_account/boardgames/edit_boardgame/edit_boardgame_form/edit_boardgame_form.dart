@@ -55,7 +55,7 @@ class _EditBoardgameFormState extends State<EditBoardgameForm> {
     final mechPsIds = await Navigator.pushNamed(
       context,
       MechanicsScreen.routeName,
-      arguments: ctrl.selectedMechIds,
+      arguments: store.bg.mechsPsIds,
     ) as List<String>?;
 
     if (mechPsIds != null) {

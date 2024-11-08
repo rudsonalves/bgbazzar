@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/models/mechanic.dart';
 import '../../../core/state/state_store.dart';
+import '../../../data_managers/mechanics_manager.dart';
+import '../../../get_it.dart';
 
 /// A state management store for managing mechanics selection and UI flags.
 ///
@@ -28,6 +30,8 @@ import '../../../core/state/state_store.dart';
 /// - [hideDescription]: Controls visibility of descriptions.
 /// - [showSelected]: Toggles visibility of selected mechanics.
 class MechanicsStore extends StateStore {
+  final mechanicManager = getIt<MechanicsManager>();
+
   List<MechanicModel> selectedMechs = [];
 
   final counter = ValueNotifier<int>(0);
@@ -41,6 +45,15 @@ class MechanicsStore extends StateStore {
   /// Retrieves the IDs of all selected mechanics.
   List<String> get selectedMechIds =>
       selectedMechs.map((mech) => mech.id!).toList();
+
+  void init(List<String>? mechIds) {
+    if (mechIds == null) return;
+
+    selectedMechs.addAll(
+      mechanicManager.mechanics.where((mech) => mechIds.contains(mech.id!)),
+    );
+    counter.value = selectedMechs.length;
+  }
 
   /// Disposes all [ValueNotifier]s to free resources.
   @override
