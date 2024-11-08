@@ -17,18 +17,26 @@
 
 import 'dart:developer';
 
+import 'package:sqflite/sqflite.dart';
+
+import '/store/stores/interfaces/i_mechanics_store.dart';
 import '../../get_it.dart';
 import '../constants/constants.dart';
 import '../database/database_manager.dart';
 
-class MechanicsStore {
-  static final _databaseManager = getIt<DatabaseManager>();
+class MechanicsStore implements IMechanicsStore {
+  final _databaseManager = getIt<DatabaseManager>();
+  late final Database _database;
 
-  static Future<List<Map<String, dynamic>>> get() async {
-    final database = await _databaseManager.database;
+  @override
+  Future<void> initialize() async {
+    _database = await _databaseManager.database;
+  }
 
+  @override
+  Future<List<Map<String, dynamic>>> getAll() async {
     try {
-      List<Map<String, dynamic>> result = await database.query(
+      List<Map<String, dynamic>> result = await _database.query(
         mechTable,
         columns: [mechId, mechName, mechDescription],
         orderBy: mechName,
@@ -41,11 +49,10 @@ class MechanicsStore {
     }
   }
 
-  static Future<int> add(Map<String, dynamic> map) async {
-    final database = await _databaseManager.database;
-
+  @override
+  Future<int> add(Map<String, dynamic> map) async {
     try {
-      final result = await database.insert(
+      final result = await _database.insert(
         mechTable,
         map,
       );
@@ -57,11 +64,10 @@ class MechanicsStore {
     }
   }
 
-  static Future<int> update(Map<String, dynamic> map) async {
-    final database = await _databaseManager.database;
-
+  @override
+  Future<int> update(Map<String, dynamic> map) async {
     try {
-      final result = await database.update(
+      final result = await _database.update(
         mechTable,
         map,
       );
@@ -73,11 +79,10 @@ class MechanicsStore {
     }
   }
 
-  static Future<int> delete(int id) async {
-    final database = await _databaseManager.database;
-
+  @override
+  Future<int> delete(String id) async {
     try {
-      final result = await database.delete(
+      final result = await _database.delete(
         mechTable,
         where: '$mechId: ?',
         whereArgs: [id],

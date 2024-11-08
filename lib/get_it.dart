@@ -77,8 +77,11 @@ void setupDependencies() {
 
     // SQFLite Repositories
     getIt.registerFactory<IBgNamesRepository>(() => SqliteBGNamesRepository());
-    getIt.registerFactory<ILocalMechanicRepository>(
-        () => SqliteMechanicRepository());
+    getIt.registerFactoryAsync<ILocalMechanicRepository>(() async {
+      final repository = SqliteMechanicRepository();
+      await repository.initialize();
+      return repository;
+    });
     getIt.registerFactory<IFavoriteRepository>(() => PSFavoriteRepository());
   } catch (err) {
     log('GetIt Locator Error: $err');

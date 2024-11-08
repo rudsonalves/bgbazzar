@@ -78,6 +78,62 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/08 - version: 0.7.13+74
+
+This commit introduces substantial improvements and refactoring to the mechanics-related features, including enhanced modularization, dependency management, and data handling. Additionally, redundant API repositories were removed, and the setup for local repositories and SQLite operations was optimized for better maintainability and performance.
+
+### Changes made:
+
+1. **lib/components/widgets/base_dismissible_container.dart**:
+   - Enhanced conditional styling for `Icon` and `Text` color properties within the dismissible container based on the `enable` flag.
+
+2. **lib/data_managers/mechanics_manager.dart**:
+   - Refactored `initialize` to load the repository asynchronously.
+   - Updated `getAllMechanics` and related methods to use `DataResult` for consistent error handling.
+   - Added a `delete` method for mechanics with error handling and logging improvements.
+
+3. **lib/features/my_account/mechanics/**:
+   - **check_mechanics** files relocated under a consolidated directory.
+   - Updated imports across `check_controller.dart`, `check_page.dart`, and `check_store.dart` to reflect new paths.
+   - Adjusted UI components to support updated `MechanicsStore` methods.
+
+4. **lib/features/my_account/mechanics/widgets/show_mechs**:
+   - Created `DismissibleMech` widget to encapsulate logic for swipe actions on mechanics with save and delete functions.
+   - Split and organized `show_all_mechs.dart` and `show_only_selected_mechs.dart` under `show_mechs`.
+
+5. **lib/get_it.dart**:
+   - Modified `ILocalMechanicRepository` registration to use asynchronous initialization for improved dependency management.
+
+6. **lib/repository**:
+   - Removed unused `gov_api` repositories (`ibge_repository.dart` and `viacep_repository.dart`), streamlining the codebase and reducing external dependencies.
+
+7. **lib/repository/local_data/interfaces/i_local_mechanic_repository.dart**:
+   - Updated method signatures to return `DataResult` for enhanced error handling consistency.
+   - Introduced an `initialize` method for repositories requiring setup.
+
+8. **lib/repository/local_data/sqlite/mechanic_repository.dart**:
+   - Refactored methods to return `DataResult` for uniform error handling.
+   - Integrated `_mechanicsStore` with asynchronous initialization.
+   - Implemented comprehensive error logging and custom `DataResult` responses.
+
+9. **lib/store/stores/interfaces/i_mechanics_store.dart**:
+   - Defined a new interface `IMechanicsStore` for mechanics-related database operations, providing a consistent contract for SQLite operations.
+
+10. **lib/store/stores/mechanics_store.dart**:
+    - Refactored `MechanicsStore` to implement `IMechanicsStore`.
+    - Moved SQLite initialization logic to an `initialize` method and removed static references for better dependency management.
+    - Enhanced CRUD methods with error handling and reduced code duplication.
+
+11. **lib/my_material_app.dart**:
+    - Updated import paths for `check_mechanics/check_page.dart` to reflect the new directory structure.
+
+12. **lib/repository/data/parse_server/ps_mechanics_repository.dart**:
+    - Corrected the `delete` method by updating the table name key, ensuring proper data manipulation on the Parse Server.
+
+### Conclusion:
+This refactor streamlines data management and dependency injection, ensuring more robust error handling and simplified maintenance. The removal of unused API repositories and restructuring of SQLite interfaces significantly reduces technical debt, while the modularized codebase improves readability and scalability. These changes prepare the project for further enhancements and support a cleaner, more manageable architecture.
+
+
 ## 2024/11/07 - version: 0.7.13+73
 
 This commit enhances the project structure by expanding documentation in the `README.md` file, reorganizing files related to mechanics and payment, and updating the navigation and import paths accordingly. These changes improve clarity and make the codebase easier to navigate, while the new documentation provides a comprehensive overview for future developers.

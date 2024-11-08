@@ -17,52 +17,74 @@
 
 import 'dart:developer';
 
-import '../../../core/models/mechanic.dart';
-import '../../../store/stores/mechanics_store.dart';
+import '../../../store/stores/interfaces/i_mechanics_store.dart';
+import '/core/abstracts/data_result.dart';
+import '/core/models/mechanic.dart';
+import '/store/stores/mechanics_store.dart';
 import '../interfaces/i_local_mechanic_repository.dart';
 
 class SqliteMechanicRepository implements ILocalMechanicRepository {
+  final IMechanicsStore _mechanicsStore = MechanicsStore();
+
   @override
-  Future<List<MechanicModel>> get() async {
+  Future<void> initialize() async {
+    _mechanicsStore.initialize();
+  }
+
+  @override
+  Future<DataResult<List<MechanicModel>>> getAll() async {
     try {
-      final result = await MechanicsStore.get();
-      if (result.isEmpty) return [];
+      final result = await _mechanicsStore.getAll();
+      if (result.isEmpty) DataResult.success([]);
 
       final mechanics =
           result.map((item) => MechanicModel.fromMap(item)).toList();
-      return mechanics;
+      return DataResult.success(mechanics);
     } catch (err) {
       final message = 'MechanicRepository.get: $err';
       log(message);
-      throw Exception(message);
-      // FIXME: put an empty list retrun hare. If there is no connection the
-      //        program chould be closed.
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 
   @override
-  Future<MechanicModel?> add(MechanicModel mech) async {
+  Future<DataResult<MechanicModel>> add(MechanicModel mech) async {
     try {
-      final id = await MechanicsStore.add(mech.toMap());
+      final id = await _mechanicsStore.add(mech.toMap());
       if (id < 0) throw Exception('return id $id');
 
-      return mech;
+      return DataResult.success(mech);
     } catch (err) {
       final message = 'MechanicRepository.add: $err';
       log(message);
-      return null;
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 
   @override
-  Future<int> update(MechanicModel mech) async {
+  Future<DataResult<void>> update(MechanicModel mech) async {
     try {
-      final result = await MechanicsStore.update(mech.toMap());
-      return result;
+      await _mechanicsStore.update(mech.toMap());
+      return DataResult.success(null);
     } catch (err) {
       final message = 'MechanicRepository.update: $err';
       log(message);
-      throw Exception(message);
+      return DataResult.failure(GenericFailure(message: message));
+    }
+  }
+
+  @override
+  Future<DataResult<void>> delete(String id) async {
+    try {
+      final result = await _mechanicsStore.delete(id);
+      if (result < 0) {
+        throw Exception('mechanic id $id not found.');
+      }
+      return DataResult.success(null);
+    } catch (err) {
+      final message = 'MechanicRepository.delete: $err';
+      log(message);
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 }

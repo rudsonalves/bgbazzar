@@ -43,14 +43,16 @@ Container baseDismissibleContainer(
         children: [
           Icon(
             icon,
-            color: colorScheme.inverseSurface,
+            color:
+                enable ? colorScheme.onPrimaryContainer : colorScheme.outline,
           ),
           const SizedBox(width: 8),
           Text(
             label,
             style: AppTextStyle.font14SemiBold.copyWith(
-              color: colorScheme.inverseSurface,
-            ),
+                color: enable
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.outline),
           ),
         ],
       );
@@ -61,14 +63,15 @@ Container baseDismissibleContainer(
           Text(
             label,
             style: AppTextStyle.font14SemiBold.copyWith(
-              color: colorScheme.inverseSurface,
-            ),
+                color: enable
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.outline),
           ),
           const SizedBox(width: 8),
-          Icon(
-            icon,
-            color: colorScheme.inverseSurface,
-          ),
+          Icon(icon,
+              color: enable
+                  ? colorScheme.onPrimaryContainer
+                  : colorScheme.outline),
         ],
       );
     }

@@ -30,7 +30,7 @@ enum ManagerStatus { ok, error, duplicated }
 /// retrieve mechanic names, and find mechanic names based on their IDs.
 class MechanicsManager {
   final mechRepository = getIt<IMechanicRepository>();
-  final localMechRepository = getIt<ILocalMechanicRepository>();
+  late final ILocalMechanicRepository localMechRepository;
 
   final List<MechanicModel> _mechanics = [];
 
@@ -39,11 +39,18 @@ class MechanicsManager {
       _mechanics.map((item) => item.name).toList();
 
   Future<void> initialize() async {
+    localMechRepository = await getIt.getAsync<ILocalMechanicRepository>();
     await getAllMechanics();
   }
 
   Future<void> getAllMechanics() async {
-    final mechs = await localMechRepository.get();
+    final localResult = await localMechRepository.getAll();
+    if (localResult.isFailure) {
+      throw Exception(localResult.error);
+    }
+
+    final mechs = localResult.data!;
+
     _mechanics.clear();
     if (mechs.isNotEmpty) {
       _mechanics.addAll(mechs);
@@ -67,10 +74,14 @@ class MechanicsManager {
 
         if (mech != null) {
           if (!localIds.contains(mech.id)) {
-            final newMech = await localMechRepository.add(mech);
-            if (newMech != null) {
-              _mechanics.add(newMech);
+            final localResult = await localMechRepository.add(mech);
+            if (localResult.isFailure) {
+              throw Exception(localResult.error);
             }
+
+            final newMech = localResult.data!;
+
+            _mechanics.add(newMech);
           }
         }
       }
@@ -128,13 +139,41 @@ class MechanicsManager {
 
   Future<ManagerStatus> add(MechanicModel mech) async {
     // add in parse server database
-    final newMech = await _psAdd(mech);
+    final newMech = await _addMechanicData(mech);
     if (newMech == null || newMech.id == null) return ManagerStatus.error;
+
     // add in local database
-    await _localAdd(newMech);
+    final result = await _localAdd(newMech);
+    if (result == null) {
+      return ManagerStatus.error;
+    }
 
     _mechanics.add(newMech);
     _sortingMechsNames();
+    return ManagerStatus.ok;
+  }
+
+  Future<ManagerStatus> delete(MechanicModel mech) async {
+    // return erro if mechanic don't have id
+    if (mech.id == null) {
+      log('MechanicsManager.delete: mechanic id is null');
+      return ManagerStatus.error;
+    }
+    // remove mechanic from database
+    final result = await mechRepository.delete(mech.id!);
+    if (result.isFailure) {
+      log('MechanicsManager.delete: I can not remove mechanic: ${result.error}');
+      return ManagerStatus.error;
+    }
+
+    // remove mechanic from local data
+    final localResult = await localMechRepository.delete(mech.id!);
+    if (localResult.isFailure) {
+      return ManagerStatus.error;
+    }
+
+    // remove mechanic from memory list
+    _mechanics.removeWhere((m) => m.id == mech.id);
     return ManagerStatus.ok;
   }
 
@@ -163,13 +202,17 @@ class MechanicsManager {
     if (mechanicsNames.contains(mech.name)) return null;
     if (mech.id != null) return null;
 
-    final newMech = await localMechRepository.add(mech);
+    final result = await localMechRepository.add(mech);
+    if (result.isFailure) {
+      log(result.error?.toString() ?? 'unknow error');
+      return null;
+    }
 
-    return newMech;
+    return result.data;
   }
 
   // Add mechanic in parse server database
-  Future<MechanicModel?> _psAdd(MechanicModel mech) async {
+  Future<MechanicModel?> _addMechanicData(MechanicModel mech) async {
     final result = await mechRepository.add(mech);
     if (result.isFailure) {
       throw Exception(result.error);

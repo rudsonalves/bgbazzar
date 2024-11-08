@@ -137,7 +137,7 @@ class PSMechanicsRepository implements IMechanicRepository {
   Future<DataResult<void>> delete(String id) async {
     try {
       // Create a ParseObject representing the advertisement to be deleted
-      final parse = ParseObject(keyAdTable)..objectId = id;
+      final parse = ParseObject(keyMechTable)..objectId = id;
 
       // Attempt to delete the object from the Parse Server
       final response = await parse.delete();

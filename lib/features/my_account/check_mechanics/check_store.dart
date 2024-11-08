@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/mechanic.dart';
-import '../../../../core/state/state_store.dart';
+import '../../../core/models/mechanic.dart';
+import '../../../core/state/state_store.dart';
 
 class CheckMechList {
   final MechanicModel mech;
