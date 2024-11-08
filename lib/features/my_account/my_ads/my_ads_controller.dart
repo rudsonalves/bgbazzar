@@ -44,7 +44,7 @@ class MyAdsController {
   bool get getMorePages => _getMorePages;
 
   void init(MyAdsStore store) {
-    store = MyAdsStore();
+    this.store = store;
 
     setProductStatus(AdStatus.active);
   }

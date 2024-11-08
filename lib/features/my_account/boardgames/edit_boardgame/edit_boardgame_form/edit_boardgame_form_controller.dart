@@ -18,6 +18,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../components/custon_controllers/numeric_edit_controller.dart';
+import '../../../../../core/models/boardgame.dart';
 import '/get_it.dart';
 import '../../../../../data_managers/boardgames_manager.dart';
 import '../../../../../data_managers/mechanics_manager.dart';
@@ -44,13 +45,11 @@ class EditBoardgameFormController {
 
   final descriptionFocus = FocusNode();
 
-  final List<String> _selectedMechPsIds = [];
-
   List<String> get bgNames => bgManager.bgNames;
-  List<String> get selectedMechIds => _selectedMechPsIds;
 
   void init(EditBoardgameStore store) {
     this.store = store;
+    _setBoardgameToForm(store.bg);
   }
 
   void dispose() {
@@ -69,58 +68,29 @@ class EditBoardgameFormController {
     descriptionFocus.dispose();
   }
 
-  // Future<DataResult<void>> getBgInfo() async {
-  //   try {
-  //     store.setStateLoading();
-  //     if (nameController.text.isEmpty) {
-  //       throw Exception('name is note defined');
-  //     }
-  //     final id = bgManager.gameId(nameController.text);
-  //     if (id == null) {
-  //       throw Exception('boardgame id not found');
-  //     }
-  //     final result = await PSBoardgameRepository.getById(id);
-  //     if (result.isFailure) {
-  //       throw Exception(result.error);
-  //     }
-  //     final bgInfo = result.data;
-
-  //     if (bgInfo != null) loadBoardInfo(bgInfo);
-  //     log(bgInfo.toString());
-  //     store.setStateSuccess();
-  //     return DataResult.success(null);
-  //   } catch (err) {
-  //     final message = 'EditBoardgameController.getBgInfo: $err';
-  //     store.setError(message);
-  //     log(message);
-  //     return DataResult.failure(GenericFailure(message: message));
-  //   }
-  // }
-
-  // loadBoardInfo(BoardgameModel bg) {
-  //   yearController.numericValue = bg.publishYear.toInt();
-  //   imageController.text = bg.image;
-  //   minPlayersController.text = bg.minPlayers.toString();
-  //   maxPlayersController.text = bg.maxPlayers.toString();
-  //   minTimeController.text = bg.minTime.toString();
-  //   maxTimeController.text = bg.maxTime.toString();
-  //   ageController.text = bg.minAge.toString();
-  //   designerController.text = bg.designer ?? '';
-  //   artistController.text = bg.designer ?? '';
-  //   descriptionController.text = bg.description ?? '';
-  //   mechsController.text = mechManager.namesFromIdListString(bg.mechsPsIds);
-  // }
+  void _setBoardgameToForm(BoardgameModel bg) {
+    nameController.text = bg.name;
+    yearController.numericValue = bg.publishYear.toInt();
+    imageController.text = bg.image;
+    minPlayersController.numericValue = bg.minPlayers;
+    maxPlayersController.numericValue = bg.maxPlayers;
+    minTimeController.numericValue = bg.minTime;
+    maxTimeController.numericValue = bg.maxTime;
+    ageController.numericValue = bg.minAge;
+    designerController.text = bg.designer ?? '';
+    artistController.text = bg.designer ?? '';
+    descriptionController.text = bg.description ?? '';
+    setMechanicsPsIds(bg.mechsPsIds);
+  }
 
   void setMechanicsPsIds(List<String> mechPsIds) {
-    _selectedMechPsIds.clear();
-    _selectedMechPsIds.addAll(mechPsIds);
-    store.setMechsPsIds(_selectedMechPsIds);
+    store.setMechsPsIds(mechPsIds);
     _updateMechsController();
   }
 
   void _updateMechsController() {
     mechsController.text =
-        mechManager.namesFromPsIdList(_selectedMechPsIds).join(', ');
+        mechManager.namesFromPsIdList(store.bg.mechsPsIds).join(', ');
   }
 
   void setImage(String? image) {

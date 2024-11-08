@@ -31,14 +31,12 @@ import '../../../../get_it.dart';
 class CustomFloatingActionBar extends StatelessWidget {
   final void Function() backPageWithGame;
   final void Function() addBoardgame;
-  final void Function() editBoardgame;
   final void Function() viewBoardgame;
 
   CustomFloatingActionBar({
     super.key,
     required this.backPageWithGame,
     required this.addBoardgame,
-    required this.editBoardgame,
     required this.viewBoardgame,
   });
 
@@ -54,7 +52,7 @@ class CustomFloatingActionBar extends StatelessWidget {
           tooltip: 'Selecionar',
           child: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
-        if (user.isAdmin) ...[
+        if (user.isAdmin)
           Padding(
             padding: const EdgeInsets.only(left: 12),
             child: FloatingActionButton(
@@ -64,16 +62,6 @@ class CustomFloatingActionBar extends StatelessWidget {
               child: const Icon(Icons.add),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 12),
-            child: FloatingActionButton(
-              heroTag: 'Fab02',
-              onPressed: editBoardgame,
-              tooltip: 'Editar',
-              child: const Icon(Icons.edit),
-            ),
-          ),
-        ],
         const SizedBox(width: 12),
         FloatingActionButton(
           heroTag: 'Fab03',

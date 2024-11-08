@@ -128,7 +128,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                     final selectedPsIds = settings.arguments as List<String>;
 
                     return MechanicsScreen(
-                      selectedPsIds: selectedPsIds,
+                      selectedMechIds: selectedPsIds,
                     );
                   });
 

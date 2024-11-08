@@ -78,6 +78,55 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/08 - version: 0.7.13+77
+
+This commit introduces several enhancements across the board games and mechanics management features, including functionality improvements, bug fixes, and modularization. Key updates include improving board game selection and editing capabilities, refining controller and store structures, and simplifying component usage in mechanics handling.
+
+### Changes made:
+
+1. **lib/features/my_account/boardgames/boardgames_controller.dart**:
+   - Modified `selectBGId` method to be synchronous, enhancing responsiveness in selecting board games.
+   - Updated `getBoardgameSelected` to accept an optional `bgId` parameter, improving flexibility when fetching specific board game details.
+
+2. **lib/features/my_account/boardgames/boardgames_screen.dart**:
+   - Enhanced `_editBoardgame` method to accept a `BGNameModel` parameter for precise editing of board games.
+   - Replaced inline `ListTile` logic with the new `DismissibleBoardgame` widget for better UI handling of board game list items.
+
+3. **lib/features/my_account/boardgames/widgets/custom_floating_action_bar.dart**:
+   - Removed the `editBoardgame` button, simplifying the floating action button's functionality.
+
+4. **lib/features/my_account/boardgames/widgets/dismissible_boardgame.dart**:
+   - Introduced the `DismissibleBoardgame` widget to handle swipe actions on board games, supporting both edit and delete actions with customizable UI.
+
+5. **lib/features/my_account/boardgames/edit_boardgame/edit_boardgame_controller.dart**:
+   - Refactored references from `boardgame` to `bg` to maintain consistency with updated variable names.
+
+6. **lib/features/my_account/boardgames/edit_boardgame/edit_boardgame_form/edit_boardgame_form.dart**:
+   - Updated `init` and `setMechanicsPsIds` methods to better integrate mechanics with the board game editing form.
+
+7. **lib/features/my_account/boardgames/edit_boardgame/edit_boardgame_store.dart**:
+   - Renamed `boardgame` variable to `bg` for consistency and streamlined its usage across methods.
+
+8. **lib/features/my_account/mechanics/mechanics_controller.dart**:
+   - Updated `init` method to remove unnecessary `psIds` parameter, simplifying initialization logic.
+
+9. **lib/features/my_account/mechanics/mechanics_screen.dart**:
+   - Adjusted constructor parameter `selectedPsIds` to `selectedMechIds` to better align with naming conventions.
+   - Updated initialization to match the modified `MechanicsController` structure.
+
+10. **lib/features/my_account/mechanics/mechanics_store.dart**:
+    - Implemented `init` method to initialize selected mechanics from a list of IDs, enhancing the store's setup flexibility.
+
+11. **lib/features/my_account/my_ads/my_ads_controller.dart**:
+    - Corrected the `init` method to properly assign the provided `store` to the instance variable, fixing initialization issues.
+
+12. **lib/my_material_app.dart**:
+    - Modified route argument for `MechanicsScreen` to use `selectedMechIds`, ensuring parameter consistency throughout the app.
+
+### Conclusion:
+This commit significantly enhances both the board games and mechanics features by improving initialization flexibility, standardizing variable names, and introducing modular widgets for list items. These updates contribute to a more maintainable codebase and improved user experience.
+
+
 ## 2024/11/08 - version: 0.7.13+76
 
 This commit introduces several updates to the mechanics feature, including UI enhancements, model functionality improvements, and better modularity in code structure. Notable updates are the addition of the `copyWith` method to `MechanicModel`, the implementation of a new `MechAppBar` and `MechFloatingActionButton`, and updates to `MechanicDialog` for edit functionality.

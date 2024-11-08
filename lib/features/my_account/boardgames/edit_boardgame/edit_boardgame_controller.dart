@@ -41,9 +41,9 @@ class EditBoardgameController {
     try {
       store.setStateLoading();
 
-      final result = store.boardgame.id != null
-          ? await bgManager.update(store.boardgame)
-          : await bgManager.save(store.boardgame);
+      final result = store.bg.id != null
+          ? await bgManager.update(store.bg)
+          : await bgManager.save(store.bg);
       if (result.isFailure) {
         throw Exception(result.error);
       }

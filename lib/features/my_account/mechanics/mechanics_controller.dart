@@ -29,7 +29,7 @@ class MechanicsController {
   final mechanicManager = getIt<MechanicsManager>();
 
   /// Initializes the controller with the provided [store] and a list of [psIds].
-  void init(MechanicsStore store, List<String> psIds) {
+  void init(MechanicsStore store) {
     this.store = store;
   }
 
