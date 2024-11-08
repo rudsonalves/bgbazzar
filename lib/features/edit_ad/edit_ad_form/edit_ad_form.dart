@@ -19,11 +19,11 @@ import 'package:flutter/material.dart';
 
 import '../edit_ad_store.dart';
 import '/get_it.dart';
-import '../../../data_managers/mechanics_manager.dart';
+import '/data_managers/mechanics_manager.dart';
 import '/components/buttons/big_button.dart';
-import '../../../core/models/ad.dart';
+import '/core/models/ad.dart';
 import '/components/form_fields/custom_form_field.dart';
-import '../../../components/widgets/fitted_button_segment.dart';
+import '/components/widgets/fitted_button_segment.dart';
 import '../../addresses/addresses_screen.dart';
 import '../../my_account/boardgames/boardgames_screen.dart';
 import '../../my_account/mechanics/mechanics_screen.dart';

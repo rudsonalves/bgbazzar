@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/boardgame.dart';
-import '../../../../components/buttons/big_button.dart';
+import '/core/models/boardgame.dart';
+import '/components/buttons/big_button.dart';
 import 'bg_info_card.dart';
 
 class ViewBoardgame extends StatelessWidget {

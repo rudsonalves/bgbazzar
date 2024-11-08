@@ -19,8 +19,8 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import '../interfaces/i_mechanic_repository.dart';
 import 'common/ps_functions.dart';
-import '../../../core/abstracts/data_result.dart';
-import '../../../core/models/mechanic.dart';
+import '/core/abstracts/data_result.dart';
+import '/core/models/mechanic.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 

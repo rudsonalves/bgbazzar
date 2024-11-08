@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/bg_name.dart';
+import '/core/models/bg_name.dart';
 
 class SearchCard extends StatelessWidget {
   final List<BGNameModel> bgSearchList;

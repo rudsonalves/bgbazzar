@@ -17,15 +17,15 @@
 
 import 'dart:io';
 
-import 'package:bgbazzar/repository/data/parse_server/common/ps_functions.dart';
 import 'package:path/path.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import '../../../core/abstracts/data_result.dart';
-import '../../../core/models/ad.dart';
-import '../../../core/models/boardgame.dart';
-import '../../../core/models/filter.dart';
-import '../../../core/models/user.dart';
+import '/repository/data/parse_server/common/ps_functions.dart';
+import '/core/abstracts/data_result.dart';
+import '/core/models/ad.dart';
+import '/core/models/boardgame.dart';
+import '/core/models/filter.dart';
+import '/core/models/user.dart';
 import '../interfaces/i_ad_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';

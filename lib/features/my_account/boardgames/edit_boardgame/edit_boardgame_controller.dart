@@ -17,9 +17,9 @@
 
 import 'dart:developer';
 
-import '../../../../core/abstracts/data_result.dart';
-import '../../../../data_managers/boardgames_manager.dart';
-import '../../../../get_it.dart';
+import '/core/abstracts/data_result.dart';
+import '/data_managers/boardgames_manager.dart';
+import '/get_it.dart';
 import 'edit_boardgame_store.dart';
 
 class EditBoardgameController {

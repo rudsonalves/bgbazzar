@@ -17,9 +17,9 @@
 
 import 'dart:developer';
 
-import '../../../get_it.dart';
-import '../../../core/models/bg_name.dart';
-import '../../../store/stores/interfaces/i_bg_names_store.dart';
+import '/get_it.dart';
+import '/core/models/bg_name.dart';
+import '/store/stores/interfaces/i_bg_names_store.dart';
 import '../interfaces/i_bg_names_repository.dart';
 
 class SqliteBGNamesRepository implements IBgNamesRepository {

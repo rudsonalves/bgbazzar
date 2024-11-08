@@ -17,8 +17,8 @@
 
 import 'dart:developer';
 
-import '../../../core/singletons/app_settings.dart';
-import '../../../get_it.dart';
+import '/core/singletons/app_settings.dart';
+import '/get_it.dart';
 import '../../constants/migration_sql_scripts.dart';
 import '../backup/database_backup.dart';
 import '../database_manager.dart';

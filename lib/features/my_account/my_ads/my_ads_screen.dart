@@ -17,15 +17,15 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/models/ad.dart';
+import '/core/models/ad.dart';
 import '../../edit_ad/edit_ad_screen.dart';
 import '../../shop/product/widgets/title_product.dart';
 import 'my_ads_controller.dart';
 import 'my_ads_store.dart';
 import 'widgets/my_tab_bar.dart';
 import 'widgets/my_tab_bar_view.dart';
-import '../../../components/widgets/state_error_message.dart';
-import '../../../components/widgets/state_loading_message.dart';
+import '/components/widgets/state_error_message.dart';
+import '/components/widgets/state_loading_message.dart';
 
 class MyAdsScreen extends StatefulWidget {
   const MyAdsScreen({super.key});

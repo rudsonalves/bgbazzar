@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/address.dart';
+import '/core/models/address.dart';
 import 'sub_title_product.dart';
 
 class LocationProduct extends StatelessWidget {

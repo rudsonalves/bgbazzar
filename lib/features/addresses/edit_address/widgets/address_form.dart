@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/validators.dart';
-import '../../../../components/form_fields/custom_form_field.dart';
+import '/core/utils/validators.dart';
+import '/components/form_fields/custom_form_field.dart';
 import '../edit_address_controller.dart';
 
 class AddressForm extends StatefulWidget {

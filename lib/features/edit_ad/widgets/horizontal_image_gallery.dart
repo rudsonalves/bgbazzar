@@ -22,7 +22,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../../components/widgets/bottom_message.dart';
+import '/components/widgets/bottom_message.dart';
 import 'photo_origin_bottom_sheet.dart';
 
 const maxImages = 5;

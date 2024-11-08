@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/singletons/current_user.dart';
-import '../../../../get_it.dart';
+import '/core/singletons/current_user.dart';
+import '/get_it.dart';
 
 /// CustomFloatingActionBar creates a FloatingActionBar with buttons to:
 ///

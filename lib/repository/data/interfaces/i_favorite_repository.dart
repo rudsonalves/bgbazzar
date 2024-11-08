@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../../core/models/favorite.dart';
+import '/core/models/favorite.dart';
 
 abstract class IFavoriteRepository {
   Future<FavoriteModel?> add(String userId, String adId);

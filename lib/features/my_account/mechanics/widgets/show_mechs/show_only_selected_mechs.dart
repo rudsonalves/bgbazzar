@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../../get_it.dart';
-import '../../../../../data_managers/mechanics_manager.dart';
+import '/get_it.dart';
+import '/data_managers/mechanics_manager.dart';
 import '../../mechanics_store.dart';
 
 class ShowOnlySelectedMechs extends StatefulWidget {

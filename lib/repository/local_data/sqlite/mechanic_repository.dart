@@ -17,7 +17,7 @@
 
 import 'dart:developer';
 
-import '../../../store/stores/interfaces/i_mechanics_store.dart';
+import '/store/stores/interfaces/i_mechanics_store.dart';
 import '/core/abstracts/data_result.dart';
 import '/core/models/mechanic.dart';
 import '/store/stores/mechanics_store.dart';

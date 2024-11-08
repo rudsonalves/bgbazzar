@@ -17,9 +17,9 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../../core/models/mechanic.dart';
-import '../../../../../get_it.dart';
-import '../../../../../data_managers/mechanics_manager.dart';
+import '/core/models/mechanic.dart';
+import '/get_it.dart';
+import '/data_managers/mechanics_manager.dart';
 import '../../mechanics_store.dart';
 import 'widgets/dismissible_mech.dart';
 

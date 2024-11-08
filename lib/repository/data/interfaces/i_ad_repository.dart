@@ -15,10 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../../core/abstracts/data_result.dart';
-import '../../../core/models/ad.dart';
-import '../../../core/models/filter.dart';
-import '../../../core/models/user.dart';
+import '/core/abstracts/data_result.dart';
+import '/core/models/ad.dart';
+import '/core/models/filter.dart';
+import '/core/models/user.dart';
 
 class AdRepositoryException implements Exception {
   final String message;

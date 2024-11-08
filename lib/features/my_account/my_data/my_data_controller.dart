@@ -19,14 +19,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '../../../repository/data/interfaces/i_user_repository.dart';
-import '../../../core/models/user.dart';
-import '../../../core/utils/extensions.dart';
-import '../../../core/models/address.dart';
-import '../../../core/singletons/current_user.dart';
-import '../../../components/custon_controllers/masked_text_controller.dart';
-import '../../../get_it.dart';
-import '../../../data_managers/addresses_manager.dart';
+import '/repository/data/interfaces/i_user_repository.dart';
+import '/core/models/user.dart';
+import '/core/utils/extensions.dart';
+import '/core/models/address.dart';
+import '/core/singletons/current_user.dart';
+import '/components/custon_controllers/masked_text_controller.dart';
+import '/get_it.dart';
+import '/data_managers/addresses_manager.dart';
 
 class MyDataController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();

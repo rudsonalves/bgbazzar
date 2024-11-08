@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/mechanic.dart';
-import '../../../../components/form_fields/custom_form_field.dart';
+import '/core/models/mechanic.dart';
+import '/components/form_fields/custom_form_field.dart';
 
 class MechanicDialog extends StatefulWidget {
   final MechanicModel? mech;

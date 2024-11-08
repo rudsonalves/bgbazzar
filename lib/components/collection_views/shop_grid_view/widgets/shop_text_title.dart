@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_text_style.dart';
+import '/core/theme/app_text_style.dart';
 
 class ShopTextTitle extends StatelessWidget {
   final String label;

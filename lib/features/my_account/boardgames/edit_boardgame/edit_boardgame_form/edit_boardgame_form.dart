@@ -21,11 +21,11 @@ import '../../../mechanics/mechanics_screen.dart';
 import '../edit_boardgame_store.dart';
 import '../get_image/get_image.dart';
 import 'edit_boardgame_form_controller.dart';
-import '../../../../../core/theme/app_text_style.dart';
+import '/core/theme/app_text_style.dart';
 import '/components/form_fields/custom_form_field.dart';
 import '/components/form_fields/custom_names_form_field.dart';
-import '../../../../../components/widgets/image_view.dart';
-import '../../../../../components/widgets/spin_box_field.dart';
+import '/components/widgets/image_view.dart';
+import '/components/widgets/spin_box_field.dart';
 import '../../../../shop/product/widgets/sub_title_product.dart';
 
 class EditBoardgameForm extends StatefulWidget {

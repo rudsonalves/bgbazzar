@@ -19,8 +19,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '../../../../get_it.dart';
-import '../../../../data_managers/mechanics_manager.dart';
+import '/get_it.dart';
+import '/data_managers/mechanics_manager.dart';
 
 class SearchMechsDelegate extends SearchDelegate {
   final void Function(String) selectMechByName;

@@ -15,15 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:bgbazzar/repository/data/parse_server/common/ps_functions.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
+import '/repository/data/parse_server/common/ps_functions.dart';
 import '../interfaces/i_user_repository.dart';
-import '../../../core/abstracts/data_result.dart';
-import '../../../core/models/user.dart';
+import '/core/abstracts/data_result.dart';
+import '/core/models/user.dart';
 import 'common/errors_mensages.dart';
-import '../../../core/singletons/current_user.dart';
-import '../../../get_it.dart';
+import '/core/singletons/current_user.dart';
+import '/get_it.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 

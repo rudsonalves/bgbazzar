@@ -17,9 +17,9 @@
 
 import 'dart:developer';
 
-import 'package:bgbazzar/store/stores/interfaces/i_bg_names_store.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '/store/stores/interfaces/i_bg_names_store.dart';
 import '../../get_it.dart';
 import '../constants/constants.dart';
 import '../database/database_manager.dart';

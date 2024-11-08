@@ -18,14 +18,14 @@
 
 import 'dart:io';
 
-import 'package:bgbazzar/repository/data/parse_server/common/ps_functions.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:path/path.dart';
 
+import '/repository/data/parse_server/common/ps_functions.dart';
 import '../interfaces/i_boardgame_repository.dart';
-import '../../../core/abstracts/data_result.dart';
-import '../../../core/models/bg_name.dart';
-import '../../../core/models/boardgame.dart';
+import '/core/abstracts/data_result.dart';
+import '/core/models/bg_name.dart';
+import '/core/models/boardgame.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';
 

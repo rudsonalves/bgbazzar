@@ -17,8 +17,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/ad.dart';
-import '../../../../core/theme/app_text_style.dart';
+import '/core/models/ad.dart';
+import '/core/theme/app_text_style.dart';
 
 class MyTabBar extends StatelessWidget implements PreferredSizeWidget {
   final void Function(AdStatus newStatus) setProductStatus;

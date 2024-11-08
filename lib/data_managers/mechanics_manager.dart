@@ -17,8 +17,7 @@
 
 import 'dart:developer';
 
-import 'package:bgbazzar/get_it.dart';
-
+import '/get_it.dart';
 import '../core/abstracts/data_result.dart';
 import '../core/models/mechanic.dart';
 import '../repository/data/interfaces/i_mechanic_repository.dart';

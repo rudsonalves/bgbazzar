@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../components/texts/read_more_text.dart';
+import '/components/texts/read_more_text.dart';
 import 'sub_title_product.dart';
 
 class DescriptionProduct extends StatelessWidget {

@@ -19,8 +19,8 @@ import 'dart:developer';
 
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import '../../../core/models/ad.dart';
-import '../../../core/models/favorite.dart';
+import '/core/models/ad.dart';
+import '/core/models/favorite.dart';
 import '../interfaces/i_favorite_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';

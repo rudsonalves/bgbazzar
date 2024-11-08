@@ -19,7 +19,7 @@ import 'dart:developer';
 
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-import '../../../core/models/address.dart';
+import '/core/models/address.dart';
 import '../interfaces/i_address_repository.dart';
 import 'common/constants.dart';
 import 'common/parse_to_model.dart';

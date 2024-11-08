@@ -17,9 +17,9 @@
 
 import 'dart:developer';
 
-import '../../../core/models/mechanic.dart';
+import '/core/models/mechanic.dart';
 import '/get_it.dart';
-import '../../../data_managers/mechanics_manager.dart';
+import '/data_managers/mechanics_manager.dart';
 import 'mechanics_store.dart';
 
 /// Controls the mechanics state by managing selections and interactions with

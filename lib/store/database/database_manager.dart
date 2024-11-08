@@ -18,11 +18,11 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:bgbazzar/store/constants/sql_create_table.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import '/store/constants/sql_create_table.dart';
 import '../constants/constants.dart';
 import 'database_util.dart';
 

@@ -20,7 +20,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 
-import '../../../get_it.dart';
+import '/get_it.dart';
 import '../database_manager.dart';
 import '/store/constants/constants.dart';
 import '../database_util.dart';

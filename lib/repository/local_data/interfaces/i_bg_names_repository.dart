@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../../core/models/bg_name.dart';
+import '/core/models/bg_name.dart';
 
 /// A repository class for handling operations related to board game names using
 /// SQLite.

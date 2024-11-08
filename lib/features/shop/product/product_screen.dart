@@ -22,10 +22,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../core/models/ad.dart';
-import '../../../core/singletons/current_user.dart';
-import '../../../components/widgets/favorite_button.dart';
-import '../../../get_it.dart';
+import '/core/models/ad.dart';
+import '/core/singletons/current_user.dart';
+import '/components/widgets/favorite_button.dart';
+import '/get_it.dart';
 import 'widgets/description_product.dart';
 import 'widgets/duo_segmented_button.dart';
 import 'widgets/game_data.dart';

@@ -19,9 +19,9 @@ import 'dart:developer';
 
 import 'package:sqflite/sqflite.dart';
 
-import '../../../get_it.dart';
+import '/get_it.dart';
 import '../../constants/migration_sql_scripts.dart';
-import '../../../core/singletons/app_settings.dart';
+import '/core/singletons/app_settings.dart';
 
 class DatabaseMigration {
   DatabaseMigration._();

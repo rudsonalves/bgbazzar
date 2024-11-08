@@ -17,11 +17,11 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/validators.dart';
-import '../../../components/buttons/big_button.dart';
-import '../../../components/dialogs/simple_question.dart';
-import '../../../components/form_fields/custom_form_field.dart';
-import '../../../components/form_fields/password_form_field.dart';
+import '/core/utils/validators.dart';
+import '/components/buttons/big_button.dart';
+import '/components/dialogs/simple_question.dart';
+import '/components/form_fields/custom_form_field.dart';
+import '/components/form_fields/password_form_field.dart';
 import '../../shop/widgets/ad_text_subtitle.dart';
 import 'my_data_controller.dart';
 
