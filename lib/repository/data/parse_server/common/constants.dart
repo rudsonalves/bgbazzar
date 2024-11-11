@@ -59,7 +59,7 @@ const keyAdAddress = 'address';
 const keyAdViews = 'views';
 const keyAdCondition = 'condition';
 const keyAdCreatedAt = 'createdAt';
-const keyAdBoargGame = 'boargGame';
+const keyAdBoardGame = 'boargGame';
 
 const keyFavoriteTable = 'Favorites';
 const keyFavoriteId = 'objectId';

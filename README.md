@@ -78,6 +78,38 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/11 - version: 0.7.13+78
+
+This commit refines the ad editing functionality, improves naming conventions, and introduces enhancements in controller and store management. Key changes include renaming the `EditAdFormController` to `EditAdController`, adding ad saving functionality, and fixing typos in constants.
+
+### Changes made:
+
+1. **lib/features/edit_ad/edit_ad_form/edit_ad_form_controller.dart → lib/features/edit_ad/edit_ad_controller.dart**:
+   - Renamed `EditAdFormController` to `EditAdController` to improve naming consistency.
+   - Added `saveAd` method to handle the process of saving or updating ads, including error handling and status management.
+
+2. **lib/features/edit_ad/edit_ad_form/edit_ad_form.dart**:
+   - Updated imports to use `EditAdController`.
+   - Modified `EditAdForm` constructor to accept the new `ctrl` (controller) parameter, ensuring consistency.
+
+3. **lib/features/edit_ad/edit_ad_screen.dart**:
+   - Updated the ad save function, `_saveAd`, which now leverages the new `saveAd` method from `EditAdController`.
+   - Integrated `EditAdController` into the screen’s lifecycle methods (`initState`, `dispose`) to manage state properly.
+
+4. **lib/features/edit_ad/edit_ad_store.dart**:
+   - Renamed `startAd` to `init` for a clearer initialization purpose.
+   - Refined `removeImage` method logic to correctly update images and handle validation.
+
+5. **lib/repository/data/parse_server/common/constants.dart**:
+   - Corrected typo in `keyAdBoardGame` constant (was `keyAdBoargGame`), aligning the naming with conventional spelling.
+
+6. **lib/repository/data/parse_server/ps_ad_repository.dart**:
+   - Updated the `setNonNull` method to use the corrected `keyAdBoardGame` constant.
+
+### Conclusion:
+These updates improve the readability and maintainability of the ad editing module. The renaming of classes and methods enhances clarity, while the addition of the `saveAd` method streamlines the ad saving process. Additionally, the correction in constants prevents potential issues with database field names.
+
+
 ## 2024/11/08 - version: 0.7.13+77
 
 This commit introduces several enhancements across the board games and mechanics management features, including functionality improvements, bug fixes, and modularization. Key updates include improving board game selection and editing capabilities, refining controller and store structures, and simplifying component usage in mechanics handling.

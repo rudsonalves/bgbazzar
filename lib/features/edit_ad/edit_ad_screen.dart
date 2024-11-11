@@ -21,6 +21,7 @@ import '../../core/models/ad.dart';
 import '../../components/buttons/big_button.dart';
 import '../../components/widgets/state_error_message.dart';
 import '../../components/widgets/state_loading_message.dart';
+import 'edit_ad_controller.dart';
 import 'edit_ad_form/edit_ad_form.dart';
 import 'edit_ad_store.dart';
 import 'image_list/image_list_view.dart';
@@ -41,24 +42,31 @@ class EditAdScreen extends StatefulWidget {
 
 class _EditAdScreenState extends State<EditAdScreen> {
   final store = EditAdStore();
+  final ctrl = EditAdController();
 
   @override
   void initState() {
     super.initState();
 
-    store.startAd(widget.ad);
+    store.init(widget.ad);
+    ctrl.init(store);
   }
 
-  Future<void> _createAnnounce() async {
-    // AdModel? ad;
-    // if (store.isValid) return;
-    // FocusScope.of(context).unfocus();
-    // if (widget.ad != null) {
-    //   ad = await ctrl.updateAds(widget.ad!.id!);
-    // } else {
-    //   ad = await ctrl.createAds();
-    // }
-    // if (mounted) Navigator.pop(context, ad);
+  @override
+  void dispose() {
+    ctrl.dispoase();
+    store.dispose();
+
+    super.dispose();
+  }
+
+  Future<void> _saveAd() async {
+    if (store.isValid) {
+      FocusScope.of(context).unfocus();
+      final result = await ctrl.saveAd();
+      if (result.isFailure) return;
+      // if (mounted) Navigator.pop(context, ad);
+    }
   }
 
   @override
@@ -95,12 +103,12 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   ),
                   Column(
                     children: [
-                      EditAdForm(store: store),
+                      EditAdForm(store: store, ctrl: ctrl),
                       BigButton(
                         color: Colors.orange,
                         label: widget.ad != null ? 'Atualizar' : 'Salvar',
                         iconData: widget.ad != null ? Icons.update : Icons.save,
-                        onPressed: _createAnnounce,
+                        onPressed: _saveAd,
                       ),
                     ],
                   ),

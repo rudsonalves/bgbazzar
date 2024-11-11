@@ -17,10 +17,12 @@
 
 import 'dart:developer';
 
+import 'package:bgbazzar/repository/data/interfaces/i_ad_repository.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/abstracts/data_result.dart';
 import '/components/custon_controllers/currency_text_controller.dart';
-import '../edit_ad_store.dart';
+import 'edit_ad_store.dart';
 import '/core/singletons/current_user.dart';
 import '/core/models/ad.dart';
 import '/core/models/mechanic.dart';
@@ -28,11 +30,12 @@ import '/get_it.dart';
 import '/data_managers/boardgames_manager.dart';
 import '/data_managers/mechanics_manager.dart';
 
-class EditAdFormController {
+class EditAdController {
   late final EditAdStore store;
   final bgManager = getIt<BoardgamesManager>();
   final mechanicsManager = getIt<MechanicsManager>();
   final currentUser = getIt<CurrentUser>();
+  final adRepository = getIt<IAdRepository>();
 
   String _selectedAddressId = '';
   ProductCondition _condition = ProductCondition.used;
@@ -65,6 +68,27 @@ class EditAdFormController {
     mechsController.dispose();
     priceController.dispose();
     addressController.dispose();
+  }
+
+  Future<DataResult<AdModel>> saveAd() async {
+    try {
+      store.setStateLoading();
+      final result = await adRepository.save(store.ad);
+      if (result.isFailure) {
+        throw Exception(result.error);
+      }
+      if (result.data == null) {
+        throw Exception('IAdRepository.save return null');
+      }
+      store.setStateSuccess();
+
+      return DataResult.success(result.data!);
+    } catch (err) {
+      final message = 'EditAdController.save: $err';
+      log(message);
+      store.setError('Ocorreu algum problema. Favor tente mais tarde');
+      return DataResult.failure(GenericFailure(message: message));
+    }
   }
 
   Future<void> setBgInfo(String bgId) async {
