@@ -35,8 +35,8 @@ class EditAdStore extends StateStore {
   final updateImages = ValueNotifier<int>(0);
   final bgInfo = ValueNotifier<String?>(null);
 
-  void startAd(AdModel? ad) {
-    this.ad = ad ??
+  void init(AdModel? ad) {
+    this.ad = ad?.copyWith() ??
         AdModel(
           images: [],
           title: '',
@@ -72,7 +72,7 @@ class EditAdStore extends StateStore {
   }
 
   removeImage(String image) {
-    if (!ad.images.contains(image)) return;
+    if (ad.images.contains(image)) return;
     updateImages.value++;
     ad.images.remove(image);
     _validateImages();
@@ -136,38 +136,6 @@ class EditAdStore extends StateStore {
     addImage(bg.image);
     bgInfo.value = ad.boardgame.toString();
   }
-
-  // void setPublishedYear(int publishYear) {
-  //   ad.publishedYear = publishYear;
-  // }
-
-  // void setMinPlayers(int minplayer) {
-  //   ad.minPlayers = minplayer;
-  // }
-
-  // void setMaxPlayers(int maxplayers) {
-  //   ad.maxPlayers = maxplayers;
-  // }
-
-  // void setMinPlayTime(int minplaytime) {
-  //   ad.minPlayTime = minplaytime;
-  // }
-
-  // void setMaxPlayTime(int maxplaytime) {
-  //   ad.maxPlayTime = maxplaytime;
-  // }
-
-  // void setAge(int age) {
-  //   ad.age = age;
-  // }
-
-  // void setDesigner(String? designer) {
-  //   ad.designer = designer;
-  // }
-
-  // void setArtist(String? artist) {
-  //   ad.artist = artist;
-  // }
 
   bool get isValid {
     _validateName();

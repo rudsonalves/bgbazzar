@@ -27,14 +27,16 @@ import '/components/widgets/fitted_button_segment.dart';
 import '../../addresses/addresses_screen.dart';
 import '../../my_account/boardgames/boardgames_screen.dart';
 import '../../my_account/mechanics/mechanics_screen.dart';
-import 'edit_ad_form_controller.dart';
+import '../edit_ad_controller.dart';
 
 class EditAdForm extends StatefulWidget {
   final EditAdStore store;
+  final EditAdController ctrl;
 
   const EditAdForm({
     super.key,
     required this.store,
+    required this.ctrl,
   });
 
   @override
@@ -43,20 +45,12 @@ class EditAdForm extends StatefulWidget {
 
 class _EditAdFormState extends State<EditAdForm> {
   final mechManager = getIt<MechanicsManager>();
-  final ctrl = EditAdFormController();
 
+  EditAdController get ctrl => widget.ctrl;
   EditAdStore get store => widget.store;
 
   @override
-  void initState() {
-    super.initState();
-    ctrl.init(store);
-  }
-
-  @override
   void dispose() {
-    ctrl.dispoase();
-
     super.dispose();
   }
 

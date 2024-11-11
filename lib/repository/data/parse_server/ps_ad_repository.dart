@@ -348,7 +348,7 @@ class PSAdRepository implements IAdRepository {
       ..setNonNull<List<String>>(keyAdMechanics, ad.mechanicsIds);
 
     if (parseBoardgame != null) {
-      parseAd.setNonNull<ParseObject>(keyAdBoargGame, parseBoardgame);
+      parseAd.setNonNull<ParseObject>(keyAdBoardGame, parseBoardgame);
     }
 
     return parseAd;
