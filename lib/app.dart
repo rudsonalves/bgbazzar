@@ -46,14 +46,14 @@ import 'features/addresses/edit_address/edit_address_screen.dart';
 import 'features/signup/signup_screen.dart';
 import 'get_it.dart';
 
-class MyMaterialApp extends StatefulWidget {
-  const MyMaterialApp({super.key});
+class App extends StatefulWidget {
+  const App({super.key});
 
   @override
-  State<MyMaterialApp> createState() => _MyMaterialAppState();
+  State<App> createState() => _AppState();
 }
 
-class _MyMaterialAppState extends State<MyMaterialApp> {
+class _AppState extends State<App> {
   final app = getIt<AppSettings>();
 
   @override

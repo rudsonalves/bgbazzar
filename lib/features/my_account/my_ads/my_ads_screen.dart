@@ -26,6 +26,7 @@ import 'widgets/my_tab_bar.dart';
 import 'widgets/my_tab_bar_view.dart';
 import '/components/widgets/state_error_message.dart';
 import '/components/widgets/state_loading_message.dart';
+import 'widgets/no_ads_found_card.dart';
 
 class MyAdsScreen extends StatefulWidget {
   const MyAdsScreen({super.key});
@@ -107,8 +108,8 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return DefaultTabController(
-      initialIndex: 1,
-      length: 3,
+      initialIndex: AdStatus.active.index,
+      length: AdStatus.values.length - 1,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Meus Anúncios'),
@@ -130,36 +131,18 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           listenable: store.state,
           builder: (context, _) {
             if (store.isSuccess) {
+              // If Ads if empty show NoAdsFoundCard Widget
               if (ctrl.ads.isEmpty) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Card(
-                        color: colorScheme.primaryContainer,
-                        child: const Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.cloud_done,
-                                size: 48,
-                              ),
-                              Text('Nenhum anúncio encontrado.'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                return NoAdsFoundCard();
+              } else {
+                // else show Ads
+                return MyTabBarView(
+                  ctrl: ctrl,
+                  scrollController: _scrollController,
+                  editAd: _editAd,
+                  deleteAd: _deleteAd,
                 );
               }
-              return MyTabBarView(
-                ctrl: ctrl,
-                scrollController: _scrollController,
-                editAd: _editAd,
-                deleteAd: _deleteAd,
-              );
             } else if (store.isLoading) {
               return const StateLoadingMessage();
             }

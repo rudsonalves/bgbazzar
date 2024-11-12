@@ -30,14 +30,6 @@ class AdListView extends StatefulWidget {
   final ScrollController scrollController;
   final bool buttonBehavior;
   final bool enableDismissible;
-  final Color? colorLeft;
-  final Color? colorRight;
-  final IconData? iconLeft;
-  final IconData? iconRight;
-  final String? labelLeft;
-  final String? labelRight;
-  final AdStatus? statusLeft;
-  final AdStatus? statusRight;
   final Function(AdModel ad)? editAd;
   final Function(AdModel ad)? deleteAd;
 
@@ -49,14 +41,6 @@ class AdListView extends StatefulWidget {
     required this.scrollController,
     required this.buttonBehavior,
     this.enableDismissible = false,
-    this.colorLeft,
-    this.colorRight,
-    this.iconLeft,
-    this.iconRight,
-    this.labelLeft,
-    this.labelRight,
-    this.statusLeft,
-    this.statusRight,
     this.editAd,
     this.deleteAd,
   });
@@ -170,14 +154,7 @@ class _AdListViewState extends State<AdListView> {
               child: widget.enableDismissible
                   ? DismissibleAd(
                       ad: ads[index],
-                      colorLeft: widget.colorLeft,
-                      colorRight: widget.colorRight,
-                      iconLeft: widget.iconLeft,
-                      iconRight: widget.iconRight,
-                      labelLeft: widget.labelLeft,
-                      labelRight: widget.labelRight,
-                      statusLeft: widget.statusLeft,
-                      statusRight: widget.statusRight,
+                      adStatus: ads[index].status,
                       updateAdStatus: widget.updateAdStatus,
                     )
                   : AdCardView(

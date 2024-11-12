@@ -7,7 +7,7 @@ import 'core/singletons/search_history.dart';
 import 'get_it.dart';
 import 'data_managers/boardgames_manager.dart';
 import 'data_managers/mechanics_manager.dart';
-import 'my_material_app.dart';
+import 'app.dart';
 import 'store/database/providers/database_provider.dart';
 
 void main() async {
@@ -31,5 +31,5 @@ void main() async {
   await getIt<BoardgamesManager>().initialize();
   await getIt<MechanicsManager>().initialize();
 
-  runApp(const MyMaterialApp());
+  runApp(const App());
 }

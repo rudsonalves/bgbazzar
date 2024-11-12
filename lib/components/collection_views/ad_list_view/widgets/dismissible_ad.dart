@@ -17,38 +17,27 @@
 
 import 'package:flutter/material.dart';
 
+import '/features/my_account/my_ads/model/my_ads_dismissible.dart';
 import '/core/models/ad.dart';
 import '../../../widgets/base_dismissible_container.dart';
 import 'ad_card_view.dart';
 
 class DismissibleAd extends StatelessWidget {
   final AdModel ad;
-  final Color? colorLeft;
-  final Color? colorRight;
-  final IconData? iconLeft;
-  final IconData? iconRight;
-  final String? labelLeft;
-  final String? labelRight;
-  final AdStatus? statusLeft;
-  final AdStatus? statusRight;
+  final AdStatus adStatus;
   final Function(AdModel)? updateAdStatus;
 
   const DismissibleAd({
     super.key,
     required this.ad,
-    this.colorLeft,
-    this.colorRight,
-    this.iconLeft,
-    this.iconRight,
-    this.labelLeft,
-    this.labelRight,
-    this.statusLeft,
-    this.statusRight,
+    required this.adStatus,
     this.updateAdStatus,
   });
 
   @override
   Widget build(BuildContext context) {
+    final dismiss = MyAdsDsimissible(adStatus: adStatus);
+
     return Dismissible(
       // FIXME: select direction to disable unnecessary shifts
       // direction: DismissDirection.endToStart,
@@ -56,30 +45,32 @@ class DismissibleAd extends StatelessWidget {
       background: baseDismissibleContainer(
         context,
         alignment: Alignment.centerLeft,
-        color: colorLeft,
-        icon: iconLeft,
-        label: labelLeft,
+        color: dismiss.color(DismissSide.left),
+        icon: dismiss.iconData(DismissSide.left),
+        label: dismiss.label(DismissSide.left),
       ),
       secondaryBackground: baseDismissibleContainer(
         context,
         alignment: Alignment.centerRight,
-        color: colorRight,
-        icon: iconRight,
-        label: labelRight,
+        color: dismiss.color(DismissSide.right),
+        icon: dismiss.iconData(DismissSide.right),
+        label: dismiss.label(DismissSide.right),
       ),
       child: AdCardView(
         ads: ad,
       ),
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.startToEnd) {
-          if (updateAdStatus != null && statusLeft != null) {
-            ad.status = statusLeft!;
+          if (updateAdStatus != null &&
+              dismiss.status(DismissSide.left) != null) {
+            ad.status = dismiss.status(DismissSide.left)!;
             updateAdStatus!(ad);
           }
           return false;
         } else if (direction == DismissDirection.endToStart) {
-          if (updateAdStatus != null && statusRight != null) {
-            ad.status = statusRight!;
+          if (updateAdStatus != null &&
+              dismiss.status(DismissSide.right) != null) {
+            ad.status = dismiss.status(DismissSide.right)!;
             updateAdStatus!(ad);
           }
           return false;

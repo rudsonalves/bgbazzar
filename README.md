@@ -78,6 +78,53 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/12 - version: 0.7.15+79
+
+This commit enhances the structure and functionality of the ad management features, implementing a more modular and streamlined approach to managing dismissible actions, handling empty states, and renaming the main app entry point.
+
+### Summary of Changes:
+
+1. **Renamed Main App Class**:
+   - **lib/my_material_app.dart → lib/app.dart**: Renamed `MyMaterialApp` to `App` for a simpler, more intuitive app entry point.
+   - **lib/main.dart**: Updated main entry file to reference `App` instead of `MyMaterialApp`.
+
+2. **Simplified Dismissible Ad Configuration**:
+   - **lib/components/collection_views/ad_list_view/ad_list_view.dart**:
+     - Removed redundant properties (e.g., color, icon, label for dismissible actions).
+     - Simplified `DismissibleAd` instantiation by passing only `adStatus`.
+
+   - **lib/components/collection_views/ad_list_view/widgets/dismissible_ad.dart**:
+     - Removed individual configuration parameters for each side and replaced them with `MyAdsDismissible`, which centralizes logic for determining dismissible properties.
+
+3. **Centralized Dismissible Properties Logic**:
+   - **lib/features/my_account/my_ads/model/my_ads_dismissible.dart**:
+     - Created `MyAdsDismissible` to handle side-specific properties (color, icon, label, status) based on `AdStatus`.
+     - Consolidates all dismissible configuration in one place, reducing code duplication and improving readability.
+
+4. **Enhanced Empty State Handling**:
+   - **lib/features/my_account/my_ads/my_ads_screen.dart**:
+     - Replaced inlined empty state handling with the `NoAdsFoundCard` widget for consistent presentation when no ads are found.
+
+   - **lib/features/my_account/my_ads/widgets/no_ads_found_card.dart**:
+     - Added `NoAdsFoundCard` widget to provide a reusable card UI for empty states with a message and icon.
+
+5. **Removed Unused Code and Improved Naming**:
+   - **lib/features/my_account/my_ads/my_ads_controller.dart**:
+     - Renamed `_adPage` to `_adsDataBasePage` for clarity.
+     - Cleaned up redundant code related to pagination.
+
+   - **lib/features/my_account/my_ads/my_ads_store.dart**:
+     - Added constants for tab indices and selected tab properties to streamline the tab management in `MyAdsStore`.
+
+6. **Streamlined Tab Bar View Logic**:
+   - **lib/features/my_account/my_ads/widgets/my_tab_bar_view.dart**:
+     - Refactored the tab bar view to remove hardcoded configurations and integrate the new `MyAdsDismissible`.
+     - Updated logic to display `NoAdsFoundCard` when the ads list is empty.
+
+### Conclusion:
+This refactor optimizes the ad management feature by reducing redundancy, improving naming conventions, and providing a modular approach to handling dismissible actions. The introduction of `MyAdsDismissible` centralizes logic, making future modifications easier, while the `NoAdsFoundCard` provides a consistent user experience for empty states.
+
+
 ## 2024/11/11 - version: 0.7.13+78
 
 This commit refines the ad editing functionality, improves naming conventions, and introduces enhancements in controller and store management. Key changes include renaming the `EditAdFormController` to `EditAdController`, adding ad saving functionality, and fixing typos in constants.

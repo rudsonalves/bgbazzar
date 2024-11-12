@@ -35,7 +35,7 @@ class MyAdsController {
   AdStatus _productStatus = AdStatus.active;
   AdStatus get productStatus => _productStatus;
 
-  int _adPage = 0;
+  int _adsDataBasePage = 0;
 
   final List<AdModel> _ads = [];
   List<AdModel> get ads => _ads;
@@ -71,7 +71,7 @@ class MyAdsController {
       throw Exception('MyAdsController.getAds error: ${result.error}');
     }
     final newAds = result.data;
-    _adPage = 0;
+    _adsDataBasePage = 0;
     ads.clear();
     if (newAds != null && newAds.isNotEmpty) {
       ads.addAll(newAds);
@@ -100,11 +100,11 @@ class MyAdsController {
   }
 
   Future<void> _getMoreAds() async {
-    _adPage++;
+    _adsDataBasePage++;
     final result = await adRepository.get(
       filter: FilterModel(),
       search: '',
-      page: _adPage,
+      page: _adsDataBasePage,
     );
     if (result.isFailure) {
       // FIXME: Complete this error handling
@@ -120,7 +120,7 @@ class MyAdsController {
   }
 
   Future<bool> updateAdStatus(AdModel ad) async {
-    int atePage = _adPage;
+    int currentPage = _adsDataBasePage;
     try {
       store.setStateLoading();
       final result = await adRepository.updateStatus(ad);
@@ -128,9 +128,9 @@ class MyAdsController {
         throw Exception(result.error);
       }
       await _getAds();
-      while (atePage > 0) {
+      while (currentPage > 0) {
         await _getMoreAds();
-        atePage--;
+        currentPage--;
       }
       store.setStateSuccess();
       return true;
