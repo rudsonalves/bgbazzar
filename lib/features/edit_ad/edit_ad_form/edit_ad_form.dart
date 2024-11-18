@@ -26,8 +26,8 @@ import '/core/models/ad.dart';
 import '/components/form_fields/custom_form_field.dart';
 import '/components/widgets/fitted_button_segment.dart';
 import '../../addresses/addresses_screen.dart';
-import '../../my_account/boardgames/boardgames_screen.dart';
-import '../../my_account/mechanics/mechanics_screen.dart';
+import '../../account/boardgames/boardgames_screen.dart';
+import '../../account/mechanics/mechanics_screen.dart';
 import '../edit_ad_controller.dart';
 
 class EditAdForm extends StatefulWidget {

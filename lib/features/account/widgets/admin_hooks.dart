@@ -18,7 +18,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '/features/my_account/check_mechanics/check_page.dart';
+import '../check_mechanics/check_page.dart';
 import '../boardgames/boardgames_screen.dart';
 import '../mechanics/mechanics_screen.dart';
 import '../../shop/product/widgets/title_product.dart';
