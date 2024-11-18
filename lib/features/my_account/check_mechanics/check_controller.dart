@@ -51,4 +51,14 @@ class CheckController {
       store.setError('Error: $err');
     }
   }
+
+  Future<void> resetMechanics() async {
+    try {
+      store.setStateLoading();
+      await mechManager.resetDatabase();
+      store.setStateSuccess();
+    } catch (err) {
+      store.setError('Error: $err');
+    }
+  }
 }

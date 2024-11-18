@@ -83,4 +83,6 @@ abstract class ILocalMechanicRepository {
   /// - A [Future] containing the added [MechanicModel] with the assigned ID.
   /// - Returns `null` if an error occurs during the addition.
   Future<DataResult<void>> delete(String id);
+
+  Future<DataResult<void>> resetDatabase();
 }

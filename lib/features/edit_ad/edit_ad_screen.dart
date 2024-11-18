@@ -64,7 +64,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
     if (store.isValid) {
       FocusScope.of(context).unfocus();
       final result = await ctrl.saveAd();
-      if (result.isFailure) return;
+      if (result.isFailure) {
+        store.setStateSuccess();
+        return;
+      }
       // if (mounted) Navigator.pop(context, ad);
     }
   }
@@ -87,43 +90,48 @@ class _EditAdScreenState extends State<EditAdScreen> {
               icon: const Icon(Icons.print))
         ],
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 18,
-                vertical: 12,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ImagesListView(
-                    store: store,
+      body: ValueListenableBuilder(
+          valueListenable: store.state,
+          builder: (context, _, __) {
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 12,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ImagesListView(
+                          store: store,
+                        ),
+                        Column(
+                          children: [
+                            EditAdForm(store: store, ctrl: ctrl),
+                            BigButton(
+                              color: Colors.orange,
+                              label: widget.ad != null ? 'Atualizar' : 'Salvar',
+                              iconData:
+                                  widget.ad != null ? Icons.update : Icons.save,
+                              onPressed: _saveAd,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  Column(
-                    children: [
-                      EditAdForm(store: store, ctrl: ctrl),
-                      BigButton(
-                        color: Colors.orange,
-                        label: widget.ad != null ? 'Atualizar' : 'Salvar',
-                        iconData: widget.ad != null ? Icons.update : Icons.save,
-                        onPressed: _saveAd,
-                      ),
-                    ],
+                ),
+                if (store.isLoading) const StateLoadingMessage(),
+                if (store.isError)
+                  StateErrorMessage(
+                    message: store.errorMessage,
+                    closeDialog: store.setStateSuccess,
                   ),
-                ],
-              ),
-            ),
-          ),
-          if (store.isLoading) const StateLoadingMessage(),
-          if (store.isError)
-            StateErrorMessage(
-              message: store.errorMessage,
-              closeDialog: store.setStateSuccess,
-            ),
-        ],
-      ),
+              ],
+            );
+          }),
       // ),
     );
   }

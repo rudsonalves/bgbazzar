@@ -42,13 +42,21 @@ class SqlTable {
     );
   }
 
-  static createMechanics(Batch bach) {
-    bach.execute(
+  static createMechanics(Batch batch) {
+    batch.execute(
       'CREATE TABLE IF NOT EXISTS $mechTable ('
       '  $mechId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'
       '  $mechName TEXT NOT NULL UNIQUE,'
       '  $mechDescription TEXT NOT NULL'
       ')',
     );
+  }
+
+  static dropMechanics(Batch batch) {
+    batch.execute('DROP TABLE IF EXISTS $mechTable');
+  }
+
+  static dropBgNamesTable(Batch batch) {
+    batch.execute('DROP TABLE IF EXISTS $bgNamesTable');
   }
 }

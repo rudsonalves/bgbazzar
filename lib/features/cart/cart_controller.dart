@@ -15,10 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-abstract class IBgNamesStore {
-  Future<void> initialize();
-  Future<List<Map<String, dynamic>>> getAll();
-  Future<int> add(Map<String, dynamic> map);
-  Future<int> update(Map<String, dynamic> map);
-  Future<void> resetDatabase();
+import 'cart_store.dart';
+
+class CartController {
+  late final CartStore store;
+
+  void init(CartStore store) {
+    this.store = store;
+  }
 }

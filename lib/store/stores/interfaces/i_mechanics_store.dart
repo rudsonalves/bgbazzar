@@ -21,4 +21,5 @@ abstract class IMechanicsStore {
   Future<int> add(Map<String, dynamic> map);
   Future<int> update(Map<String, dynamic> map);
   Future<int> delete(String id);
+  Future<void> resetDatabase();
 }

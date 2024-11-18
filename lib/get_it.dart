@@ -19,6 +19,7 @@ import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 
+import 'data_managers/cart_manager.dart';
 import 'repository/app_data/share_preferences/app_share_preferences_repository.dart';
 import 'repository/app_data/interfaces/i_app_preferences_repository.dart';
 import 'core/singletons/app_settings.dart';
@@ -96,6 +97,9 @@ void setupDependencies() {
       await repository.initialize();
       return repository;
     });
+
+    // Cart Manager
+    getIt.registerLazySingleton<CartManager>(() => CartManager());
   } catch (err) {
     log('GetIt Locator Error: $err');
   }

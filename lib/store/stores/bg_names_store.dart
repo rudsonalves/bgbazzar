@@ -26,17 +26,17 @@ import '../database/database_manager.dart';
 
 class BGNamesStore implements IBgNamesStore {
   final _databaseManager = getIt<DatabaseManager>();
-  late final Database database;
+  late final Database _db;
 
   @override
   Future<void> initialize() async {
-    database = await _databaseManager.database;
+    _db = await _databaseManager.database;
   }
 
   @override
   Future<List<Map<String, dynamic>>> getAll() async {
     try {
-      List<Map<String, dynamic>> result = await database.query(
+      List<Map<String, dynamic>> result = await _db.query(
         bgNamesTable,
         orderBy: bgName,
       );
@@ -51,7 +51,7 @@ class BGNamesStore implements IBgNamesStore {
   @override
   Future<int> add(Map<String, dynamic> map) async {
     try {
-      final id = await database.insert(
+      final id = await _db.insert(
         bgNamesTable,
         map,
       );
@@ -68,7 +68,7 @@ class BGNamesStore implements IBgNamesStore {
   @override
   Future<int> update(Map<String, dynamic> map) async {
     try {
-      final result = await database.update(
+      final result = await _db.update(
         bgNamesTable,
         map,
       );
@@ -78,5 +78,10 @@ class BGNamesStore implements IBgNamesStore {
       log('BGNamesStore.update: $err');
       return -1;
     }
+  }
+
+  @override
+  Future<void> resetDatabase() async {
+    await _databaseManager.resetBgNamesTable(_db);
   }
 }

@@ -83,6 +83,18 @@ class _CheckPageState extends State<CheckPage> {
                       ),
                       Row(
                         children: [
+                          const Text('Reiniciar Mecânicas'),
+                          const Spacer(),
+                          FilledButton.tonalIcon(
+                            onPressed: ctrl.resetMechanics,
+                            label: const Text('Resetar'),
+                            icon: const Icon(Symbols.sync_rounded),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                      Row(
+                        children: [
                           const Text('Verificar'),
                           const Spacer(),
                           FilledButton.tonalIcon(

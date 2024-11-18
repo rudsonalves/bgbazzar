@@ -99,7 +99,7 @@ class DatabaseManager {
   //   await db.execute('PRAGMA foreign_keys = ON');
   // }
 
-  static Future<int?> getDBVerion() async {
+  Future<int?> getDBVerion() async {
     try {
       final result = await _database!.query(
         dbVersionTable,
@@ -109,6 +109,30 @@ class DatabaseManager {
       return result.first[dbAppVersion] as int;
     } catch (err) {
       return null;
+    }
+  }
+
+  Future<void> resetMechanics(Database db) async {
+    try {
+      Batch batch = db.batch();
+      SqlTable.dropMechanics(batch);
+      SqlTable.createMechanics(batch);
+
+      await batch.commit();
+    } catch (err) {
+      log(err.toString());
+    }
+  }
+
+  Future<void> resetBgNamesTable(Database db) async {
+    try {
+      Batch batch = db.batch();
+      SqlTable.dropBgNamesTable(batch);
+      SqlTable.createBgNamesTable(batch);
+
+      await batch.commit();
+    } catch (err) {
+      log(err.toString());
     }
   }
 }

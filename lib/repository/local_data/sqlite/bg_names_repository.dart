@@ -17,57 +17,72 @@
 
 import 'dart:developer';
 
+import '../../../core/abstracts/data_result.dart';
 import '/get_it.dart';
 import '/core/models/bg_name.dart';
 import '/store/stores/interfaces/i_bg_names_store.dart';
 import '../interfaces/i_bg_names_repository.dart';
 
 class SqliteBGNamesRepository implements IBgNamesRepository {
-  late final IBgNamesStore bgNamesStore;
+  late final IBgNamesStore _store;
 
   @override
   Future<void> initialize() async {
-    bgNamesStore = await getIt.getAsync<IBgNamesStore>();
+    _store = await getIt.getAsync<IBgNamesStore>();
   }
 
   @override
-  Future<List<BGNameModel>> getAll() async {
+  Future<DataResult<List<BGNameModel>>> getAll() async {
     try {
-      final result = await bgNamesStore.getAll();
-      if (result.isEmpty) return [];
+      final result = await _store.getAll();
+      if (result.isEmpty) {
+        return DataResult.success([]);
+      }
 
       final bgs = result.map((item) => BGNameModel.fromMap(item)).toList();
-      return bgs;
+      return DataResult.success(bgs);
     } catch (err) {
       final message = 'BGNamesRepository.get: $err';
       log(message);
-      throw Exception(message);
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 
   @override
-  Future<BGNameModel> add(BGNameModel bg) async {
+  Future<DataResult<BGNameModel>> add(BGNameModel bg) async {
     try {
-      final id = await bgNamesStore.add(bg.toMap());
+      final id = await _store.add(bg.toMap());
       if (id < 0) throw Exception('retrun id $id');
 
-      return bg;
+      return DataResult.success(bg);
     } catch (err) {
       final message = 'BGNamesRepository.add: $err';
       log(message);
-      throw Exception(message);
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 
   @override
-  Future<int> update(BGNameModel bg) async {
+  Future<DataResult<int>> update(BGNameModel bg) async {
     try {
-      final result = await bgNamesStore.update(bg.toMap());
-      return result;
+      final result = await _store.update(bg.toMap());
+      return DataResult.success(result);
     } catch (err) {
       final message = 'BGNamesRepository.update: $err';
       log(message);
-      throw Exception(message);
+      return DataResult.failure(GenericFailure(message: message));
+    }
+  }
+
+  @override
+  Future<DataResult<void>> resetDatabase() async {
+    try {
+      await _store.resetDatabase();
+      return DataResult.success(null);
+    } catch (err) {
+      final message = 'MechanicRepository.resetDatabase: $err';
+      log(message);
+      return DataResult.failure(GenericFailure(message: message));
     }
   }
 }

@@ -17,10 +17,28 @@
 
 import 'package:flutter/material.dart';
 
-class ChatScreen extends StatelessWidget {
+import 'chat_controller.dart';
+import 'chat_store.dart';
+
+class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
   static const routeName = '/chat';
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  final store = ChatStore();
+  final ctrl = ChatController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    ctrl.init(store);
+  }
 
   @override
   Widget build(BuildContext context) {

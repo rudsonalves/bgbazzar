@@ -43,6 +43,7 @@ class EditAdController {
 
   final nameController = TextEditingController();
   final priceController = CurrencyTextController();
+  final quantityController = TextEditingController();
   final mechsController = TextEditingController();
   final addressController = TextEditingController();
 
@@ -67,6 +68,7 @@ class EditAdController {
     nameController.dispose();
     mechsController.dispose();
     priceController.dispose();
+    quantityController.dispose();
     addressController.dispose();
   }
 

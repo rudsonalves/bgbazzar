@@ -49,15 +49,18 @@ class PaymentController {
             log('Page loaded: $url');
           },
           onNavigationRequest: (NavigationRequest request) {
-            // Navigation control - if necessary, prevent navigation to unwanted URLs
-            if (request.url.startsWith('https://www.youtube.com/')) {
+            if (request.url.contains("success_url")) {
+              store.setStateSuccess();
+              return NavigationDecision.prevent;
+            } else if (request.url.contains("failure_url")) {
+              store.setError('Falha no pagemento!');
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
           },
           onWebResourceError: (WebResourceError error) {
             log('Error loading resource: ${error.description}');
-            store.setStateError();
+            store.setError('Ocoreu um erro. Tente mais tarde');
           },
         ),
       );

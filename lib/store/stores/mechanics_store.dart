@@ -26,17 +26,17 @@ import '../database/database_manager.dart';
 
 class MechanicsStore implements IMechanicsStore {
   final _databaseManager = getIt<DatabaseManager>();
-  late final Database _database;
+  late final Database _db;
 
   @override
   Future<void> initialize() async {
-    _database = await _databaseManager.database;
+    _db = await _databaseManager.database;
   }
 
   @override
   Future<List<Map<String, dynamic>>> getAll() async {
     try {
-      List<Map<String, dynamic>> result = await _database.query(
+      List<Map<String, dynamic>> result = await _db.query(
         mechTable,
         columns: [mechId, mechName, mechDescription],
         orderBy: mechName,
@@ -52,7 +52,7 @@ class MechanicsStore implements IMechanicsStore {
   @override
   Future<int> add(Map<String, dynamic> map) async {
     try {
-      final result = await _database.insert(
+      final result = await _db.insert(
         mechTable,
         map,
       );
@@ -67,7 +67,7 @@ class MechanicsStore implements IMechanicsStore {
   @override
   Future<int> update(Map<String, dynamic> map) async {
     try {
-      final result = await _database.update(
+      final result = await _db.update(
         mechTable,
         map,
       );
@@ -82,7 +82,7 @@ class MechanicsStore implements IMechanicsStore {
   @override
   Future<int> delete(String id) async {
     try {
-      final result = await _database.delete(
+      final result = await _db.delete(
         mechTable,
         where: '$mechId = ?',
         whereArgs: [id],
@@ -93,5 +93,10 @@ class MechanicsStore implements IMechanicsStore {
       log('MechanicsStore.delete: $err');
       return -1;
     }
+  }
+
+  @override
+  Future<void> resetDatabase() async {
+    await _databaseManager.resetMechanics(_db);
   }
 }

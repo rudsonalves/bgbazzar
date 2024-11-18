@@ -136,7 +136,7 @@ class _ProductScreenState extends State<ProductScreen>
       floatingActionButton: SlideTransition(
         position: _fabOffsetAnimation,
         child: DuoSegmentedButton(
-          hideButton1: ad.hidePhone,
+          hideButton1: false,
           label1: 'Ligar',
           iconData1: Icons.phone,
           callBack1: () {

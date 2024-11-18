@@ -15,9 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '/store/constants/constants.dart';
-
 const maxAdsPerList = 20;
+
+const keyRoleDefult = 'user'; // default role
+const keyRoleUsers = 'users'; // _Role relationship users column
+const keyRoleTable = '_Role'; // role table name
+const keyRoleName = 'name'; // role column name
 
 const keyUserId = 'objectId';
 const keyUserName = 'username';
@@ -25,12 +28,7 @@ const keyUserNickname = 'nickname';
 const keyUserEmail = 'email';
 const keyUserPassword = 'password';
 const keyUserPhone = 'phone';
-const keyUserType = 'type';
-
-const keyMechanicTable = 'Mechanics';
-const keyMechanicId = 'objectId';
-const keyMechanicName = 'name';
-const keyMechanicDescription = 'description';
+const keyUserRole = 'role';
 
 const keyAddressTable = 'Addresses';
 const keyAddressId = 'objectId';
@@ -50,7 +48,7 @@ const keyAdId = 'objectId';
 const keyAdOwner = 'owner';
 const keyAdTitle = 'title';
 const keyAdDescription = 'description';
-const keyAdHidePhone = 'hidePhone';
+const keyAdQuantity = 'quantity';
 const keyAdPrice = 'price';
 const keyAdStatus = 'status';
 const keyAdMechanics = 'mechanic';
@@ -81,7 +79,7 @@ const keyBgArtist = 'artist';
 const keyBgDescription = 'description';
 const keyBgMechanics = 'mechanics';
 
-const keyMechTable = mechTable;
-const keyMechObjectId = 'objectId';
-const keyMechName = mechName;
-const keyMechDescription = mechDescription;
+const keyMechanicTable = 'Mechanics';
+const keyMechanicId = 'objectId';
+const keyMechanicName = 'name';
+const keyMechanicDescription = 'description';

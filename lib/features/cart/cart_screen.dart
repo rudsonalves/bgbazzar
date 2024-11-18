@@ -15,10 +15,31 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-abstract class IBgNamesStore {
-  Future<void> initialize();
-  Future<List<Map<String, dynamic>>> getAll();
-  Future<int> add(Map<String, dynamic> map);
-  Future<int> update(Map<String, dynamic> map);
-  Future<void> resetDatabase();
+import 'package:flutter/material.dart';
+
+import 'cart_controller.dart';
+import 'cart_store.dart';
+
+class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  final store = CartStore();
+  final ctrl = CartController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    ctrl.init(store);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
 }

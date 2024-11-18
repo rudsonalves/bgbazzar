@@ -24,17 +24,17 @@ import '/store/stores/mechanics_store.dart';
 import '../interfaces/i_local_mechanic_repository.dart';
 
 class SqliteMechanicRepository implements ILocalMechanicRepository {
-  final IMechanicsStore _mechanicsStore = MechanicsStore();
+  final IMechanicsStore _store = MechanicsStore();
 
   @override
   Future<void> initialize() async {
-    _mechanicsStore.initialize();
+    _store.initialize();
   }
 
   @override
   Future<DataResult<List<MechanicModel>>> getAll() async {
     try {
-      final result = await _mechanicsStore.getAll();
+      final result = await _store.getAll();
       if (result.isEmpty) DataResult.success([]);
 
       final mechanics =
@@ -50,7 +50,7 @@ class SqliteMechanicRepository implements ILocalMechanicRepository {
   @override
   Future<DataResult<MechanicModel>> add(MechanicModel mech) async {
     try {
-      final id = await _mechanicsStore.add(mech.toMap());
+      final id = await _store.add(mech.toMap());
       if (id < 0) throw Exception('return id $id');
 
       return DataResult.success(mech);
@@ -64,7 +64,7 @@ class SqliteMechanicRepository implements ILocalMechanicRepository {
   @override
   Future<DataResult<void>> update(MechanicModel mech) async {
     try {
-      await _mechanicsStore.update(mech.toMap());
+      await _store.update(mech.toMap());
       return DataResult.success(null);
     } catch (err) {
       final message = 'MechanicRepository.update: $err';
@@ -76,13 +76,25 @@ class SqliteMechanicRepository implements ILocalMechanicRepository {
   @override
   Future<DataResult<void>> delete(String id) async {
     try {
-      final result = await _mechanicsStore.delete(id);
+      final result = await _store.delete(id);
       if (result < 0) {
         throw Exception('mechanic id $id not found.');
       }
       return DataResult.success(null);
     } catch (err) {
       final message = 'MechanicRepository.delete: $err';
+      log(message);
+      return DataResult.failure(GenericFailure(message: message));
+    }
+  }
+
+  @override
+  Future<DataResult<void>> resetDatabase() async {
+    try {
+      await _store.resetDatabase();
+      return DataResult.success(null);
+    } catch (err) {
+      final message = 'MechanicRepository.resetDatabase: $err';
       log(message);
       return DataResult.failure(GenericFailure(message: message));
     }
