@@ -102,7 +102,7 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
         ) ??
         false;
     if (result) {
-      final result = await ctrl.deleteMech(mech);
+      final result = await ctrl.resetMechs(mech);
       return result;
     }
     return false;

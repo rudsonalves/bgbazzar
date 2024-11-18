@@ -17,7 +17,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../features/my_account/my_account_screen.dart';
+import '../../features/account/account_screen.dart';
 import '../../core/singletons/app_settings.dart';
 import '../../core/singletons/current_user.dart';
 import '../../features/edit_ad/edit_ad_screen.dart';
@@ -47,7 +47,7 @@ class CustomDrawer extends StatelessWidget {
 
   void _navAccountScreen(BuildContext context) {
     Navigator.pop(context);
-    Navigator.pushNamed(context, MyAccountScreen.routeName);
+    Navigator.pushNamed(context, AccountScreen.routeName);
   }
 
   void _navFavoriteScreen(BuildContext context) {

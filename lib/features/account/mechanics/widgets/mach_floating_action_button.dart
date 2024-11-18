@@ -41,7 +41,7 @@ class MechFloatingActionButton extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 12),
           child: FloatingActionButton(
-            heroTag: 'hero-1',
+            heroTag: 'hero-0',
             backgroundColor: colorScheme.primaryContainer.withOpacity(0.85),
             onPressed: onPressBack,
             tooltip: 'Voltar',
@@ -52,7 +52,7 @@ class MechFloatingActionButton extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: FloatingActionButton(
-              heroTag: 'hero-2',
+              heroTag: 'hero-1',
               backgroundColor: colorScheme.primaryContainer.withOpacity(0.85),
               onPressed: onPressAdd,
               tooltip: 'Adicionar',
@@ -62,6 +62,7 @@ class MechFloatingActionButton extends StatelessWidget {
         ],
         FloatingActionButton(
           backgroundColor: colorScheme.primaryContainer.withOpacity(0.85),
+          heroTag: 'hero-3',
           onPressed: onPressDeselect,
           tooltip: 'Deselecionar',
           child: const Icon(Icons.deselect),

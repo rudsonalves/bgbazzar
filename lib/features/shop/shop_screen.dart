@@ -20,7 +20,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '/features/my_account/my_account_screen.dart';
+import '../account/account_screen.dart';
 import '../../core/singletons/current_user.dart';
 import '../../core/theme/app_text_style.dart';
 import '../../components/drawers/custom_drawer.dart';
@@ -149,7 +149,7 @@ class _ShopScreenState extends State<ShopScreen>
       await Navigator.pushNamed(context, SignInScreen.routeName);
       // ctrl.init(store);
     } else {
-      Navigator.pushNamed(context, MyAccountScreen.routeName);
+      Navigator.pushNamed(context, AccountScreen.routeName);
     }
   }
 

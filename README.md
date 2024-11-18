@@ -78,11 +78,59 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/18 - version: 0.7.15+81
+
+This commit enhances the mechanics management module, improves functionality across multiple files, refines code consistency, and introduces new capabilities for local database reset and CSV import. Key updates include adding the CSV library, refining methods, and improving state handling.
+
+### Changes made:
+
+1. **`assets/data/bgBazzar.db`**:
+   - Updated the binary database file.
+
+2. **`lib/data_managers/boardgames_manager.dart`**:
+   - Updated `image.startsWith` logic to check for `keyParseServerImageUrl`.
+   - Added a condition to prevent the deletion of remote files by skipping paths starting with `http`.
+
+3. **`lib/data_managers/mechanics_manager.dart`**:
+   - Renamed the method `resetDatabase` to `resetLocalDatabase`.
+   - Added new methods `getMechanics` and `addLocalDatabase` for handling local database operations.
+   - Improved exception handling for database operations.
+
+4. **`lib/features/account/check_mechanics/check_controller.dart`**:
+   - Integrated the new `resetLocalDatabase` and `getMechanics` methods.
+   - Introduced `loadCSVMechs` to import mechanics from a CSV file.
+   - Improved error handling and streamlined the mechanics reset process.
+
+5. **`lib/features/account/check_mechanics/check_page.dart`**:
+   - Refactored UI structure for better readability.
+   - Improved the mechanics count logic and loading state messages.
+
+6. **`lib/features/account/check_mechanics/check_store.dart`**:
+   - Added `counterMax` to enhance state tracking during operations.
+   - Updated the `resetCount` method to initialize the counter value.
+
+7. **`lib/features/account/mechanics/mechanics_controller.dart`**:
+   - Renamed `deleteMech` to `resetMechs` for better semantic clarity.
+
+8. **`lib/features/account/mechanics/mechanics_screen.dart`**:
+   - Updated the call to `resetMechs` to align with the renamed method.
+
+9. **`lib/features/account/mechanics/widgets/mach_floating_action_button.dart`**:
+   - Adjusted `heroTag` values for floating action buttons to improve UI state management.
+
+10. **`pubspec.lock` and `pubspec.yaml`**:
+    - Added the `csv` library (version 6.0.0) to handle CSV file operations.
+
+### Conclusion:
+
+These updates significantly enhance the mechanics management module by improving local database operations, introducing CSV import capabilities, and refining UI handling. The changes ensure better code readability, state management, and overall maintainability.
+
+
 ## 2024/11/18 - version: 0.7.15+80
 
 This commit introduces comprehensive updates across various modules, focusing on improving functionality, refactoring code, and adding new features related to payment, cart, and user management.
 
-## Changes made:
+### Changes made:
 
 1. **lib/components/drawers/custom_drawer.dart**:
    - Removed unused `dart:developer` import.
