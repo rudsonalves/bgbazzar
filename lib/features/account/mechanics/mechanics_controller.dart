@@ -84,7 +84,7 @@ class MechanicsController {
     store.setStateSuccess();
   }
 
-  Future<bool> deleteMech(MechanicModel mech) async {
+  Future<bool> resetMechs(MechanicModel mech) async {
     try {
       store.setStateLoading();
       await mechanicManager.delete(mech);

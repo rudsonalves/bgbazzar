@@ -410,7 +410,7 @@ class BoardgamesManager {
     required int year,
   }) async {
     // Image is already on the parse server
-    if (image.startsWith(parseServer.keyParseServerUrl)) {
+    if (image.startsWith(parseServer.keyParseServerImageUrl)) {
       return ImageConversionResult(convertedImagePath: image, localPath: '');
     }
 
@@ -517,7 +517,9 @@ class BoardgamesManager {
       if (path.isEmpty) continue;
 
       // Attempt to delete the file at the specified path
-      await File(path).delete();
+      if (!path.startsWith('http')) {
+        await File(path).delete();
+      }
     }
   }
 

@@ -15,6 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:csv/csv.dart';
+import 'package:file_picker/file_picker.dart';
+
 import '/core/models/mechanic.dart';
 import '/get_it.dart';
 import '/data_managers/mechanics_manager.dart';
@@ -32,7 +38,7 @@ class CheckController {
 
   Future<void> checkMechanics() async {
     final List<CheckMechList> checkList = [];
-    store.resetCount();
+    store.resetCount(mechManager.mechanics.length);
     try {
       store.setStateLoading();
       for (final mech in mechanics) {
@@ -55,10 +61,70 @@ class CheckController {
   Future<void> resetMechanics() async {
     try {
       store.setStateLoading();
-      await mechManager.resetDatabase();
+      await mechManager.resetLocalDatabase();
+      // await _loadCSVMechs();
+      // Read all Mechanics from Server
+      final resultMechs = await mechManager.getMechanics();
+      if (resultMechs.isFailure) {
+        throw Exception(resultMechs);
+      }
+
+      // Save all mechanics in local database
+      final mechs = resultMechs.data!;
+      store.resetCount(mechs.length);
+      for (final mech in mechs) {
+        final result = await mechManager.addLocalDatabase(mech);
+        if (result.isFailure) {
+          throw Exception(result.error);
+        }
+        store.incrementCount();
+      }
       store.setStateSuccess();
     } catch (err) {
       store.setError('Error: $err');
+    }
+  }
+
+  Future<void> loadCSVMechs() async {
+    try {
+      store.setStateLoading();
+      // Select csv file
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      );
+
+      if (result != null) {
+        // get selected file
+        File file = File(result.files.single.path!);
+
+        // read file
+        final content = await file.readAsString();
+
+        // convert CSV content to a MechanicModel list
+        List<List<dynamic>> rows = const CsvToListConverter(
+          fieldDelimiter: ',',
+          textDelimiter: '"',
+          eol: '\n',
+        ).convert(content);
+
+        final List<MechanicModel> mechs = rows
+            .map((row) => MechanicModel(name: row[1], description: row[2]))
+            .toList();
+
+        // remove header line
+        mechs.removeAt(0);
+        store.resetCount(mechs.length);
+        for (final mech in mechs) {
+          log(mech.toString());
+          await mechManager.add(mech);
+          store.incrementCount();
+        }
+      }
+      store.setStateSuccess();
+    } catch (err) {
+      log(err.toString());
+      store.setError('Teve algum problema no servidor. Tente mais tarde.');
     }
   }
 }

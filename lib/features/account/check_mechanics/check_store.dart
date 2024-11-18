@@ -34,6 +34,8 @@ class CheckStore extends StateStore {
 
   final count = ValueNotifier<int>(0);
 
+  int counterMax = 0;
+
   @override
   void dispose() {
     checkList.dispose();
@@ -50,7 +52,8 @@ class CheckStore extends StateStore {
     count.value++;
   }
 
-  void resetCount() {
+  void resetCount(int value) {
     count.value = 0;
+    counterMax = value;
   }
 }
