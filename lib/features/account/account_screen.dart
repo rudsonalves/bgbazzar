@@ -25,16 +25,16 @@ import 'widgets/config_hooks.dart';
 import 'widgets/sales_hooks.dart';
 import 'widgets/shopping_hooks.dart';
 
-class MyAccountScreen extends StatefulWidget {
-  const MyAccountScreen({super.key});
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
   static const routeName = '/account';
 
   @override
-  State<MyAccountScreen> createState() => _MyAccountScreenState();
+  State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _MyAccountScreenState extends State<MyAccountScreen> {
+class _AccountScreenState extends State<AccountScreen> {
   final user = getIt<CurrentUser>();
   final app = getIt<AppSettings>();
 

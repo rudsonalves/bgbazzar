@@ -25,20 +25,20 @@ import 'core/models/filter.dart';
 import 'core/singletons/app_settings.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/util.dart';
-import 'features/my_account/boardgames/boardgames_screen.dart';
-import 'features/my_account/boardgames/widgets/view_boardgame.dart';
-import 'features/my_account/boardgames/edit_boardgame/edit_boardgame_screen.dart';
+import 'features/account/boardgames/boardgames_screen.dart';
+import 'features/account/boardgames/widgets/view_boardgame.dart';
+import 'features/account/boardgames/edit_boardgame/edit_boardgame_screen.dart';
 import 'features/favorites/favorites_screen.dart';
-import 'features/my_account/my_account_screen.dart';
+import 'features/account/account_screen.dart';
 import 'features/addresses/addresses_screen.dart';
-import 'features/my_account/my_ads/my_ads_screen.dart';
-import 'features/my_account/my_data/my_data_screen.dart';
+import 'features/account/my_ads/my_ads_screen.dart';
+import 'features/account/my_data/my_data_screen.dart';
 import 'features/payment/payment_page.dart';
 import 'features/shop/product/product_screen.dart';
 import 'features/filters/filters_screen.dart';
-import 'features/my_account/mechanics/mechanics_screen.dart';
+import 'features/account/mechanics/mechanics_screen.dart';
 import 'features/chat/chat_screen.dart';
-import 'features/my_account/check_mechanics/check_page.dart';
+import 'features/account/check_mechanics/check_page.dart';
 import 'features/shop/shop_screen.dart';
 import 'features/edit_ad/edit_ad_screen.dart';
 import 'features/signin/signin_screen.dart';
@@ -80,7 +80,7 @@ class _AppState extends State<App> {
             locale: const Locale('pt', 'BR'),
             routes: {
               ChatScreen.routeName: (_) => const ChatScreen(),
-              MyAccountScreen.routeName: (_) => const MyAccountScreen(),
+              AccountScreen.routeName: (_) => const AccountScreen(),
               SignInScreen.routeName: (_) => const SignInScreen(),
               SignUpScreen.routeName: (_) => const SignUpScreen(),
               AddressesScreen.routeName: (_) => const AddressesScreen(),
