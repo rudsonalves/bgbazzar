@@ -80,8 +80,6 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 ## 2024/11/18 - version: 0.7.15+80
 
-# Commit Message
-
 This commit introduces comprehensive updates across various modules, focusing on improving functionality, refactoring code, and adding new features related to payment, cart, and user management.
 
 ## Changes made:
