@@ -60,4 +60,6 @@ abstract class IUserRepository {
   Future<DataResult<void>> update(UserModel user);
 
   Future<DataResult<void>> resetPassword(String email);
+
+  Future<DataResult<void>> removeByEmail(String userEmail);
 }

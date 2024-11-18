@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-enum UserType { client, admin }
+enum UserRole { user, admin }
 
 class UserModel {
   String? id;
@@ -25,7 +25,7 @@ class UserModel {
   String? phone;
   String? password;
   DateTime? createdAt;
-  UserType userType;
+  UserRole role;
 
   UserModel({
     this.id,
@@ -34,7 +34,7 @@ class UserModel {
     this.phone,
     this.password,
     DateTime? createdAt,
-    this.userType = UserType.client,
+    this.role = UserRole.user,
   }) : createdAt = createdAt ?? DateTime.now();
 
   @override
@@ -43,7 +43,7 @@ class UserModel {
         ' $name, email:'
         ' $email, phone: $phone,'
         ' password: $password,'
-        ' userType: ${userType.name},'
+        ' role: ${role.name},'
         ' createdAt: $createdAt';
   }
 
@@ -54,7 +54,7 @@ class UserModel {
     String? phone,
     String? password,
     DateTime? createdAt,
-    UserType? userType,
+    UserRole? userType,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -63,7 +63,7 @@ class UserModel {
       phone: phone ?? this.phone,
       password: password ?? this.password,
       createdAt: createdAt ?? this.createdAt,
-      userType: userType ?? this.userType,
+      role: userType ?? this.role,
     );
   }
 }

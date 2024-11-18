@@ -26,7 +26,6 @@ import '../../core/state/state_store.dart';
 class EditAdStore extends StateStore {
   late AdModel ad;
 
-  final hidePhone = ValueNotifier<bool>(false);
   final errorName = ValueNotifier<String?>(null);
   final errorDescription = ValueNotifier<String?>(null);
   final errorAddress = ValueNotifier<String?>(null);
@@ -49,7 +48,6 @@ class EditAdStore extends StateStore {
   @override
   void dispose() {
     super.dispose();
-    hidePhone.dispose();
     errorName.dispose();
     errorDescription.dispose();
     errorAddress.dispose();
@@ -126,9 +124,8 @@ class EditAdStore extends StateStore {
     ad.mechanicsIds = mechs;
   }
 
-  void setHidePhone(bool value) {
-    ad.hidePhone = value;
-    hidePhone.value = value;
+  void setQuantity(int value) {
+    ad.quantity = value;
   }
 
   void setBGInfo(BoardgameModel bg) {

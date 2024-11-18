@@ -26,40 +26,66 @@ import '../../core/models/payment.dart';
 class PaymentService {
   PaymentService._();
 
-  static Future<DataResult<String>> getPreferenceId(PaymentModel pay) async {
+  static Future<DataResult<String>> getPreferenceId(
+      List<PaymentModel> products) async {
     final function = ParseCloudFunction('createPreference');
     final parameters = {
-      'amount': pay.amount,
-      'description': pay.description,
-      'quantity': pay.quantity,
+      'items': products.map((product) => product.toMap()).toList()
     };
 
     try {
-      // Adiciona um timeout de 10 segundos à chamada da função Cloud
+      // Adds a 10 second timeout to the Cloud Function call
       final response = await function
           .execute(parameters: parameters)
           .timeout(Duration(seconds: 10), onTimeout: () {
         throw TimeoutException('Timed out while trying to get preferenceId.');
       });
 
-      // Verifica a resposta
+      // Check the answer
       if (response.success && response.result != null) {
         return DataResult.success(response.result['preferenceId'] as String);
       } else {
-        final message =
-            'Error getting preferenceId: ${response.error?.message}';
-        log(message);
-        return DataResult.failure(
-            APIFailure(message: message, code: response.error?.code ?? 0));
+        throw Exception(response.error?.message ?? 'unknow error');
       }
-    } on TimeoutException catch (e) {
-      // Tratamento de Timeout
-      final message = 'Timeout error: ${e.message}';
+    } on TimeoutException catch (err) {
+      final message =
+          'PaymentService.getPreferenceId: timeout error: ${err.message}';
       log(message);
       return DataResult.failure(TimeoutFailure(message: message));
-    } catch (e) {
+    } catch (err) {
       // Tratamento de outros erros inesperados
-      final message = 'Unexpected error: $e';
+      final message = 'PaymentService.getPreferenceId: Unexpected error: $err';
+      log(message);
+      return DataResult.failure(GenericFailure(message: message));
+    }
+  }
+
+  static Future<DataResult<String>> updateStockAndStatus(
+      Map<String, int> parameters) async {
+    final function = ParseCloudFunction('updateStockAndStatus');
+
+    try {
+      // Adds a 10 second timeout to the Cloud Function call
+      final response = await function
+          .execute(parameters: parameters)
+          .timeout(Duration(seconds: 10), onTimeout: () {
+        throw TimeoutException('Timed out while trying to get preferenceId.');
+      });
+
+      // Check the answer
+      if (response.success && response.result != null) {
+        return DataResult.success(response.result['preferenceId'] as String);
+      } else {
+        throw Exception(response.error?.message ?? 'unknow error');
+      }
+    } on TimeoutException catch (err) {
+      final message =
+          'PaymentService.updateStockAndStatus: timeout error: ${err.message}';
+      log(message);
+      return DataResult.failure(TimeoutFailure(message: message));
+    } catch (err) {
+      final message =
+          'PaymentService.updateStockAndStatus: Unexpected error: $err';
       log(message);
       return DataResult.failure(GenericFailure(message: message));
     }

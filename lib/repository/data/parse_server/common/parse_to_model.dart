@@ -49,7 +49,8 @@ class ParseToModel {
       name: parse.get<String>(keyUserNickname),
       email: parse.username!,
       phone: parse.get<String>(keyUserPhone),
-      userType: UserType.values[parse.get<int>(keyUserType)!],
+      role: UserRole.values
+          .firstWhere((role) => role.name == parse.get<String>(keyUserRole)!),
       createdAt: parse.createdAt,
     );
   }
@@ -96,7 +97,7 @@ class ParseToModel {
       title: parse.get<String>(keyAdTitle)!,
       description: parse.get<String>(keyAdDescription)!,
       price: parse.get<num>(keyAdPrice)!.toDouble(),
-      hidePhone: parse.get<bool>(keyAdHidePhone)!,
+      quantity: parse.get<int>(keyAdQuantity)!,
       images: (parse.get<List<dynamic>>(keyAdImages) as List<dynamic>)
           .map((item) => (item as ParseFile).url!)
           .toList(),
@@ -153,8 +154,8 @@ class ParseToModel {
   static MechanicModel mechanic(ParseObject parse) {
     return MechanicModel(
       id: parse.objectId,
-      name: parse.get<String>(keyMechName)!,
-      description: parse.get<String>(keyMechDescription)!,
+      name: parse.get<String>(keyMechanicName)!,
+      description: parse.get<String>(keyMechanicDescription)!,
     );
   }
 }

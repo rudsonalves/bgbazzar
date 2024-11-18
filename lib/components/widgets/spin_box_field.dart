@@ -199,6 +199,7 @@ class _SpinBoxFieldState<T extends num> extends State<SpinBoxField<T>> {
     return Padding(
       padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (widget.label != null) widget.label!,
           GestureDetector(

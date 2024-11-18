@@ -78,7 +78,7 @@ class PSMechanicsRepository implements IMechanicRepository {
 
   @override
   Future<DataResult<List<MechanicModel>>> getAll() async {
-    final query = QueryBuilder<ParseObject>(ParseObject(keyMechTable));
+    final query = QueryBuilder<ParseObject>(ParseObject(keyMechanicTable));
 
     try {
       // Executes the query to retrieve all mechanics
@@ -107,7 +107,7 @@ class PSMechanicsRepository implements IMechanicRepository {
     try {
       // Creates a ParseObject representing the mechanics table and retrieves
       // the object by ID
-      final parse = ParseObject(keyMechTable);
+      final parse = ParseObject(keyMechanicTable);
       final response = await parse.getObject(psId);
 
       // Checks if the query was successful and throws an error if not
@@ -137,7 +137,7 @@ class PSMechanicsRepository implements IMechanicRepository {
   Future<DataResult<void>> delete(String id) async {
     try {
       // Create a ParseObject representing the advertisement to be deleted
-      final parse = ParseObject(keyMechTable)..objectId = id;
+      final parse = ParseObject(keyMechanicTable)..objectId = id;
 
       // Attempt to delete the object from the Parse Server
       final response = await parse.delete();
@@ -155,11 +155,11 @@ class PSMechanicsRepository implements IMechanicRepository {
 
   @override
   Future<DataResult<List<String>>> getIds() async {
-    final query = QueryBuilder<ParseObject>(ParseObject(keyMechTable));
+    final query = QueryBuilder<ParseObject>(ParseObject(keyMechanicTable));
 
     try {
       // Restrict the query to return only the objectId key for each record
-      query.keysToReturn([keyMechObjectId]);
+      query.keysToReturn([keyMechanicId]);
 
       // Execute the query to fetch the object IDs
       final response = await query.query();
@@ -219,8 +219,8 @@ class PSMechanicsRepository implements IMechanicRepository {
     }
 
     parseMech
-      ..setNonNull<String>(keyMechName, mech.name)
-      ..setNonNull<String>(keyMechDescription, mech.description ?? '');
+      ..setNonNull<String>(keyMechanicName, mech.name)
+      ..setNonNull<String>(keyMechanicDescription, mech.description ?? '');
 
     return parseMech;
   }

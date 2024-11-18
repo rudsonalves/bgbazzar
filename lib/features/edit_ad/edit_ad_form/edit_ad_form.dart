@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:bgbazzar/components/widgets/spin_box_field.dart';
 import 'package:flutter/material.dart';
 
 import '../edit_ad_store.dart';
@@ -211,21 +212,14 @@ class _EditAdFormState extends State<EditAdForm> {
           ),
           Row(
             children: [
-              ValueListenableBuilder(
-                valueListenable: store.hidePhone,
-                builder: (context, value, _) {
-                  return Checkbox(
-                    value: value,
-                    onChanged: (value) {
-                      if (value != null) {
-                        store.hidePhone.value = value;
-                      }
-                    },
-                  );
-                },
-              ),
-              const Expanded(
-                child: Text('Ocultar meu telefone neste anúncio.'),
+              Text('Quantidade:'),
+              Expanded(
+                child: SpinBoxField(
+                  minValue: 1,
+                  maxValue: 100,
+                  controller: ctrl.quantityController,
+                  onChange: store.setQuantity,
+                ),
               ),
             ],
           ),

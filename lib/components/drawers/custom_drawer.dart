@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with xlo_mobx.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import '../../features/my_account/my_account_screen.dart';
@@ -44,7 +42,6 @@ class CustomDrawer extends StatelessWidget {
     await currentUSer.logout();
     if (context.mounted) Navigator.pop(context);
     await Future.delayed(const Duration(milliseconds: 400));
-    log('update...');
     setPageTitle();
   }
 

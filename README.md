@@ -78,6 +78,68 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/18 - version: 0.7.15+80
+
+# Commit Message
+
+This commit introduces comprehensive updates across various modules, focusing on improving functionality, refactoring code, and adding new features related to payment, cart, and user management.
+
+## Changes made:
+
+1. **lib/components/drawers/custom_drawer.dart**:
+   - Removed unused `dart:developer` import.
+   - Deleted a redundant `log` statement to clean up the logout function.
+
+2. **lib/core/models/ad.dart**:
+   - Added `quantity` field to the `AdModel` class.
+   - Implemented `toMap`, `fromMap`, `toJson`, and `fromJson` methods for serialization.
+   - Removed the `hidePhone` field.
+
+3. **lib/core/models/cart_item.dart**:
+   - Created a new `CartItemModel` class for managing items in the cart.
+   - Added serialization and deserialization methods.
+
+4. **lib/core/models/payment.dart**:
+   - Refactored fields to include `title`, `unitPrice`, and `quantity`.
+   - Added serialization and deserialization methods.
+
+5. **lib/core/models/sale.dart**:
+   - Created the `SaleModel` class to manage sales, including `SaleStatus` and methods for handling sale items and status updates.
+
+6. **lib/core/models/sale_item.dart**:
+   - Created the `SaleItemModel` class to represent items in a sale, including basic fields like `title`, `description`, `quantity`, and `unitPrice`.
+
+7. **lib/core/models/user.dart**:
+   - Replaced `UserType` with `UserRole` for better naming clarity.
+   - Updated serialization and related logic accordingly.
+
+8. **lib/data_managers**:
+   - Added `CartManager` to handle cart-specific operations.
+   - Enhanced `MechanicsManager` to support resetting the database.
+
+9. **lib/features**:
+   - Introduced `CartController`, `CartStore`, and `CartScreen` for cart management.
+   - Refactored `EditAdController` and `EditAdForm` to include quantity handling.
+   - Updated the `EditAdStore` to remove `hidePhone` and include `quantity`.
+   - Enhanced `CheckMechanicsController` to support resetting mechanics.
+   - Added error handling and state management improvements in `PaymentController`.
+
+10. **lib/repository/data**:
+    - Refactored interfaces and repositories to use `DataResult` for consistent error handling.
+    - Enhanced `PSUserRepository` to include the `removeByEmail` method and `UserRole` handling.
+
+11. **lib/store**:
+    - Added `resetDatabase` methods to stores for mechanics and board game names.
+
+12. **parse_server**:
+    - Created new Cloud Functions for assigning users to roles and managing stock updates.
+    - Added support for `Payment Brick` in the `payment_page.html`.
+
+## Conclusion:
+
+These updates enhance the overall functionality, readability, and scalability of the codebase. The introduction of new models and controllers provides better modularization, while the refactorings improve maintainability and robustness.
+
+
 ## 2024/11/12 - version: 0.7.15+79
 
 This commit enhances the structure and functionality of the ad management features, implementing a more modular and streamlined approach to managing dismissible actions, handling empty states, and renaming the main app entry point.

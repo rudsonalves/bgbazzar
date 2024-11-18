@@ -384,7 +384,12 @@ class BoardgamesManager {
       if (!bgIds.contains(bg.id!)) {
         // Adds new boardgame to the local repository and updates the local
         // cache.
-        final newBg = await localBoardgameRepository.add(bg);
+        final result = await localBoardgameRepository.add(bg);
+        if (result.isFailure) {
+          throw Exception(result.error);
+        }
+
+        final newBg = result.data!;
         _localBGsList.add(newBg);
         bgIds.add(newBg.id!);
       }
@@ -479,7 +484,11 @@ class BoardgamesManager {
   /// Returns:
   /// - A [Future] with no return value.
   Future<void> _getLocalBgNames() async {
-    final bgs = await localBoardgameRepository.getAll();
+    final result = await localBoardgameRepository.getAll();
+    if (result.isFailure) {
+      throw Exception(result.error);
+    }
+    final bgs = result.data!;
 
     // Clear the current list of board game names.
     _localBGsList.clear();

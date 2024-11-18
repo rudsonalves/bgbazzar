@@ -195,6 +195,36 @@ class MechanicsManager {
     return await mechRepository.get(psId);
   }
 
+  Future<DataResult<void>> resetDatabase() async {
+    try {
+      final localResult = await localMechRepository.resetDatabase();
+      if (localResult.isFailure) {
+        throw Exception(localResult.error);
+      }
+
+      // Read all Mechanics from Server
+      final resultMechs = await mechRepository.getAll();
+      if (resultMechs.isFailure) {
+        throw Exception(resultMechs);
+      }
+
+      // Save all mechanics in local database
+      _mechanics.clear();
+      _mechanics.addAll(resultMechs.data!);
+      for (final mech in _mechanics) {
+        final result = await localMechRepository.add(mech);
+        if (result.isFailure) {
+          throw Exception(result.error);
+        }
+      }
+
+      return DataResult.success(null);
+    } catch (err) {
+      final message = 'MechanicsManager.resetDatabase: $err';
+      return DataResult.failure(GenericFailure(message: message));
+    }
+  }
+
   // Add mechanic in local sqlite database
   Future<MechanicModel?> _addLocalMechanicData(MechanicModel mech) async {
     if (mechanicsNames.contains(mech.name)) return null;

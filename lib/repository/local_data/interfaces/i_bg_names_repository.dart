@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import '../../../core/abstracts/data_result.dart';
 import '/core/models/bg_name.dart';
 
 /// A repository class for handling operations related to board game names using
@@ -38,7 +39,7 @@ abstract class IBgNamesRepository {
   /// Returns:
   /// - A [Future] containing a list of [BGNameModel] objects if successful.
   /// - Throws an exception if an error occurs during retrieval.
-  Future<List<BGNameModel>> getAll();
+  Future<DataResult<List<BGNameModel>>> getAll();
 
   /// Adds a new board game name to the SQLite database.
   ///
@@ -52,7 +53,7 @@ abstract class IBgNamesRepository {
   ///
   /// Returns:
   /// - A [Future] containing the added [BGNameModel] with the assigned ID.
-  Future<BGNameModel> add(BGNameModel bg);
+  Future<DataResult<BGNameModel>> add(BGNameModel bg);
 
   /// Updates an existing board game name in the SQLite database.
   ///
@@ -66,5 +67,7 @@ abstract class IBgNamesRepository {
   ///
   /// Returns:
   /// - A [Future] containing the number of affected rows.
-  Future<int> update(BGNameModel bg);
+  Future<DataResult<int>> update(BGNameModel bg);
+
+  Future<DataResult<void>> resetDatabase();
 }

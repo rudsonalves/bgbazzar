@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -15,10 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-abstract class IBgNamesStore {
-  Future<void> initialize();
-  Future<List<Map<String, dynamic>>> getAll();
-  Future<int> add(Map<String, dynamic> map);
-  Future<int> update(Map<String, dynamic> map);
-  Future<void> resetDatabase();
+class SaleItemModel {
+  String? id;
+  String title;
+  String description;
+  int quantity;
+  double unitPrice;
+
+  SaleItemModel({
+    this.id,
+    required this.title,
+    required this.description,
+    this.quantity = 1,
+    required this.unitPrice,
+  });
 }

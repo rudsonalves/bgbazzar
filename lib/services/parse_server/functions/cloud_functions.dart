@@ -15,10 +15,20 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-abstract class IBgNamesStore {
-  Future<void> initialize();
-  Future<List<Map<String, dynamic>>> getAll();
-  Future<int> add(Map<String, dynamic> map);
-  Future<int> update(Map<String, dynamic> map);
-  Future<void> resetDatabase();
+import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+
+class CloudFunctions {
+  CloudFunctions._();
+
+  static Future<void> assignUserToRoleCloud(
+      String userId, String roleName) async {
+    final response = await ParseCloudFunction('addUserToRole').execute(
+      parameters: {'userId': userId, 'roleName': roleName},
+    );
+
+    if (!response.success) {
+      throw Exception(
+          'Failed to assign user to role "$roleName": ${response.error?.message ?? 'Unknown error'}');
+    }
+  }
 }

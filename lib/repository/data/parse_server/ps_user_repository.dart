@@ -47,7 +47,7 @@ class PSUserRepository implements IUserRepository {
         ..setNonNull<String>(keyUserName, user.email)
         ..setNonNull<String>(keyUserNickname, user.name!)
         ..setNonNull<String>(keyUserPhone, user.phone!)
-        ..setNonNull<int>(keyUserType, user.userType.index);
+        ..setNonNull<String>(keyUserRole, user.role.name);
 
       // Attempt to sign up the user on the Parse Server.
       final response = await parseUser.signUp();
@@ -67,6 +67,38 @@ class PSUserRepository implements IUserRepository {
     } catch (err) {
       // Handle any error that occurs during the sign up process.
       return _handleError<UserModel>('signUp', err);
+    }
+  }
+
+  @override
+  Future<DataResult<void>> removeByEmail(String userEmail) async {
+    try {
+      final query = QueryBuilder<ParseUser>(ParseUser.forQuery())
+        ..whereEqualTo(keyUserEmail, userEmail);
+      final response = await query.query();
+
+      if (!response.success ||
+          response.result == null ||
+          response.results!.isEmpty) {
+        throw Exception(response.error?.toString() ??
+            'User with email $userEmail not found.');
+      }
+
+      // get user object
+      final user = response.results!.first as ParseUser;
+
+      // try remove user
+      final deleteResponse = await user.delete();
+
+      if (!deleteResponse.success) {
+        throw UserRepositoryException(
+          deleteResponse.error?.message ?? 'Failed to delete user.',
+        );
+      }
+
+      return DataResult.success(null);
+    } catch (err) {
+      return _handleError<UserModel>('removeByEmail', err);
     }
   }
 
@@ -208,6 +240,40 @@ class PSUserRepository implements IUserRepository {
       return _handleError<void>('resetPassword', err);
     }
   }
+
+  // Future<void> _assignUserToRole(ParseUser user, String roleName) async {
+  //   try {
+  //     // ;search for the Role by name
+  //     final query = QueryBuilder<ParseObject>(ParseObject(keyRoleTable))
+  //       ..whereEqualTo(keyRoleName, roleName);
+  //     final response = await query.query();
+
+  //     if (!response.success ||
+  //         response.results == null ||
+  //         response.results!.isEmpty) {
+  //       throw UserRepositoryException(
+  //           'Role "$roleName" not found or query failed.');
+  //     }
+
+  //     // Get the Role found
+  //     final role = response.results!.first as ParseObject;
+
+  //     // Add the user to the Role relationship
+  //     final relation = role.getRelation<ParseObject>(keyRoleUsers);
+  //     relation.add(user);
+
+  //     // Save the Role with the new relationship
+  //     final saveResponse = await role.save();
+  //     if (!saveResponse.success) {
+  //       throw UserRepositoryException(
+  //           'Failed to save role "$roleName": ${saveResponse.error?.message ?? 'Unknown error'}');
+  //     }
+  //   } catch (err) {
+  //     // Log the error and wrap it in a specific exception
+  //     throw UserRepositoryException(
+  //         'Failed to assign user to role "$roleName": $err');
+  //   }
+  // }
 
   Future<void> _checksPermissions(ParseUser parseUser) async {
     final parseAcl = parseUser.getACL();
