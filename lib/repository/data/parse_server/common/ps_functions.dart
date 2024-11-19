@@ -84,4 +84,10 @@ class PsFunctions {
       ..setPublicReadAccess(allowed: true)
       ..setPublicWriteAccess(allowed: false);
   }
+
+  static ParseACL createSharedAcl(ParseUser owner) {
+    return ParseACL()
+      ..setPublicReadAccess(allowed: true)
+      ..setPublicWriteAccess(allowed: true);
+  }
 }

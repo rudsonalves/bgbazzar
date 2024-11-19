@@ -36,7 +36,7 @@ class PSBoardgameRepository implements IBoardgameRepository {
   Future<DataResult<BoardgameModel?>> save(BoardgameModel bg) async {
     try {
       final parseUser = await PsFunctions.parseCurrentUser();
-      final parseAcl = PsFunctions.createDefaultAcl(parseUser);
+      final parseAcl = PsFunctions.createSharedAcl(parseUser);
       final parseImage = await _saveImage(path: bg.image, parseUser: parseUser);
 
       final parseBg = _prepareBgForSaveOrUpdate(
@@ -100,6 +100,23 @@ class PSBoardgameRepository implements IBoardgameRepository {
       return DataResult.success(ParseToModel.boardgameModel(resultParse));
     } catch (err) {
       return _handleError('getById', err);
+    }
+  }
+
+  @override
+  Future<DataResult<void>> delete(String bgId) async {
+    try {
+      final parse = ParseObject(keyBgTable)..objectId = bgId;
+      final fetchedObject = await parse.fetch();
+
+      final response = await fetchedObject.delete();
+      if (!response.success) {
+        throw BoardgameRepositoryException(
+            response.error?.toString() ?? 'no data found');
+      }
+      return DataResult.success(null);
+    } catch (err) {
+      return _handleError('delete', err);
     }
   }
 

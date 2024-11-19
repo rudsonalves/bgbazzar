@@ -18,7 +18,7 @@
 
 import 'package:flutter/material.dart';
 
-import '/components/widgets/base_dismissible_container.dart';
+import '../../../components/dialogs/simple_question.dart';
 import '/components/widgets/state_error_message.dart';
 import '/components/widgets/state_loading_message.dart';
 import '/core/models/bg_name.dart';
@@ -27,6 +27,7 @@ import '../../shop/widgets/search/search_dialog.dart';
 import 'boardgames_controller.dart';
 import 'boardgames_store.dart';
 import 'widgets/custom_floating_action_bar.dart';
+import 'widgets/dismissible_boardgame.dart';
 import 'widgets/view_boardgame.dart';
 
 class BoardgamesScreen extends StatefulWidget {
@@ -59,11 +60,11 @@ class _BoardgamesScreenState extends State<BoardgamesScreen> {
 
   Future<void> _addBoardgame() async {
     await Navigator.pushNamed(context, EditBoardgamesScreen.routeName);
-    ctrl.changeSearchName('');
+    ctrl.addBG();
   }
 
-  Future<void> _editBoardgame(BGNameModel editedBg) async {
-    final result = await ctrl.getBoardgameSelected(editedBg.id);
+  Future<void> _editBoardgame(BGNameModel bgName) async {
+    final result = await ctrl.getBoardgameSelected(bgName.id);
     if (result.isFailure) {
       throw Exception(result.error);
     }
@@ -77,7 +78,23 @@ class _BoardgamesScreenState extends State<BoardgamesScreen> {
         );
       }
     }
-    ctrl.changeSearchName('');
+    ctrl.addBG();
+  }
+
+  Future<bool> _deleteBoardgame(BGNameModel bgName) async {
+    final response = await SimpleQuestionDialog.open(
+      context,
+      title: 'Confirmar Remoção',
+      message: 'Confirma a remoção do boardgame ${bgName.name}?',
+      type: SQMessageType.confirmCancel,
+    );
+
+    if (response) {
+      await ctrl.removeBg(bgName);
+      ctrl.addBG();
+      return true;
+    }
+    return false;
   }
 
   Future<void> _openSearchDialog() async {
@@ -139,6 +156,7 @@ class _BoardgamesScreenState extends State<BoardgamesScreen> {
                   selectBGId: ctrl.selectBGId,
                   isSelected: ctrl.isSelected,
                   saveBg: _editBoardgame,
+                  deleteBg: _deleteBoardgame,
                 ),
               ),
               if (store.isLoading)
@@ -155,86 +173,6 @@ class _BoardgamesScreenState extends State<BoardgamesScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class DismissibleBoardgame extends StatelessWidget {
-  final BGNameModel bg;
-  final Function(BGNameModel) selectBGId;
-  final Function(BGNameModel) isSelected;
-  final Future<void> Function(BGNameModel)? saveBg;
-  final Future<bool> Function(BGNameModel)? deleteBg;
-
-  final Color colorLeft;
-  final IconData iconLeft;
-  final String labelLeft;
-
-  final Color colorRight;
-  final IconData iconRight;
-  final String labelRight;
-
-  const DismissibleBoardgame({
-    super.key,
-    required this.bg,
-    required this.selectBGId,
-    required this.isSelected,
-    this.colorLeft = Colors.green,
-    this.iconLeft = Icons.edit,
-    this.labelLeft = 'Editar',
-    this.colorRight = Colors.red,
-    this.iconRight = Icons.delete,
-    this.labelRight = 'Remover',
-    this.saveBg,
-    this.deleteBg,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Dismissible(
-      key: UniqueKey(),
-      background: baseDismissibleContainer(
-        context,
-        alignment: Alignment.centerLeft,
-        color: colorLeft.withOpacity(0.3),
-        icon: iconLeft,
-        label: labelLeft,
-        enable: saveBg != null,
-      ),
-      secondaryBackground: baseDismissibleContainer(
-        context,
-        alignment: Alignment.centerRight,
-        color: colorRight.withOpacity(0.3),
-        icon: iconRight,
-        label: labelRight,
-        enable: deleteBg != null,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: isSelected(bg) ? colorScheme.tertiaryContainer : null,
-        ),
-        child: ListTile(
-          title: Text(bg.name!),
-          onTap: () => selectBGId(bg),
-        ),
-      ),
-      confirmDismiss: (direction) async {
-        if (direction == DismissDirection.startToEnd) {
-          if (saveBg != null) {
-            saveBg!(bg);
-          }
-          return false;
-        } else if (direction == DismissDirection.endToStart) {
-          if (deleteBg != null) {
-            return deleteBg!(bg);
-          }
-          return false;
-        }
-        return false;
-      },
     );
   }
 }

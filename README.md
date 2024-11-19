@@ -78,6 +78,70 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/18 - version: 0.7.16+82
+
+This commit introduces significant enhancements and new functionality across multiple modules, focusing on boardgame and mechanics management, Parse Server integration, and cloud function improvements.
+
+### Changes made:
+
+1. **`lib/data_managers/boardgames_manager.dart`**:
+   - Added `delete` method to handle the deletion of boardgames from both Parse Server and local repository.
+   - Improved error handling for boardgame-related operations.
+
+2. **`lib/features/account/boardgames/boardgames_controller.dart`**:
+   - Introduced `addBG` and `removeBg` methods to manage boardgame addition and deletion.
+   - Enhanced error logging and state handling for boardgame operations.
+
+3. **`lib/features/account/boardgames/boardgames_screen.dart`**:
+   - Integrated boardgame deletion confirmation with `SimpleQuestionDialog`.
+   - Refactored `editBoardgame` and `addBoardgame` logic for consistency.
+
+4. **`lib/features/account/boardgames/boardgames_store.dart`**:
+   - Added `updateBGList` notifier to track boardgame list updates.
+   - Implemented `notifiesUpadteBGList` method to handle UI refreshes after operations.
+
+5. **`lib/features/account/boardgames/widgets/dismissible_boardgame.dart`**:
+   - Created a new widget to handle swipe actions for editing or deleting boardgames.
+
+6. **`lib/features/account/mechanics/mechanics_controller.dart`**:
+   - Renamed `resetMechs` to `removeMechs` for better semantic clarity.
+   - Added calls to `notifiesUpdateMechList` after mechanics operations.
+
+7. **`lib/features/account/mechanics/mechanics_store.dart`**:
+   - Added `updateMechList` notifier to manage mechanics list updates dynamically.
+
+8. **`lib/features/edit_ad`**:
+   - Moved `AdStatus` and `ProductCondition` state management to `EditAdStore`.
+   - Updated `edit_ad_controller.dart`, `edit_ad_form.dart`, and `edit_ad_store.dart` for improved separation of concerns.
+
+9. **`lib/repository/data/interfaces/i_boardgame_repository.dart`**:
+   - Added `delete` method to the boardgame repository interface.
+
+10. **`lib/repository/data/parse_server`**:
+    - **`ps_boardgame_repository.dart`**: Implemented `delete` method for removing boardgames from Parse Server.
+    - **`common/ps_functions.dart`**: Added `createSharedAcl` method for public write access to shared items.
+    - **`common/constants.dart`**: Fixed typo in `keyAdBoardGame`.
+
+11. **`lib/repository/local_data/sqlite/bg_names_repository.dart`**:
+    - Added `delete` method for local boardgame removal.
+
+12. **`lib/store/stores`**:
+    - **`bg_names_store.dart`**: Added a `delete` method to support boardgame removal.
+    - **`interfaces/i_bg_names_store.dart`**: Updated the interface to include the `delete` method.
+
+13. **`parse_server/cloud/main.js`**:
+    - Added multiple cloud functions:
+      - `createPaymentPreference`: Generates Mercado Pago payment preferences.
+      - `updateStockAndStatus`: Updates stock and marks items as sold when depleted.
+      - `afterSave` for `Parse.User`: Automatically assigns new users to the `user` role.
+      - `beforeSave` and `beforeDelete` for `Boardgame`: Restricts access to admin users only.
+      - `beforeSave` for `AdsSale`: Validates the referenced boardgame during ad creation.
+
+### Conclusion:
+
+These updates enhance the application's robustness by introducing comprehensive boardgame and mechanics management, refining the integration with Parse Server, and adding key cloud function validations. This improves maintainability, security, and user experience.
+
+
 ## 2024/11/18 - version: 0.7.15+81
 
 This commit enhances the mechanics management module, improves functionality across multiple files, refines code consistency, and introduces new capabilities for local database reset and CSV import. Key updates include adding the CSV library, refining methods, and improving state handling.

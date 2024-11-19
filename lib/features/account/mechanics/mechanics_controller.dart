@@ -39,6 +39,7 @@ class MechanicsController {
     try {
       store.setStateLoading();
       await mechanicManager.add(mech);
+      store.notifiesUpdateMechList();
       store.setStateSuccess();
     } catch (err) {
       log('add mechanic error: $err');
@@ -50,6 +51,7 @@ class MechanicsController {
     try {
       store.setStateLoading();
       await mechanicManager.update(mech);
+      store.notifiesUpdateMechList();
       store.setStateSuccess();
     } catch (err) {
       log('add mechanic error: $err');
@@ -84,10 +86,11 @@ class MechanicsController {
     store.setStateSuccess();
   }
 
-  Future<bool> resetMechs(MechanicModel mech) async {
+  Future<bool> removeMechs(MechanicModel mech) async {
     try {
       store.setStateLoading();
       await mechanicManager.delete(mech);
+      store.notifiesUpdateMechList();
       store.setStateSuccess();
       return true;
     } catch (err) {

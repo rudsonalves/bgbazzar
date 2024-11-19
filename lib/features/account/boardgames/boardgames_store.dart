@@ -15,6 +15,21 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:flutter/material.dart';
+
 import '/core/state/state_store.dart';
 
-class BoardgamesStore extends StateStore {}
+class BoardgamesStore extends StateStore {
+  final updateBGList = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    updateBGList.dispose();
+
+    super.dispose();
+  }
+
+  void notifiesUpadteBGList() {
+    updateBGList.value = !updateBGList.value;
+  }
+}

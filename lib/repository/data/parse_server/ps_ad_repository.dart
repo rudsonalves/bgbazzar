@@ -255,7 +255,7 @@ class PSAdRepository implements IAdRepository {
             response.error?.message ?? 'Failed to save ad.');
       }
 
-      return DataResult.success(ParseToModel.ad(parseAd));
+      return DataResult.success(ad.copyWith(id: parseAd.objectId));
     } catch (err) {
       return _handleError<AdModel?>('save', err);
     }
