@@ -21,4 +21,5 @@ abstract class IBgNamesStore {
   Future<int> add(Map<String, dynamic> map);
   Future<int> update(Map<String, dynamic> map);
   Future<void> resetDatabase();
+  Future<int> delete(String bgId);
 }

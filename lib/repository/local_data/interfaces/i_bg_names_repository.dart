@@ -70,4 +70,6 @@ abstract class IBgNamesRepository {
   Future<DataResult<int>> update(BGNameModel bg);
 
   Future<DataResult<void>> resetDatabase();
+
+  Future<DataResult<void>> delete(String bgId);
 }

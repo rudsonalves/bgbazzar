@@ -37,6 +37,7 @@ class MechanicsStore extends StateStore {
   final counter = ValueNotifier<int>(0);
   final hideDescription = ValueNotifier<bool>(false);
   final showSelected = ValueNotifier<bool>(false);
+  final updateMechList = ValueNotifier<bool>(false);
 
   /// Retrieves the names of all selected mechanics.
   List<String> get mechsNames =>
@@ -61,8 +62,14 @@ class MechanicsStore extends StateStore {
     counter.dispose();
     hideDescription.dispose();
     showSelected.dispose();
+    updateMechList.dispose();
 
     super.dispose();
+  }
+
+  /// Notifies updates in the mechanics list
+  void notifiesUpdateMechList() {
+    updateMechList.value = !updateMechList.value;
   }
 
   /// Toggles the [hideDescription] flag with loading and success states.

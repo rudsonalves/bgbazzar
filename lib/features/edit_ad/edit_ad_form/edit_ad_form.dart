@@ -156,10 +156,10 @@ class _EditAdFormState extends State<EditAdForm> {
                       icon: Icon(Icons.new_releases_outlined),
                     ),
                   ],
-                  selected: {ctrl.condition},
+                  selected: {store.ad.condition},
                   onSelectionChanged: (p0) {
                     setState(() {
-                      ctrl.setCondition(p0.first);
+                      store.setCondition(p0.first);
                     });
                   },
                 ),
@@ -229,26 +229,26 @@ class _EditAdFormState extends State<EditAdForm> {
               Expanded(
                 child: SegmentedButton<AdStatus>(
                   segments: [
-                    FittedButtonSegment(
+                    FittedButtonSegment<AdStatus>(
                       value: AdStatus.pending,
                       label: 'Pendente',
                       iconData: Icons.hourglass_empty,
                     ),
-                    FittedButtonSegment(
+                    FittedButtonSegment<AdStatus>(
                       value: AdStatus.active,
                       label: 'Ativo',
                       iconData: Icons.verified,
                     ),
-                    FittedButtonSegment(
+                    FittedButtonSegment<AdStatus>(
                       value: AdStatus.sold,
                       label: 'Vendido',
                       iconData: Icons.attach_money,
                     ),
                   ],
-                  selected: {ctrl.adStatus},
+                  selected: {store.ad.status},
                   onSelectionChanged: (p0) {
                     setState(() {
-                      ctrl.setAdStatus(p0.first);
+                      store.setStatus(p0.first);
                     });
                   },
                 ),

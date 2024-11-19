@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:developer';
+
 import '/core/abstracts/data_result.dart';
 import '/core/models/bg_name.dart';
 import '/core/models/boardgame.dart';
@@ -46,6 +48,29 @@ class BoardgamesController {
 
   closeError() {
     store.setStateSuccess();
+  }
+
+  Future<void> addBG() async {
+    try {
+      store.setStateLoading();
+      _updateSearchFilter('');
+      store.notifiesUpadteBGList();
+      await Future.delayed(const Duration(milliseconds: 50));
+      store.setStateSuccess();
+    } catch (err) {
+      store.setError('Ocorreu um erro. Tente mais tarde.');
+    }
+  }
+
+  Future<bool> removeBg(BGNameModel bgName) async {
+    store.setStateLoading();
+    final result = await getIt<BoardgamesManager>().delete(bgName.id!);
+    if (result.isFailure) {
+      log(result.error.toString());
+      return false;
+    }
+    store.setStateSuccess();
+    return true;
   }
 
   Future<void> changeSearchName(String fsearch) async {

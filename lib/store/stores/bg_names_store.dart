@@ -66,6 +66,21 @@ class BGNamesStore implements IBgNamesStore {
   }
 
   @override
+  Future<int> delete(String bgId) async {
+    try {
+      final id = await _db.delete(
+        bgNamesTable,
+        where: '$bgId = ?',
+        whereArgs: [bgId],
+      );
+      return id;
+    } catch (err) {
+      log('BGNamesStore.delete: $err');
+      return -1;
+    }
+  }
+
+  @override
   Future<int> update(Map<String, dynamic> map) async {
     try {
       final result = await _db.update(

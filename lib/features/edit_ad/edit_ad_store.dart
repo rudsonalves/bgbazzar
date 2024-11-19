@@ -128,6 +128,14 @@ class EditAdStore extends StateStore {
     ad.quantity = value;
   }
 
+  void setStatus(AdStatus value) {
+    ad.status = value;
+  }
+
+  void setCondition(ProductCondition value) {
+    ad.condition = value;
+  }
+
   void setBGInfo(BoardgameModel bg) {
     ad.boardgame = bg;
     addImage(bg.image);

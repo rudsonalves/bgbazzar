@@ -38,8 +38,6 @@ class EditAdController {
   final adRepository = getIt<IAdRepository>();
 
   String _selectedAddressId = '';
-  ProductCondition _condition = ProductCondition.used;
-  AdStatus _adStatus = AdStatus.pending;
 
   final nameController = TextEditingController();
   final priceController = CurrencyTextController();
@@ -55,9 +53,7 @@ class EditAdController {
     price: 0,
   );
 
-  AdStatus get adStatus => _adStatus;
   String get selectedAddressId => _selectedAddressId;
-  ProductCondition get condition => _condition;
   List<MechanicModel> get mechanics => mechanicsManager.mechanics;
 
   void init(EditAdStore store) {
@@ -130,14 +126,6 @@ class EditAdController {
       store.setAddress(address);
       _selectedAddressId = address.id!;
     }
-  }
-
-  void setCondition(ProductCondition newCondition) {
-    _condition = newCondition;
-  }
-
-  void setAdStatus(AdStatus newStatus) {
-    _adStatus = newStatus;
   }
 
   void setName(String name) {

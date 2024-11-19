@@ -108,4 +108,6 @@ abstract class IBoardgameRepository {
   /// - `BoardgameRepositoryException` if the query operation fails, providing
   /// details of the issue.
   Future<DataResult<List<BGNameModel>>> getNames();
+
+  Future<DataResult<void>> delete(String bgId);
 }

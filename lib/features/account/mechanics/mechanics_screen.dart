@@ -102,10 +102,24 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
         ) ??
         false;
     if (result) {
-      final result = await ctrl.resetMechs(mech);
+      final result = await ctrl.removeMechs(mech);
       return result;
     }
     return false;
+  }
+
+  Widget showMechList() {
+    if (!store.showSelected.value) {
+      return ShowAllMechs(
+        store: store,
+        deleteMech: _deleteMechanic,
+        editMechanic: _editMechanic,
+      );
+    } else {
+      return ShowOnlySelectedMechs(
+        store: store,
+      );
+    }
   }
 
   @override
@@ -129,15 +143,11 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
               body: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: (!store.showSelected.value)
-                    ? ShowAllMechs(
-                        store: store,
-                        deleteMech: _deleteMechanic,
-                        editMechanic: _editMechanic,
-                      )
-                    : ShowOnlySelectedMechs(
-                        store: store,
-                      ),
+                child: ValueListenableBuilder(
+                    valueListenable: store.updateMechList,
+                    builder: (context, _, __) {
+                      return showMechList();
+                    }),
               ),
             ),
             if (store.isLoading)

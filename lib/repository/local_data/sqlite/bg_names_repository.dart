@@ -63,6 +63,21 @@ class SqliteBGNamesRepository implements IBgNamesRepository {
   }
 
   @override
+  Future<DataResult<void>> delete(String bgId) async {
+    try {
+      final id = await _store.delete(bgId);
+      if (id < 1) {
+        throw Exception('record not found');
+      }
+      return DataResult.success(null);
+    } catch (err) {
+      final message = 'BGNamesRepository.delete: $err';
+      log(message);
+      return DataResult.failure(GenericFailure(message: message));
+    }
+  }
+
+  @override
   Future<DataResult<int>> update(BGNameModel bg) async {
     try {
       final result = await _store.update(bg.toMap());

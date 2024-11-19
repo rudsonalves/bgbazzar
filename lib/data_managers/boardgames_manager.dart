@@ -216,6 +216,16 @@ class BoardgamesManager {
     }
   }
 
+  Future<DataResult<void>> delete(String bgId) async {
+    try {
+      await boardgameRepository.delete(bgId);
+      await localBoardgameRepository.delete(bgId);
+      return DataResult.success(null);
+    } catch (err) {
+      return _handleError('delete', err);
+    }
+  }
+
   /// Processes the image for a board game update by converting it to a standard
   /// format if needed and updating the [BoardgameModel]'s image path.
   ///
