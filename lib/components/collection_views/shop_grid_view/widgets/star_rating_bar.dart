@@ -16,7 +16,6 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 class StarRatingBar extends StatelessWidget {
   final double rate;
@@ -28,15 +27,38 @@ class StarRatingBar extends StatelessWidget {
 
   List<Widget> _createRateRow(double rate) {
     List<Widget> row = [];
+    final note = (rate * 2).round() / 2;
+    final size = 18.0;
 
-    for (int i = 1; i <= 5; i++) {
-      row.add(
-        Icon(
-          Symbols.star_sharp,
-          size: 18,
-          color: rate >= i ? Colors.yellow : Colors.grey,
-        ),
-      );
+    for (int i = 1; i < 6; i++) {
+      final halfLeft = note > i - 1;
+      final halfRight = halfLeft && note >= i;
+
+      if (!halfLeft && !halfRight) {
+        row.add(
+          Image.asset(
+            'assets/images/star_empty.png',
+            width: size,
+            height: size,
+          ),
+        );
+      } else if (halfLeft && !halfRight) {
+        row.add(
+          Image.asset(
+            'assets/images/star_half.png',
+            width: size,
+            height: size,
+          ),
+        );
+      } else if (halfLeft && halfRight) {
+        row.add(
+          Image.asset(
+            'assets/images/star_full.png',
+            width: size,
+            height: size,
+          ),
+        );
+      }
     }
 
     return row;

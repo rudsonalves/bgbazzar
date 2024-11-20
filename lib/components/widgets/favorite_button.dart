@@ -45,7 +45,7 @@ class FavoriteStackButton extends StatelessWidget {
                   favAdIds.contains(ad.id!)
                       ? Icons.favorite
                       : Icons.favorite_border,
-                  color: Colors.red,
+                  color: favAdIds.contains(ad.id!) ? Colors.red : null,
                 );
               }),
           onPressed: () => favoritesManager.toggleAdFav(ad),

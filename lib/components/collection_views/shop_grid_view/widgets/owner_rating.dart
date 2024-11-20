@@ -35,7 +35,7 @@ class OwnerRating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final note = 4.5;
+    final note = 4.2;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

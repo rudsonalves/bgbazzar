@@ -78,6 +78,34 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/19 - version: 0.7.16+84
+
+This commit introduces enhancements to the star rating display, adds SVG and PNG resources for visual representation, and refines functionality across various components.
+
+### Changes made:
+
+1. **assets/images/star_empty.png, star_full.png, star_half.png**:
+   - Added PNG assets for empty, full, and half stars to support the star rating visualization.
+
+2. **assets/svg/Stars.svg**:
+   - Added an SVG resource for star shapes, created with Inkscape for vector-based customization and potential export to other formats.
+
+3. **lib/components/collection_views/shop_grid_view/widgets/owner_rating.dart**:
+   - Adjusted the `note` variable from `4.5` to `4.2` to demonstrate dynamic star ratings.
+
+4. **lib/components/collection_views/shop_grid_view/widgets/star_rating_bar.dart**:
+   - Removed the `material_symbols_icons` dependency for icons.
+   - Updated `_createRateRow` to dynamically generate star ratings using PNG assets for empty, half, and full stars.
+   - Added logic to handle half-star ratings by rounding the `rate` value appropriately.
+
+5. **lib/components/widgets/favorite_button.dart**:
+   - Updated the icon color logic to conditionally assign `null` when the ad is not a favorite, improving UI consistency.
+
+### Conclusion:
+
+This commit enhances the user experience by implementing a dynamic and visually engaging star rating system. The inclusion of SVG and PNG assets ensures flexibility for design adjustments. Additional refinements improve functionality and readability across the codebase.
+
+
 ## 2024/11/20 - version: 0.7.16+83
 
 This commit enhances several components and features across the project, introducing new widgets, refining functionality, and improving overall maintainability and readability.
