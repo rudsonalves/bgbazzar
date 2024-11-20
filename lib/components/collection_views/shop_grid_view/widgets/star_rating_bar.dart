@@ -15,29 +15,38 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
-import '../edit_ad_store.dart';
+class StarRatingBar extends StatelessWidget {
+  final double rate;
 
-class ImageListController {
-  late final EditAdStore store;
+  const StarRatingBar({
+    super.key,
+    required this.rate,
+  });
 
-  List<String> get images => store.ad.images;
+  List<Widget> _createRateRow(double rate) {
+    List<Widget> row = [];
 
-  void init(EditAdStore store) {
-    this.store = store;
-  }
-
-  void addImage(String image) {
-    store.addImage(image);
-  }
-
-  void removeImage(int index) {
-    final image = images[index];
-    store.removeImage(image);
-    if (!image.startsWith('http')) {
-      final file = File(image);
-      file.delete();
+    for (int i = 1; i <= 5; i++) {
+      row.add(
+        Icon(
+          Symbols.star_sharp,
+          size: 18,
+          color: rate >= i ? Colors.yellow : Colors.grey,
+        ),
+      );
     }
+
+    return row;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: _createRateRow(rate),
+    );
   }
 }

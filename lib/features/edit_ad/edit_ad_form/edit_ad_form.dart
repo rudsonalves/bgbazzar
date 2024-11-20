@@ -122,7 +122,10 @@ class _EditAdFormState extends State<EditAdForm> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              'Estes dados são informações genéricas do jogo coletadas em sites especializados e no distribuidor',
+              'Estes dados são informações genéricas do jogo coletadas em'
+              ' sites especializados e no distribuidor',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           ValueListenableBuilder(

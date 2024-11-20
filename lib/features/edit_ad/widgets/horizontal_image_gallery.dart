@@ -22,19 +22,20 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../edit_ad_store.dart';
 import '/components/widgets/bottom_message.dart';
 import 'photo_origin_bottom_sheet.dart';
 
 const maxImages = 5;
 
 class HotizontalImageGallery extends StatefulWidget {
-  final List<String> images;
+  final EditAdStore store;
   final void Function(String path) addImage;
   final void Function(int index) removeImage;
 
   const HotizontalImageGallery({
     super.key,
-    required this.images,
+    required this.store,
     required this.addImage,
     required this.removeImage,
   });
@@ -44,6 +45,9 @@ class HotizontalImageGallery extends StatefulWidget {
 }
 
 class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
+  EditAdStore get store => widget.store;
+  List<String> get images => store.ad.images;
+
   Future<void> getFromCamera() async {
     Navigator.pop(context);
     if (Platform.isAndroid || Platform.isIOS) {
@@ -104,7 +108,7 @@ class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
 
   void _showImageEditDialog(int index) {
     final colorScheme = Theme.of(context).colorScheme;
-    final image = widget.images[index];
+    final image = images[index];
 
     showDialog(
       context: context,
@@ -155,7 +159,7 @@ class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
 
   @override
   Widget build(BuildContext context) {
-    int length = widget.images.length;
+    int length = images.length;
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -165,11 +169,48 @@ class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
           // Show image
           return Padding(
             padding: const EdgeInsets.only(right: 4),
-            child: InkWell(
-              onTap: () => _showImageEditDialog(index),
-              child: SizedBox(
-                child: showImage(widget.images[index]),
-              ),
+            child: Stack(
+              children: [
+                InkWell(
+                  onTap: () => _showImageEditDialog(index),
+                  child: SizedBox(
+                    height: 148,
+                    width: 148,
+                    child: showImage(images[index]),
+                  ),
+                ),
+                SizedBox(
+                  height: 148,
+                  width: 148,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton.filled(
+                            onPressed: index == 0
+                                ? null
+                                : () => store.moveImaveLeft(index),
+                            icon: Icon(Symbols.chevron_left_rounded),
+                          ),
+                          IconButton.filled(
+                            onPressed: index == length - 1
+                                ? null
+                                : () => store.moveImageRight(index),
+                            icon: Icon(Symbols.chevron_right_rounded),
+                          ),
+                        ],
+                      ),
+                      IconButton.filled(
+                        onPressed: () => _showImageEditDialog(index),
+                        icon: Icon(Symbols.delete_rounded),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           );
         } else {
@@ -177,8 +218,8 @@ class _HotizontalImageGalleryState extends State<HotizontalImageGallery> {
           return Padding(
             padding: const EdgeInsets.all(2),
             child: SizedBox(
-              width: 108,
-              height: 108,
+              width: 148,
+              height: 148,
               child: IconButton.filledTonal(
                 onPressed: _showModelBottomImageSource,
                 icon: const Column(

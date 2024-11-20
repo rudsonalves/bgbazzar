@@ -62,29 +62,30 @@ class _ImagesListViewState extends State<ImagesListView> {
                 : colorScheme.primary.withOpacity(0.25),
             borderRadius: BorderRadius.circular(12),
           ),
-          height: 120,
+          height: 150,
           child: ValueListenableBuilder(
             valueListenable: store.updateImages,
             builder: (context, erroString, _) => HotizontalImageGallery(
-              images: ctrl.images,
+              store: store,
               addImage: ctrl.addImage,
               removeImage: ctrl.removeImage,
             ),
           ),
         ),
         ValueListenableBuilder(
-            valueListenable: store.errorImages,
-            builder: (context, message, _) {
-              if (message == null) {
-                return Container();
-              } else {
-                return Text(
-                  message,
-                  style: AppTextStyle.font12Bold
-                      .copyWith(color: colorScheme.error),
-                );
-              }
-            })
+          valueListenable: store.errorImages,
+          builder: (context, message, _) {
+            if (message == null) {
+              return Container();
+            } else {
+              return Text(
+                message,
+                style:
+                    AppTextStyle.font12Bold.copyWith(color: colorScheme.error),
+              );
+            }
+          },
+        )
       ],
     );
   }

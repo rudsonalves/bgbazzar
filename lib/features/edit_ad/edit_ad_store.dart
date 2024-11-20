@@ -56,24 +56,34 @@ class EditAdStore extends StateStore {
     updateImages.dispose();
   }
 
-  // setImages(List<String> images) {
-  //   updateImages.value++;
-  //   ad.images = List.from(images);
-  //   _validateImages();
-  // }
-
-  addImage(String image) {
+  void addImage(String image) {
     if (ad.images.contains(image)) return;
     updateImages.value++;
     ad.images.add(image);
     _validateImages();
   }
 
-  removeImage(String image) {
-    if (ad.images.contains(image)) return;
+  void removeImage(String image) {
+    if (!ad.images.contains(image)) return;
     updateImages.value++;
     ad.images.remove(image);
     _validateImages();
+  }
+
+  void moveImaveLeft(int index) {
+    if (index == 0) return;
+    final auxImage = ad.images[index];
+    ad.images[index] = ad.images[index - 1];
+    ad.images[index - 1] = auxImage;
+    updateImages.value++;
+  }
+
+  void moveImageRight(int index) {
+    if (index + 1 == ad.images.length) return;
+    final auxImage = ad.images[index];
+    ad.images[index] = ad.images[index + 1];
+    ad.images[index + 1] = auxImage;
+    updateImages.value++;
   }
 
   void _validateImages() {
