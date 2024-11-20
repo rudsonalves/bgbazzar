@@ -22,7 +22,6 @@ import 'package:flutter/rendering.dart';
 
 import '../account/account_screen.dart';
 import '../../core/singletons/current_user.dart';
-import '../../core/theme/app_text_style.dart';
 import '../../components/drawers/custom_drawer.dart';
 import '../../components/collection_views/shop_grid_view/shop_grid_view.dart';
 import '../../components/widgets/state_error_message.dart';
@@ -32,6 +31,7 @@ import '../edit_ad/edit_ad_screen.dart';
 import '../signin/signin_screen.dart';
 import 'shop_controller.dart';
 import 'shop_store.dart';
+import 'widgets/ads_not_found_message.dart';
 import 'widgets/search/search_dialog.dart';
 
 class ShopScreen extends StatefulWidget {
@@ -147,7 +147,6 @@ class _ShopScreenState extends State<ShopScreen>
   Future<void> _navToLoginScreen() async {
     if (!ctrl.isLogged) {
       await Navigator.pushNamed(context, SignInScreen.routeName);
-      // ctrl.init(store);
     } else {
       Navigator.pushNamed(context, AccountScreen.routeName);
     }
@@ -229,33 +228,7 @@ class _ShopScreenState extends State<ShopScreen>
           builder: (context, _) => Stack(
             children: [
               // state State Success
-              if (ctrl.ads.isEmpty && store.isSuccess)
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Card(
-                        color: colorScheme.primaryContainer.withOpacity(.45),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            children: [
-                              const Icon(
-                                Icons.warning_amber,
-                                color: Colors.amber,
-                                size: 80,
-                              ),
-                              Text(
-                                'Nenhum anúncio encontrado',
-                                style: AppTextStyle.font18Bold,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              if (ctrl.ads.isEmpty && store.isSuccess) AdsNotFoundMessage(),
               if (ctrl.ads.isNotEmpty && store.isSuccess)
                 Padding(
                   padding: const EdgeInsets.all(0),

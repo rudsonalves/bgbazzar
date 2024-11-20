@@ -17,34 +17,39 @@
 
 import 'package:flutter/material.dart';
 
-import '/core/singletons/app_settings.dart';
-import '/get_it.dart';
-import 'star_rating_bar.dart';
+import '/core/theme/app_text_style.dart';
 
-class OwnerRating extends StatelessWidget {
-  final String? owner;
-  final int starts;
-
-  const OwnerRating({
-    super.key,
-    required this.starts,
-    this.owner,
-  });
-
-  bool get isDark => getIt<AppSettings>().isDark;
+class AdsNotFoundMessage extends StatelessWidget {
+  const AdsNotFoundMessage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final note = 4.5;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(owner ?? ''),
+        Center(
+          child: Card(
+            color: colorScheme.primaryContainer.withOpacity(.45),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.warning_amber,
+                    color: Colors.amber,
+                    size: 80,
+                  ),
+                  Text(
+                    'Nenhum anúncio encontrado',
+                    style: AppTextStyle.font18Bold,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
-        StarRatingBar(rate: note)
       ],
     );
   }

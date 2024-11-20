@@ -68,7 +68,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
         store.setStateSuccess();
         return;
       }
-      // if (mounted) Navigator.pop(context, ad);
+      if (mounted) Navigator.pop(context, store.ad);
     }
   }
 
@@ -82,13 +82,6 @@ class _EditAdScreenState extends State<EditAdScreen> {
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                // log(ctrl.ad.toString());
-              },
-              icon: const Icon(Icons.print))
-        ],
       ),
       body: ValueListenableBuilder(
           valueListenable: store.state,

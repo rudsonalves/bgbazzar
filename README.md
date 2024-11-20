@@ -78,7 +78,69 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
-## 2024/11/18 - version: 0.7.16+82
+## 2024/11/20 - version: 0.7.16+83
+
+This commit enhances several components and features across the project, introducing new widgets, refining functionality, and improving overall maintainability and readability.
+
+### Changes made:
+
+1. **lib/components/collection_views/shop_grid_view/widgets/owner_rating.dart**:
+   - Added the import for `star_rating_bar.dart`.
+   - Replaced the manual star rating display logic with the new `StarRatingBar` widget.
+   - Introduced a fixed note value for demonstration purposes.
+
+2. **lib/components/collection_views/shop_grid_view/widgets/star_rating_bar.dart**:
+   - Added a new widget `StarRatingBar` to handle dynamic star ratings visually.
+   - Implemented a method `_createRateRow` to dynamically create star icons based on the given rating.
+   - Designed the widget for reusability across other components.
+
+3. **lib/components/widgets/favorite_button.dart**:
+   - Set the icon color to red for the `FavoriteStackButton` to improve visual feedback.
+
+4. **lib/core/models/ad.dart**:
+   - Updated the default value for `condition` in `AdModel` from `ProductCondition.all` to `ProductCondition.used`.
+
+5. **lib/features/edit_ad/edit_ad_controller.dart**:
+   - Added `_loadBoardgame` method to initialize form fields with ad data.
+   - Integrated `_loadBoardgame` into the `init` method to prepopulate the form.
+
+6. **lib/features/edit_ad/edit_ad_form/edit_ad_form.dart**:
+   - Adjusted the layout of descriptive text to include ellipsis and max lines for better UX.
+
+7. **lib/features/edit_ad/edit_ad_screen.dart**:
+   - Fixed navigation logic by passing the updated ad object when popping the screen.
+   - Removed unnecessary debug-related `IconButton`.
+
+8. **lib/features/edit_ad/edit_ad_store.dart**:
+   - Added `moveImageLeft` and `moveImageRight` methods to handle reordering of images.
+   - Refactored `addImage` and `removeImage` methods to enhance readability and maintainability.
+
+9. **lib/features/edit_ad/image_list/image_list_controller.dart**:
+   - Simplified URL validation logic in `removeImage` by replacing regex with `startsWith`.
+
+10. **lib/features/edit_ad/image_list/image_list_view.dart**:
+    - Integrated reordering capabilities into the `HorizontalImageGallery` widget.
+    - Adjusted layout dimensions for better visual consistency.
+
+11. **lib/features/edit_ad/widgets/horizontal_image_gallery.dart**:
+    - Modified the widget to utilize `EditAdStore` for state management.
+    - Implemented reordering functionality using the new `moveImageLeft` and `moveImageRight` methods from `EditAdStore`.
+    - Enhanced UX by adding icons for reordering and deletion directly on images.
+
+12. **lib/features/shop/shop_screen.dart**:
+    - Replaced inline "no ads found" message with the newly created `AdsNotFoundMessage` widget.
+    - Removed redundant imports and comments for cleaner code.
+
+13. **lib/features/shop/widgets/ads_not_found_message.dart**:
+    - Introduced a new reusable widget `AdsNotFoundMessage` to display a "no ads found" message.
+    - Styled the widget for consistency with the app's design system.
+
+### Conclusion:
+
+These updates significantly improve code modularity, readability, and user experience. The addition of reusable components like `StarRatingBar` and `AdsNotFoundMessage` promotes maintainability, while enhancements to image handling and ad editing functionality streamline workflows for both developers and end users.
+
+
+## 2024/11/19 - version: 0.7.16+82
 
 This commit introduces significant enhancements and new functionality across multiple modules, focusing on boardgame and mechanics management, Parse Server integration, and cloud function improvements.
 

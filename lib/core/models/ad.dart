@@ -54,7 +54,7 @@ class AdModel {
     this.address,
     required this.price,
     this.quantity = 1,
-    this.condition = ProductCondition.all,
+    this.condition = ProductCondition.used,
     this.status = AdStatus.pending,
     this.views = 0,
     this.boardgame,

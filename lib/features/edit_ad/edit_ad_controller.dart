@@ -17,9 +17,9 @@
 
 import 'dart:developer';
 
-import 'package:bgbazzar/repository/data/interfaces/i_ad_repository.dart';
 import 'package:flutter/material.dart';
 
+import '/repository/data/interfaces/i_ad_repository.dart';
 import '../../core/abstracts/data_result.dart';
 import '/components/custon_controllers/currency_text_controller.dart';
 import 'edit_ad_store.dart';
@@ -58,6 +58,8 @@ class EditAdController {
 
   void init(EditAdStore store) {
     this.store = store;
+
+    _loadBoardgame();
   }
 
   void dispoase() {
@@ -140,5 +142,17 @@ class EditAdController {
 
   void setPriceString(String value) {
     store.setPrice(priceController.currencyValue);
+  }
+
+  void _loadBoardgame() {
+    store.setStateLoading();
+    final ad = store.ad;
+    nameController.text = ad.title;
+    priceController.currencyValue = ad.price;
+    quantityController.text = ad.quantity.toString();
+    mechsController.text = store.ad.mechanicsString;
+    addressController.text = store.ad.address?.addressString() ?? "";
+
+    store.setStateSuccess();
   }
 }
