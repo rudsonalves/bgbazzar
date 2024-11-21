@@ -290,24 +290,24 @@ Parse.Cloud.beforeSave("AdsSale", async (request) => {
   }
 
   // Verificar se há um Boardgame referenciado
-  const boardgame = ad.get("boardGame");
+  const boardgame = ad.get("boardgame");
 
-  if (!boardgame) {
-    throw new Parse.Error(102, "Boardgame reference is missing.");
+  if (boardgame) {
+    // Validar o Boardgame referenciado
+    const boardgameQuery = new Parse.Query("Boardgame");
+    boardgameQuery.equalTo("objectId", boardgame.id);
+    const fetchedBoardgame = await boardgameQuery.first({ useMasterKey: true });
+
+    if (!fetchedBoardgame) {
+      throw new Parse.Error(103, "Referenced Boardgame not found.");
+    }
+
+    console.log(
+      `Boardgame ${fetchedBoardgame.id} validated successfully for AdsSale.`
+    );
+  } else {
+    console.log("No Boardgame reference provided. Skipping validation.");
   }
-
-  // Validar o Boardgame referenciado
-  const boardgameQuery = new Parse.Query("Boardgame");
-  boardgameQuery.equalTo("objectId", boardgame.id);
-  const fetchedBoardgame = await boardgameQuery.first({ useMasterKey: true });
-
-  if (!fetchedBoardgame) {
-    throw new Parse.Error(103, "Referenced Boardgame not found.");
-  }
-
-  console.log(
-    `Boardgame ${fetchedBoardgame.id} validated successfully for AdsSale.`
-  );
 
   // Permitir a operação de salvar o AdsSale
 });

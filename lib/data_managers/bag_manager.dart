@@ -28,6 +28,10 @@ class BagManager {
   final itemsCount = ValueNotifier<int>(0);
   final refreshList = ValueNotifier<bool>(false);
 
+  final List<String> _sellerIds = [];
+
+  List<String> get sellers => _sellerIds;
+
   List<String> get itemsIds => items.map((item) => item.adItem.id!).toList();
 
   void dispose() {
@@ -53,6 +57,7 @@ class BagManager {
     } else {
       items.add(newItem);
       _updateCountValue();
+      _checkSellers();
     }
     // FIXME: write in database...
   }
@@ -60,6 +65,7 @@ class BagManager {
   Future<void> increaseQt(String adId) async {
     final index = _indexThatHasId(adId);
     if (index != -1) {
+      // Add new item
       items[index].increaseQt();
       _updateCountValue();
       // FIXME: write in database...
@@ -70,9 +76,11 @@ class BagManager {
     final index = _indexThatHasId(adId);
     if (index != -1) {
       items[index].decreaseQt();
+      // Remove item
       if (items[index].quantity == 0) {
         items.removeAt(index);
         refreshList.value = !refreshList.value;
+        _checkSellers();
       }
       _updateCountValue();
       // FIXME: write in database...
@@ -97,17 +105,12 @@ class BagManager {
     return sum;
   }
 
-  void checkSellers() {
-    final List<Seller> sellers = [];
+  void _checkSellers() {
+    _sellerIds.clear();
     for (final item in items) {
-      // item.adItem.;
+      if (!_sellerIds.contains(item.adItem.ownerId!)) {
+        _sellerIds.add(item.adItem.ownerId!);
+      }
     }
   }
-}
-
-class Seller {
-  final String id;
-  final String name;
-
-  Seller(this.id, this.name);
 }

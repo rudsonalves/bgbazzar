@@ -171,15 +171,25 @@ class PSAdRepository implements IAdRepository {
   Future<DataResult<List<AdModel>?>> get({
     required FilterModel filter,
     required String search,
+    bool full = false,
     int page = 0,
   }) async {
     try {
       // Create query for ads from the Parse server
-      final query = QueryBuilder<ParseObject>(ParseObject(keyAdTable))
-        ..setAmountToSkip(page * maxAdsPerList)
-        ..setLimit(maxAdsPerList)
-        ..includeObject([keyAdOwner, keyAdAddress])
-        ..whereEqualTo(keyAdStatus, AdStatus.active.name);
+      late QueryBuilder<ParseObject> query;
+
+      if (full) {
+        query = QueryBuilder<ParseObject>(ParseObject(keyAdTable))
+          ..setAmountToSkip(page * maxAdsPerList)
+          ..setLimit(maxAdsPerList)
+          ..includeObject([keyAdOwner, keyAdAddress])
+          ..whereEqualTo(keyAdStatus, AdStatus.active.name);
+      } else {
+        query = QueryBuilder<ParseObject>(ParseObject(keyAdTable))
+          ..setAmountToSkip(page * maxAdsPerList)
+          ..setLimit(maxAdsPerList)
+          ..whereEqualTo(keyAdStatus, AdStatus.active.name);
+      }
 
       // Apply search filter if the search term is not empty
       if (search.trim().isNotEmpty) {
@@ -338,8 +348,16 @@ class PSAdRepository implements IAdRepository {
       parseAd.setACL(parseAcl);
     }
 
+    final shortAddress = '${ad.address!.city} - ${ad.address!.state}';
+
     parseAd
       ..setNonNull<ParseUser>(keyAdOwner, parseUser)
+      ..setNonNull<String>(keyAdOwnerId, ad.owner!.id)
+      ..setNonNull<String>(keyAdOwnerName, ad.owner!.name)
+      // FIXME: fazer o rate de usuário
+      ..setNonNull<double>(keyAdOwnerRate, 4.5)
+      ..setNonNull<String>(keyAdOwnerCity, shortAddress)
+      ..setNonNull<DateTime>(keyAdOwnerCreatedAt, ad.owner!.createdAt)
       ..setNonNull<String>(keyAdTitle, ad.title)
       ..setNonNull<String>(keyAdDescription, ad.description)
       ..setNonNull<double>(keyAdPrice, ad.price)

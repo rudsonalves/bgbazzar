@@ -18,20 +18,21 @@
 import 'package:flutter/material.dart';
 
 import '/components/collection_views/shop_grid_view/widgets/star_rating_bar.dart';
-import '/core/models/address.dart';
 import '/core/utils/extensions.dart';
 import '/core/theme/app_text_style.dart';
 
 class UserCard extends StatelessWidget {
   final String name;
+  final double rate;
   final DateTime createAt;
-  final AddressModel address;
+  final String address;
 
   const UserCard({
     super.key,
     required this.name,
     required this.address,
     required this.createAt,
+    required this.rate,
   });
 
   @override
@@ -59,12 +60,12 @@ class UserCard extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
-                        child: StarRatingBar(rate: 4.5),
+                        child: StarRatingBar(rate: rate),
                       ),
                     ],
                   ),
                   const SizedBox(height: 12),
-                  Text('Localização: ${address.city} - ${address.city}'),
+                  Text('Localização: $address'),
                   Text(
                     'Usuário desde ${createAt.formatDate()}',
                     style: AppTextStyle.font12

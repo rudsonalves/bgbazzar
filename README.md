@@ -78,7 +78,67 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
-## 2024/11/21 - version: 0.7.16+85
+## 2024/11/21 - version: 0.7.17+86
+
+This commit enhances the `AdModel` by integrating additional owner details, optimizes the bag management process, and introduces seller grouping functionality in the Bag module. Key changes also include refining Parse server integration and improving the `AdsSale` validation logic.
+
+### Changes made:
+
+1. **lib/components/collection_views/shop_grid_view/widgets/ad_shop_view.dart**:
+   - Removed unnecessary `dart:math` import.
+   - Updated `OwnerRating` widget to use `ownerName` and `ownerRate` instead of `owner.name` and a random integer.
+
+2. **lib/components/collection_views/shop_grid_view/widgets/owner_rating.dart**:
+   - Replaced `starts` parameter with `note` for a clearer rating representation.
+   - Removed hardcoded `note` initialization inside the widget.
+
+3. **lib/core/models/ad.dart**:
+   - Added new owner-related fields: `ownerId`, `ownerName`, `ownerRate`, `ownerCity`, and `ownerCreateAt`.
+
+4. **lib/data_managers/bag_manager.dart**:
+   - Introduced `_sellerIds` to track unique seller IDs in the bag.
+   - Added `_checkSellers` method to maintain the list of unique sellers dynamically.
+   - Refactored logic in `addItem` and `decreaseQt` to call `_checkSellers` when items are added or removed.
+
+5. **lib/features/bag/bag_screen.dart**:
+   - Replaced inline item rendering logic with a dynamic seller-based grouping using the new `SallerBag` widget.
+   - Simplified imports for consistency.
+
+6. **lib/features/bag/widgets/saller_bag.dart** (New file):
+   - Introduced `SallerBag` widget to group items by seller and display them in the Bag screen.
+
+7. **lib/features/edit_ad/edit_ad_controller.dart**:
+   - Ensured `store.ad.owner` is updated with the current user before saving an ad.
+
+8. **lib/features/shop/product/product_screen.dart**:
+   - Updated `UserCard` usage to include `ownerName`, `ownerRate`, `ownerCity`, and `ownerCreateAt`.
+
+9. **lib/features/shop/product/widgets/user_card_product.dart**:
+   - Added `rate` parameter to dynamically display the owner’s rating.
+   - Adjusted address display to use a single string instead of an `AddressModel`.
+
+10. **lib/repository/data/parse_server/common/constants.dart**:
+    - Added constants for new owner fields: `keyAdOwnerId`, `keyAdOwnerName`, `keyAdOwnerRate`, `keyAdOwnerCity`, and `keyAdOwnerCreatedAt`.
+    - Corrected typo in `keyAdBoardGame`.
+
+11. **lib/repository/data/parse_server/common/parse_to_model.dart**:
+    - Enhanced `ad` method to parse and populate new owner fields.
+    - Added optional `full` parameter to control whether address and user details are fetched.
+
+12. **lib/repository/data/parse_server/ps_ad_repository.dart**:
+    - Updated `save` method to include new owner fields in the ad creation process.
+    - Enhanced `get` method with a `full` parameter to include or exclude related objects.
+
+13. **parse_server/cloud/main.js**:
+    - Improved `AdsSale` validation logic to handle missing boardgame references more gracefully.
+    - Added conditional logic to skip validation when no boardgame is referenced.
+
+### Conclusion:
+
+These updates significantly improve the Bag and Ads modules by introducing seller-based grouping, refining owner data integration, and enhancing the validation process. These changes also improve maintainability and prepare the codebase for more robust feature implementation.
+
+
+## 2024/11/21 - version: 0.7.17+85
 
 This commit introduces significant enhancements and restructuring within the `bgbazzar` project. It focuses on replacing the `CartManager` and `CartItemModel` with the newly implemented `BagManager` and `BagItemModel`. Additional updates include the creation of new screens and controllers for managing the shopping bag, refinements in model handling, and adjustments to address dependencies. 
 
@@ -175,7 +235,7 @@ This commit introduces significant enhancements and restructuring within the `bg
 These changes enhance the maintainability and functionality of the shopping bag system, improve naming consistency, and integrate new features into the product and bag workflows. The updates also streamline state management and ensure alignment with updated project standards.
 
 
-## 2024/11/19 - version: 0.7.17+84
+## 2024/11/19 - version: 0.7.16+84
 
 This commit introduces enhancements to the star rating display, adds SVG and PNG resources for visual representation, and refines functionality across various components.
 

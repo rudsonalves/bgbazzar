@@ -73,6 +73,7 @@ class EditAdController {
   Future<DataResult<AdModel>> saveAd() async {
     try {
       store.setStateLoading();
+      store.ad.owner = currentUser.user;
       final result = await adRepository.save(store.ad);
       if (result.isFailure) {
         throw Exception(result.error);

@@ -23,11 +23,11 @@ import 'star_rating_bar.dart';
 
 class OwnerRating extends StatelessWidget {
   final String? owner;
-  final int starts;
+  final double note;
 
   const OwnerRating({
     super.key,
-    required this.starts,
+    required this.note,
     this.owner,
   });
 
@@ -35,8 +35,6 @@ class OwnerRating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final note = 4.2;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
