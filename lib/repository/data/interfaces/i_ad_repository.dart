@@ -125,7 +125,7 @@ abstract class IAdRepository {
   ///
   /// [usr] - The `UserModel` instance representing the user requesting the ads.
   /// [status] - The status of the advertisements to filter by, represented as
-  ///   an integer.
+  ///   an string.
   ///
   /// Returns:
   /// - A `DataResult<List<AdModel>?>` that contains the user's advertisements
@@ -135,7 +135,7 @@ abstract class IAdRepository {
   /// - `AdRepositoryException` if the query fails, indicating an issue with
   ///   fetching the user ads.
   ///
-  Future<DataResult<List<AdModel>?>> getMyAds(UserModel usr, int status);
+  Future<DataResult<List<AdModel>?>> getMyAds(UserModel usr, String status);
 
   /// Fetches a list of advertisements from the Parse Server based on the
   /// provided filters and search string.

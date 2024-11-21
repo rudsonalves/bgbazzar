@@ -78,7 +78,104 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
-## 2024/11/19 - version: 0.7.16+84
+## 2024/11/21 - version: 0.7.16+85
+
+This commit introduces significant enhancements and restructuring within the `bgbazzar` project. It focuses on replacing the `CartManager` and `CartItemModel` with the newly implemented `BagManager` and `BagItemModel`. Additional updates include the creation of new screens and controllers for managing the shopping bag, refinements in model handling, and adjustments to address dependencies. 
+
+### Changes made:
+
+1. **assets/svg/Stars.svg**:
+   - Updated export filename references for SVG layers to reflect new usage: `star_full`, `star_empty`, and `star_half`.
+   - Added modifications to the layer display settings for improved visualization.
+
+2. **lib/app.dart**:
+   - Added the `BagScreen` route for navigation.
+
+3. **lib/core/models/bag_item.dart**:
+   - Introduced `BagItemModel` to replace the previous `CartItemModel`, with functionality to handle quantities and pricing logic.
+
+4. **lib/core/models/cart_item.dart** (Deleted):
+   - Removed the obsolete `CartItemModel`.
+
+5. **lib/core/models/sale.dart → lib/core/models/sales.dart**:
+   - Renamed file for consistency in naming conventions.
+   - Replaced usage of `SaleItemModel` with `BagItemModel`.
+   - Simplified item addition and removal logic in the sales model.
+
+6. **lib/data_managers/bag_manager.dart**:
+   - Introduced `BagManager` to handle shopping bag logic, replacing `CartManager`.
+   - Added methods to manage bag items, quantities, and total calculations.
+
+7. **lib/data_managers/cart_manager.dart** (Deleted):
+   - Removed the obsolete `CartManager`.
+
+8. **lib/features/account/my_ads/my_ads_controller.dart**:
+   - Adjusted to use `status.name` instead of `status.index` for ad status management.
+
+9. **lib/features/account/my_ads/widgets/my_tab_bar_view.dart**:
+   - Removed commented-out, redundant code to streamline logic.
+
+10. **lib/features/bag/bag_controller.dart**:
+    - Added `BagController` for managing the shopping bag state and interaction with `BagStore` and `BagManager`.
+
+11. **lib/features/bag/bag_screen.dart**:
+    - Introduced a new `BagScreen` for displaying and managing the shopping bag.
+
+12. **lib/features/bag/bag_store.dart**:
+    - Created `BagStore` extending `StateStore` to manage the bag's state.
+
+13. **lib/features/bag/widgets/bag_sub_total.dart**:
+    - Added widget to display the bag's subtotal with item count and total price.
+
+14. **lib/features/bag/widgets/quantity_buttons.dart**:
+    - Introduced reusable quantity adjustment buttons for bag items.
+
+15. **lib/features/shop/product/procuct_store.dart**:
+    - Added `ProcuctStore` for state management within product-related operations.
+
+16. **lib/features/shop/product/product_controller.dart**:
+    - Created `ProductController` to handle product interactions, including adding items to the bag.
+
+17. **lib/features/shop/product/product_screen.dart**:
+    - Integrated the new bag functionality, including navigation to the `BagScreen` and adding items to the bag.
+
+18. **lib/features/shop/product/widgets/description_product.dart**:
+    - Enhanced styling for the product description section.
+
+19. **lib/features/shop/product/widgets/location_product.dart** (Deleted):
+    - Removed unused `LocationProduct` widget.
+
+20. **lib/features/shop/product/widgets/sub_title_product.dart**:
+    - Improved subtitle styling with bold text.
+
+21. **lib/features/shop/product/widgets/title_product.dart**:
+    - Adjusted title styling for better visibility.
+
+22. **lib/features/shop/product/widgets/user_card_product.dart**:
+    - Added user location and star rating display for enhanced user interaction.
+
+23. **lib/get_it.dart**:
+    - Replaced `CartManager` registration with `BagManager`.
+    - Ensured proper disposal of `BagManager`.
+
+24. **lib/repository/data/interfaces/i_ad_repository.dart**:
+    - Updated method parameters to use string-based statuses instead of integers.
+
+25. **lib/repository/data/parse_server/common/parse_to_model.dart**:
+    - Adjusted status handling to use string values instead of indices.
+
+26. **lib/repository/data/parse_server/ps_ad_repository.dart**:
+    - Updated ad status and condition handling to use `name` instead of `index`.
+
+27. **parse_server/cloud/main.js**:
+    - Added logic to skip restrictions when using the MasterKey for specific cloud functions.
+
+### Conclusion:
+
+These changes enhance the maintainability and functionality of the shopping bag system, improve naming consistency, and integrate new features into the product and bag workflows. The updates also streamline state management and ensure alignment with updated project standards.
+
+
+## 2024/11/19 - version: 0.7.17+84
 
 This commit introduces enhancements to the star rating display, adds SVG and PNG resources for visual representation, and refines functionality across various components.
 

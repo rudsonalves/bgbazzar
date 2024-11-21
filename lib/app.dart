@@ -28,6 +28,7 @@ import 'core/theme/util.dart';
 import 'features/account/boardgames/boardgames_screen.dart';
 import 'features/account/boardgames/widgets/view_boardgame.dart';
 import 'features/account/boardgames/edit_boardgame/edit_boardgame_screen.dart';
+import 'features/bag/bag_screen.dart';
 import 'features/favorites/favorites_screen.dart';
 import 'features/account/account_screen.dart';
 import 'features/addresses/addresses_screen.dart';
@@ -90,6 +91,7 @@ class _AppState extends State<App> {
               FavoritesScreen.routeName: (_) => const FavoritesScreen(),
               BoardgamesScreen.routeName: (_) => const BoardgamesScreen(),
               CheckPage.routeName: (_) => const CheckPage(),
+              BagScreen.routeName: (_) => const BagScreen(),
             },
             onGenerateRoute: (settings) {
               switch (settings.name) {

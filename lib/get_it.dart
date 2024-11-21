@@ -19,7 +19,7 @@ import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 
-import 'data_managers/cart_manager.dart';
+import 'data_managers/bag_manager.dart';
 import 'repository/app_data/share_preferences/app_share_preferences_repository.dart';
 import 'repository/app_data/interfaces/i_app_preferences_repository.dart';
 import 'core/singletons/app_settings.dart';
@@ -99,7 +99,7 @@ void setupDependencies() {
     });
 
     // Cart Manager
-    getIt.registerLazySingleton<CartManager>(() => CartManager());
+    getIt.registerLazySingleton<BagManager>(() => BagManager());
   } catch (err) {
     log('GetIt Locator Error: $err');
   }
@@ -111,4 +111,5 @@ void disposeDependencies() {
   getIt<FavoritesManager>().dispose();
   getIt<CurrentUser>().dispose();
   getIt<AppSettings>().dispose();
+  getIt<BagManager>().dispose();
 }

@@ -19,27 +19,33 @@ import 'package:flutter/material.dart';
 
 import '/core/theme/app_text_style.dart';
 
-class SubTitleProduct extends StatelessWidget {
-  final String subtile;
-  final Color? color;
-  final EdgeInsetsGeometry? padding;
+class BagSubTotal extends StatelessWidget {
+  final ValueNotifier<int> itemsCount;
+  final double Function() total;
 
-  const SubTitleProduct({
+  const BagSubTotal({
     super.key,
-    required this.subtile,
-    this.color,
-    this.padding,
+    required this.itemsCount,
+    required this.total,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          padding != null ? padding! : const EdgeInsets.symmetric(vertical: 8),
-      child: Text(
-        subtile,
-        style: AppTextStyle.font16Bold.copyWith(color: color),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: itemsCount,
+      builder: (context, count, _) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text('Subtotal ($count'
+                ' ite${count > 1 ? 'ns' : 'm'}): '),
+            Text(
+              '\$${total().toStringAsFixed(2)}',
+              style: AppTextStyle.font16Bold,
+            ),
+          ],
+        );
+      },
     );
   }
 }

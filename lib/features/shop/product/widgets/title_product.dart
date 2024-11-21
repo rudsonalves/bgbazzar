@@ -35,7 +35,7 @@ class TitleProduct extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Text(
         title,
-        style: AppTextStyle.font16SemiBold.copyWith(color: color),
+        style: AppTextStyle.font20SemiBold.copyWith(color: color),
       ),
     );
   }

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -15,31 +16,24 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
+import '../../core/models/bag_item.dart';
+import '../../data_managers/bag_manager.dart';
+import '../../get_it.dart';
+import 'bag_store.dart';
 
-import '/core/theme/app_text_style.dart';
+class BagController {
+  final BagStore store;
+  final bagManager = getIt<BagManager>();
 
-class SubTitleProduct extends StatelessWidget {
-  final String subtile;
-  final Color? color;
-  final EdgeInsetsGeometry? padding;
+  List<BagItemModel> get items => bagManager.items;
 
-  const SubTitleProduct({
-    super.key,
-    required this.subtile,
-    this.color,
-    this.padding,
-  });
+  BagController(this.store) {
+    initialize();
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          padding != null ? padding! : const EdgeInsets.symmetric(vertical: 8),
-      child: Text(
-        subtile,
-        style: AppTextStyle.font16Bold.copyWith(color: color),
-      ),
-    );
+  Future<void> initialize() async {
+    store.setStateLoading();
+    Future.delayed(const Duration(milliseconds: 50));
+    store.setStateSuccess();
   }
 }
