@@ -31,6 +31,11 @@ enum ProductCondition { all, used, sealed }
 class AdModel {
   String? id;
   UserModel? owner;
+  String? ownerId;
+  String? ownerName;
+  double? ownerRate;
+  String? ownerCity;
+  DateTime? ownerCreateAt;
   String title;
   String description;
   double price;
@@ -47,6 +52,11 @@ class AdModel {
   AdModel({
     this.id,
     this.owner,
+    this.ownerId,
+    this.ownerName,
+    this.ownerRate,
+    this.ownerCity,
+    this.ownerCreateAt,
     required this.images,
     required this.title,
     required this.description,

@@ -143,9 +143,10 @@ class _ProductScreenState extends State<ProductScreen> {
                   const Divider(indent: indent, endIndent: indent),
                   // const SubTitleProduct(subtile: 'Anunciante'),
                   UserCard(
-                    name: ad.owner!.name!,
-                    createAt: ad.owner!.createdAt!,
-                    address: ad.address!,
+                    name: ad.ownerName!,
+                    createAt: ad.ownerCreateAt!,
+                    address: ad.ownerCity!,
+                    rate: ad.ownerRate!,
                   ),
                   const SizedBox(height: 50),
                 ],

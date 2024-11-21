@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import '/core/models/ad.dart';
@@ -90,8 +88,8 @@ class AdShopView extends StatelessWidget {
                   ),
                   ShopTextPrice(ad.price),
                   OwnerRating(
-                    owner: ad.owner!.name,
-                    starts: Random().nextInt(5) + 1,
+                    owner: ad.ownerName!,
+                    note: ad.ownerRate!,
                   ),
                 ],
               ),

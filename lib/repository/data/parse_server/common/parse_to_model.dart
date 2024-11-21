@@ -80,20 +80,30 @@ class ParseToModel {
   /// [parse] - The ParseObject to convert.
   /// Returns an AdModel representing the ParseObject if the address and
   /// user are not null, otherwise returns null.
-  static AdModel? ad(ParseObject parse) {
-    final parseAddress = parse.get<ParseObject?>(keyAdAddress);
-    if (parseAddress == null) return null;
-    AddressModel? address = ParseToModel.address(parseAddress);
+  static AdModel? ad(ParseObject parse, [bool full = false]) {
+    AddressModel? address;
+    UserModel? user;
 
-    final parseUser = parse.get<ParseUser?>(keyAdOwner);
-    if (parseUser == null) return null;
-    final user = ParseToModel.user(parseUser);
+    if (full) {
+      final parseAddress = parse.get<ParseObject?>(keyAdAddress);
+      if (parseAddress == null) return null;
+      address = ParseToModel.address(parseAddress);
+
+      final parseUser = parse.get<ParseUser?>(keyAdOwner);
+      if (parseUser == null) return null;
+      user = ParseToModel.user(parseUser);
+    }
 
     final mechs = parse.get<List<dynamic>>(keyAdMechanics) ?? [];
 
     return AdModel(
       id: parse.objectId,
       owner: user,
+      ownerId: parse.get<String>(keyAdOwnerId)!,
+      ownerName: parse.get<String>(keyAdOwnerName)!,
+      ownerRate: parse.get<double>(keyAdOwnerRate)!,
+      ownerCity: parse.get<String>(keyAdOwnerCity)!,
+      ownerCreateAt: parse.get<DateTime>(keyAdOwnerCreatedAt)!,
       title: parse.get<String>(keyAdTitle)!,
       description: parse.get<String>(keyAdDescription)!,
       price: parse.get<num>(keyAdPrice)!.toDouble(),
