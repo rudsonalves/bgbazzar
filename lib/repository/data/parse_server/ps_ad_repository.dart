@@ -107,7 +107,7 @@ class PSAdRepository implements IAdRepository {
       // Create the ad ParseObject with the provided ID to update its status
       final parse = ParseObject(keyAdTable)
         ..objectId = ad.id!
-        ..set(keyAdStatus, ad.status.index);
+        ..set(keyAdStatus, ad.status.name);
 
       // Execuet the update operation
       final response = await parse.update();
@@ -125,7 +125,10 @@ class PSAdRepository implements IAdRepository {
   }
 
   @override
-  Future<DataResult<List<AdModel>?>> getMyAds(UserModel usr, int status) async {
+  Future<DataResult<List<AdModel>?>> getMyAds(
+    UserModel usr,
+    String status,
+  ) async {
     try {
       // Retrieve the current user from the Parse server
       final parseUser = await ParseUser.currentUser() as ParseUser?;
@@ -176,7 +179,7 @@ class PSAdRepository implements IAdRepository {
         ..setAmountToSkip(page * maxAdsPerList)
         ..setLimit(maxAdsPerList)
         ..includeObject([keyAdOwner, keyAdAddress])
-        ..whereEqualTo(keyAdStatus, AdStatus.active.index);
+        ..whereEqualTo(keyAdStatus, AdStatus.active.name);
 
       // Apply search filter if the search term is not empty
       if (search.trim().isNotEmpty) {
@@ -341,8 +344,8 @@ class PSAdRepository implements IAdRepository {
       ..setNonNull<String>(keyAdDescription, ad.description)
       ..setNonNull<double>(keyAdPrice, ad.price)
       ..setNonNull<int>(keyAdQuantity, ad.quantity)
-      ..setNonNull<int>(keyAdStatus, ad.status.index)
-      ..setNonNull<int>(keyAdCondition, ad.condition.index)
+      ..setNonNull<String>(keyAdStatus, ad.status.name)
+      ..setNonNull<String>(keyAdCondition, ad.condition.name)
       ..setNonNull<ParseObject>(keyAdAddress, parseAddress)
       ..setNonNull<List<ParseFile>>(keyAdImages, parseImages)
       ..setNonNull<List<String>>(keyAdMechanics, ad.mechanicsIds);

@@ -15,24 +15,21 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:async';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
+import '../../bag/bag_screen.dart';
+import '/data_managers/bag_manager.dart';
 import '/core/models/ad.dart';
 import '/core/singletons/current_user.dart';
 import '/components/widgets/favorite_button.dart';
 import '/get_it.dart';
+import 'procuct_store.dart';
+import 'product_controller.dart';
 import 'widgets/description_product.dart';
-import 'widgets/duo_segmented_button.dart';
 import 'widgets/game_data.dart';
 import 'widgets/image_carousel.dart';
-import 'widgets/location_product.dart';
 import 'widgets/price_product.dart';
-import 'widgets/sub_title_product.dart';
 import 'widgets/title_product.dart';
 import 'widgets/user_card_product.dart';
 
@@ -52,13 +49,12 @@ class ProductScreen extends StatefulWidget {
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<Offset> _fabOffsetAnimation;
+class _ProductScreenState extends State<ProductScreen> {
+  late final ProductController ctrl;
+  final store = ProcuctStore();
+  final bagManager = getIt<BagManager>();
+
   late final AdModel ad;
-  final _scrollController = ScrollController();
-  Timer? _timer;
 
   bool get isLogged => getIt<CurrentUser>().isLogged;
 
@@ -68,56 +64,20 @@ class _ProductScreenState extends State<ProductScreen>
 
     ad = widget.ad;
 
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-
-    _fabOffsetAnimation = Tween<Offset>(
-      begin: const Offset(0, 1.5),
-      end: const Offset(0, 0),
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-
-    _scrollController.addListener(_scrollListener);
-    _animationController.forward();
+    ctrl = ProductController(store, ad);
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
-    _animationController.dispose();
-    _timer?.cancel();
-
     super.dispose();
   }
 
-  void _scrollListener() {
-    if (_scrollController.position.userScrollDirection ==
-            ScrollDirection.forward ||
-        _scrollController.position.userScrollDirection ==
-            ScrollDirection.reverse) {
-      _hideFab();
-      _resetTimer();
-    }
+  Future<void> _addBag() async {
+    await ctrl.addBag();
   }
 
-  void _showFab() {
-    _animationController.forward();
-  }
-
-  void _resetTimer() {
-    _timer?.cancel();
-    _timer = Timer(const Duration(seconds: 1), () {
-      _showFab();
-    });
-  }
-
-  void _hideFab() {
-    _animationController.reverse();
+  void _toBagPage() {
+    Navigator.pushNamed(context, BagScreen.routeName);
   }
 
   @override
@@ -131,69 +91,67 @@ class _ProductScreenState extends State<ProductScreen>
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
         elevation: 5,
+        actions: [
+          ValueListenableBuilder(
+              valueListenable: bagManager.itemsCount,
+              builder: (context, count, _) {
+                return IconButton(
+                  onPressed: _toBagPage,
+                  icon: Badge(
+                    label: Text(count.toString()),
+                    child: Icon(Symbols.shopping_bag_rounded),
+                  ),
+                );
+              }),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: SlideTransition(
-        position: _fabOffsetAnimation,
-        child: DuoSegmentedButton(
-          hideButton1: false,
-          label1: 'Ligar',
-          iconData1: Icons.phone,
-          callBack1: () {
-            final phone = ad.owner!.phone!.replaceAll(RegExp(r'[^\d]'), '');
-            launchUrl(Uri.parse('tel:$phone'));
-          },
-          label2: 'Chat',
-          iconData2: Icons.chat,
-          callBack2: () {
-            log('Chat');
-          },
-        ),
-      ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (scrollNotification) {
-          _hideFab();
-          _resetTimer();
-          return false;
-        },
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            children: [
-              Stack(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                ImageCarousel(ad: ad),
+                if (isLogged) FavoriteStackButton(ad: ad),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ImageCarousel(ad: ad),
-                  if (isLogged) FavoriteStackButton(ad: ad),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      PriceProduct(price: ad.price),
+                      FilledButton.icon(
+                        onPressed: _addBag,
+                        icon: Icon(Symbols.shopping_bag_rounded),
+                        label: Text('Comprar'),
+                      ),
+                    ],
+                  ),
+                  TitleProduct(title: ad.title),
+                  const Divider(indent: indent, endIndent: indent),
+                  DescriptionProduct(description: ad.description),
+                  // FIXME: verificar se é melhor copiar as informações em uma
+                  // leiture no PS ou se carregar estas informalções depois.
+                  if (ad.boardgame != null)
+                    GameData(
+                      ad: ad,
+                      indent: indent,
+                    ),
+                  const Divider(indent: indent, endIndent: indent),
+                  // const SubTitleProduct(subtile: 'Anunciante'),
+                  UserCard(
+                    name: ad.owner!.name!,
+                    createAt: ad.owner!.createdAt!,
+                    address: ad.address!,
+                  ),
+                  const SizedBox(height: 50),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    PriceProduct(price: ad.price),
-                    TitleProduct(title: ad.title),
-                    const Divider(indent: indent, endIndent: indent),
-                    DescriptionProduct(description: ad.description),
-                    if (ad.boardgame != null)
-                      GameData(
-                        ad: ad,
-                        indent: indent,
-                      ),
-                    const Divider(indent: indent, endIndent: indent),
-                    LocationProduct(address: ad.address!),
-                    const Divider(indent: indent, endIndent: indent),
-                    const SubTitleProduct(subtile: 'Anunciante'),
-                    UserCard(
-                      name: ad.owner!.name!,
-                      createAt: ad.owner!.createdAt!,
-                    ),
-                    const SizedBox(height: 50),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

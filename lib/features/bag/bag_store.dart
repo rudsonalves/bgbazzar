@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -16,18 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-class SaleItemModel {
-  String? id;
-  String title;
-  String description;
-  int quantity;
-  double unitPrice;
+import '/core/state/state_store.dart';
 
-  SaleItemModel({
-    this.id,
-    required this.title,
-    required this.description,
-    this.quantity = 1,
-    required this.unitPrice,
-  });
-}
+class BagStore extends StateStore {}

@@ -17,16 +17,20 @@
 
 import 'package:flutter/material.dart';
 
+import '/components/collection_views/shop_grid_view/widgets/star_rating_bar.dart';
+import '/core/models/address.dart';
 import '/core/utils/extensions.dart';
 import '/core/theme/app_text_style.dart';
 
 class UserCard extends StatelessWidget {
   final String name;
   final DateTime createAt;
+  final AddressModel address;
 
   const UserCard({
     super.key,
     required this.name,
+    required this.address,
     required this.createAt,
   });
 
@@ -38,7 +42,7 @@ class UserCard extends StatelessWidget {
       children: [
         Expanded(
           child: Container(
-            margin: const EdgeInsets.all(12),
+            margin: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
                 color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(16)),
@@ -47,16 +51,25 @@ class UserCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    name,
-                    style: AppTextStyle.font18SemiBold,
+                  Row(
+                    children: [
+                      Text(
+                        name,
+                        style: AppTextStyle.font18SemiBold,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: StarRatingBar(rate: 4.5),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 12),
+                  Text('Localização: ${address.city} - ${address.city}'),
                   Text(
                     'Usuário desde ${createAt.formatDate()}',
                     style: AppTextStyle.font12
                         .copyWith(color: colorScheme.secondary),
-                  )
+                  ),
                 ],
               ),
             ),

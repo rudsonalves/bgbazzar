@@ -64,7 +64,7 @@ class MyAdsController {
   Future<void> _getAds() async {
     final result = await adRepository.getMyAds(
       currentUser,
-      _productStatus.index,
+      _productStatus.name,
     );
     if (result.isFailure) {
       // FIXME: Complete this error handling

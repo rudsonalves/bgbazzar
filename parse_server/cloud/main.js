@@ -190,6 +190,12 @@ Parse.Cloud.afterSave(Parse.User, async (request) => {
 //  - Usuário não autenticado.
 //  - Usuário não autorizado a criar ou editar registros.
 Parse.Cloud.beforeSave("Boardgame", async (request) => {
+  // Permitir automaticamente se o useMasterKey estiver habilitado
+  if (request.master) {
+    console.log("MasterKey detected, skipping restrictions for beforeSave.");
+    return;
+  }
+
   const user = request.user;
 
   if (!user) {
@@ -230,6 +236,12 @@ Parse.Cloud.beforeSave("Boardgame", async (request) => {
 //  - Usuário não autenticado.
 //  - Usuário não autorizado a excluir registros.
 Parse.Cloud.beforeDelete("Boardgame", async (request) => {
+  // Permitir automaticamente se o useMasterKey estiver habilitado
+  if (request.master) {
+    console.log("MasterKey detected, skipping restrictions for beforeDelete.");
+    return;
+  }
+
   const user = request.user;
 
   if (!user) {
@@ -264,6 +276,12 @@ Parse.Cloud.beforeDelete("Boardgame", async (request) => {
 //  - Referência para um `Boardgame` ausente ou inválida.
 
 Parse.Cloud.beforeSave("AdsSale", async (request) => {
+  // Permitir automaticamente se o useMasterKey estiver habilitado
+  if (request.master) {
+    console.log("MasterKey detected, skipping restrictions for beforeDelete.");
+    return;
+  }
+
   const ad = request.object;
   const user = request.user;
 

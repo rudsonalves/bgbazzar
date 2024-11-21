@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'sale_item.dart';
+import 'bag_item.dart';
 
 /// SaleStatus
 /// - pending: the sales has been created, but the process is ongoing
@@ -41,31 +41,27 @@ enum SaleStatus {
 class SaleModel {
   String? id;
   String userId;
-  String? productId;
+  List<BagItemModel> items;
   double amount;
-  DateTime createdAt;
-  DateTime updatedAt;
   DateTime expectedCreditDate;
   SaleStatus _status;
-  String? disputeDetails;
-  List<SaleItemModel> items;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   SaleModel({
     this.id,
     required this.userId,
-    this.productId,
     this.amount = 0.0,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? expectedCreditDate,
     SaleStatus status = SaleStatus.pending,
-    this.disputeDetails,
-    List<SaleItemModel>? items,
+    List<BagItemModel>? items,
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now(),
         expectedCreditDate =
             expectedCreditDate ?? DateTime.now().add(Duration(days: 30)),
-        items = items ?? <SaleItemModel>[],
+        items = items ?? <BagItemModel>[],
         _status = status;
 
   SaleStatus get status => _status;
@@ -85,13 +81,13 @@ class SaleModel {
     _updateTimestamp();
   }
 
-  void addItem(SaleItemModel item) {
+  void addItem(BagItemModel item) {
     items.add(item);
     amount += item.quantity * item.unitPrice;
     _updateTimestamp();
   }
 
-  void removeItem(SaleItemModel item) {
+  void removeItem(BagItemModel item) {
     final isRemoved = items.remove(item);
     if (isRemoved) {
       amount -= item.quantity * item.unitPrice;

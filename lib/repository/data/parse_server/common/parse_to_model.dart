@@ -104,9 +104,9 @@ class ParseToModel {
       mechanicsIds: mechs.map((element) => element as String).toList(),
       address: address,
       status: AdStatus.values
-          .firstWhere((s) => s.index == parse.get<int>(keyAdStatus)!),
+          .firstWhere((s) => s.name == parse.get<String>(keyAdStatus)!),
       condition: ProductCondition.values
-          .firstWhere((c) => c.index == parse.get<int>(keyAdCondition)!),
+          .firstWhere((c) => c.name == parse.get<String>(keyAdCondition)!),
       views: parse.get<int>(keyAdViews, defaultValue: 0)!,
       createdAt: parse.get<DateTime>(keyAdCreatedAt)!,
     );
