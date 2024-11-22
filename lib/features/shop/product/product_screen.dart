@@ -93,16 +93,17 @@ class _ProductScreenState extends State<ProductScreen> {
         elevation: 5,
         actions: [
           ValueListenableBuilder(
-              valueListenable: bagManager.itemsCount,
-              builder: (context, count, _) {
-                return IconButton(
-                  onPressed: _toBagPage,
-                  icon: Badge(
-                    label: Text(count.toString()),
-                    child: Icon(Symbols.shopping_bag_rounded),
-                  ),
-                );
-              }),
+            valueListenable: bagManager.itemsCount,
+            builder: (context, count, _) {
+              return IconButton(
+                onPressed: _toBagPage,
+                icon: Badge(
+                  label: Text(count.toString()),
+                  child: Icon(Symbols.shopping_bag_rounded),
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(

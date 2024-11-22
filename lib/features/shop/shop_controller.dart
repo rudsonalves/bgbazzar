@@ -24,9 +24,9 @@ import '../../core/models/user.dart';
 import '../../core/singletons/app_settings.dart';
 import '../../core/singletons/current_user.dart';
 import '../../core/singletons/search_filter.dart';
+import '../../data_managers/ad_manager.dart';
 import '../../get_it.dart';
 import '../../repository/data/interfaces/i_ad_repository.dart';
-import '../../repository/data/parse_server/common/constants.dart';
 import 'shop_store.dart';
 
 class ShopController {
@@ -34,10 +34,11 @@ class ShopController {
   final currentUser = getIt<CurrentUser>();
   final searchFilter = getIt<SearchFilter>();
   final adRepository = getIt<IAdRepository>();
+  final adManager = getIt<AdManager>();
+
   late final ShopStore store;
 
-  final List<AdModel> _ads = [];
-  List<AdModel> get ads => _ads;
+  List<AdModel> get ads => adManager.ads;
 
   int _adsPage = 0;
   bool _getMorePages = true;
@@ -65,7 +66,7 @@ class ShopController {
   Future<void> _initialize() async {
     try {
       store.setStateLoading();
-      await _getAds();
+      _getMorePages = await adManager.getAds();
 
       await currentUser.init();
       setPageTitle();
@@ -106,7 +107,9 @@ class ShopController {
   Future<void> getAds() async {
     try {
       store.setStateLoading();
-      await _getAds();
+      // await _getAds();
+      _getMorePages = await adManager.getAds();
+      _adsPage = 0;
       store.setStateSuccess();
     } catch (err) {
       final message = 'ShopController.getAds: $err';
@@ -115,32 +118,33 @@ class ShopController {
     }
   }
 
-  Future<void> _getAds() async {
-    final result = await adRepository.get(
-      filter: filter,
-      search: searchFilter.searchString,
-    );
-    if (result.isFailure) {
-      // FIXME: Complete this error handling
-      throw Exception('ShopController._getAds error: ${result.error}');
-    }
-    final newAds = result.data;
-    _adsPage = 0;
-    ads.clear();
-    if (newAds != null && newAds.isNotEmpty) {
-      ads.addAll(newAds);
-      _getMorePages = maxAdsPerList == newAds.length;
-    } else {
-      _getMorePages = false;
-    }
-  }
+  // Future<void> _getAds() async {
+  //   final result = await adRepository.get(
+  //     filter: filter,
+  //     search: searchFilter.searchString,
+  //   );
+  //   if (result.isFailure) {
+  //     // FIXME: Complete this error handling
+  //     throw Exception('ShopController._getAds error: ${result.error}');
+  //   }
+  //   final newAds = result.data;
+  //   _adsPage = 0;
+  //   ads.clear();
+  //   if (newAds != null && newAds.isNotEmpty) {
+  //     ads.addAll(newAds);
+  //     _getMorePages = maxAdsPerList == newAds.length;
+  //   } else {
+  //     _getMorePages = false;
+  //   }
+  // }
 
   Future<void> getMoreAds() async {
     if (!_getMorePages) return;
     _adsPage++;
     try {
       store.setStateLoading();
-      await _getMoreAds();
+      // await _getMoreAds();
+      _getMorePages = await adManager.getMoreAds(_adsPage);
       await Future.delayed(const Duration(microseconds: 100));
       store.setStateSuccess();
     } catch (err) {
@@ -150,24 +154,24 @@ class ShopController {
     }
   }
 
-  Future<void> _getMoreAds() async {
-    final result = await adRepository.get(
-      filter: filter,
-      search: searchFilter.searchString,
-      page: _adsPage,
-    );
-    if (result.isFailure) {
-      // FIXME: Complete this error handling
-      throw Exception('ShopController._getMoreAds error: ${result.error}');
-    }
-    final newAds = result.data;
-    if (newAds != null && newAds.isNotEmpty) {
-      ads.addAll(newAds);
-      _getMorePages = maxAdsPerList == newAds.length;
-    } else {
-      _getMorePages = false;
-    }
-  }
+  // Future<void> _getMoreAds() async {
+  //   final result = await adRepository.get(
+  //     filter: filter,
+  //     search: searchFilter.searchString,
+  //     page: _adsPage,
+  //   );
+  //   if (result.isFailure) {
+  //     // FIXME: Complete this error handling
+  //     throw Exception('ShopController._getMoreAds error: ${result.error}');
+  //   }
+  //   final newAds = result.data;
+  //   if (newAds != null && newAds.isNotEmpty) {
+  //     ads.addAll(newAds);
+  //     _getMorePages = maxAdsPerList == newAds.length;
+  //   } else {
+  //     _getMorePages = false;
+  //   }
+  // }
 
   void closeErroMessage() {
     store.setStateSuccess();
