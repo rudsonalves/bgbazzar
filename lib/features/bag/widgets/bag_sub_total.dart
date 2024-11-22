@@ -20,32 +20,27 @@ import 'package:flutter/material.dart';
 import '/core/theme/app_text_style.dart';
 
 class BagSubTotal extends StatelessWidget {
-  final ValueNotifier<int> itemsCount;
-  final double Function() total;
+  final int length;
+  final double total;
 
   const BagSubTotal({
     super.key,
-    required this.itemsCount,
+    required this.length,
     required this.total,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: itemsCount,
-      builder: (context, count, _) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text('Subtotal ($count'
-                ' ite${count > 1 ? 'ns' : 'm'}): '),
-            Text(
-              '\$${total().toStringAsFixed(2)}',
-              style: AppTextStyle.font16Bold,
-            ),
-          ],
-        );
-      },
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text('Subtotal ($length'
+            ' ite${length > 1 ? 'ns' : 'm'}): '),
+        Text(
+          '\$${total.toStringAsFixed(2)}',
+          style: AppTextStyle.font16Bold,
+        ),
+      ],
     );
   }
 }

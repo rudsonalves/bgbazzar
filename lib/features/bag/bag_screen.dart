@@ -53,31 +53,34 @@ class _BagScreenState extends State<BagScreen> {
       appBar: AppBar(
         title: Text('Carrinho'),
         centerTitle: true,
-        elevation: 5,
+        // elevation: 5,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: SingleChildScrollView(
-          child: ListenableBuilder(
-            listenable: Listenable.merge(
-              [bagManager.refreshList, store.state],
-            ),
-            builder: (context, _) {
-              if (store.isLoading) {
-                return StateLoadingMessage();
-              } else if (store.isSuccess) {
-                final List<Widget> sellers = [];
-                for (final seller in bagManager.sellers) {
-                  sellers.add(SallerBag(ctrl: ctrl, saller: seller));
-                }
-                return Column(
-                  children: [...sellers],
-                );
-              } else {
-                return StateErrorMessage(closeDialog: store.setStateSuccess);
-              }
-            },
+      body: SingleChildScrollView(
+        child: ListenableBuilder(
+          listenable: Listenable.merge(
+            [bagManager.refreshList, store.state],
           ),
+          builder: (context, _) {
+            if (store.isLoading) {
+              return StateLoadingMessage();
+            } else if (store.isSuccess) {
+              final List<Widget> sellers = [];
+              for (final sellerId in bagManager.sellers) {
+                sellers.add(
+                  SallerBag(
+                    ctrl: ctrl,
+                    sallerId: sellerId,
+                    sallerName: bagManager.sellerName(sellerId)!,
+                  ),
+                );
+              }
+              return Column(
+                children: [...sellers],
+              );
+            } else {
+              return StateErrorMessage(closeDialog: store.setStateSuccess);
+            }
+          },
         ),
       ),
     );

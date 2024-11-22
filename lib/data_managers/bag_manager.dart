@@ -23,16 +23,19 @@ import 'package:flutter/material.dart';
 import '../core/models/bag_item.dart';
 
 class BagManager {
-  final items = <BagItemModel>[];
+  final _items = <BagItemModel>[];
 
   final itemsCount = ValueNotifier<int>(0);
   final refreshList = ValueNotifier<bool>(false);
 
-  final List<String> _sellerIds = [];
+  // bags contain the map of purchases made, separated by sellers Id and their
+  // selected ad Id
+  final Map<String, Set<BagItemModel>> _bagBySeller = {};
 
-  List<String> get sellers => _sellerIds;
+  Map<String, Set<BagItemModel>> get bagBySeller => _bagBySeller;
+  Set<String> get sellers => _bagBySeller.keys.toSet();
 
-  List<String> get itemsIds => items.map((item) => item.adItem.id!).toList();
+  List<String> get itemsIds => _items.map((item) => item.adItem.id!).toList();
 
   void dispose() {
     itemsCount.dispose();
@@ -41,7 +44,7 @@ class BagManager {
   /// Return a list os items from a advertiser id `advertiserId` to the
   /// MercadoPago Brick
   Map<String, int> getParameters(String advertiserId) {
-    final adItems = items.where((item) => item.adItem.id == advertiserId);
+    final adItems = _items.where((item) => item.adItem.id == advertiserId);
 
     final Map<String, int> parameters = {
       for (final item in adItems) item.adItem.id!: item.quantity,
@@ -50,12 +53,14 @@ class BagManager {
     return parameters;
   }
 
-  Future<void> addItem(BagItemModel newItem) async {
-    final index = _indexThatHasId(newItem.adItem.id!);
+  Future<void> addItem(BagItemModel newItem, [int quantity = 1]) async {
+    final itemId = newItem.adItem.id!;
+    final adId = newItem.adId;
+    final index = _indexThatHasId(itemId);
     if (index != -1) {
-      increaseQt(newItem.adId);
+      increaseQt(adId);
     } else {
-      items.add(newItem);
+      _items.add(newItem);
       _updateCountValue();
       _checkSellers();
     }
@@ -66,7 +71,7 @@ class BagManager {
     final index = _indexThatHasId(adId);
     if (index != -1) {
       // Add new item
-      items[index].increaseQt();
+      _items[index].increaseQt();
       _updateCountValue();
       // FIXME: write in database...
     }
@@ -75,10 +80,10 @@ class BagManager {
   Future<void> decreaseQt(String adId) async {
     final index = _indexThatHasId(adId);
     if (index != -1) {
-      items[index].decreaseQt();
+      _items[index].decreaseQt();
       // Remove item
-      if (items[index].quantity == 0) {
-        items.removeAt(index);
+      if (_items[index].quantity == 0) {
+        _items.removeAt(index);
         refreshList.value = !refreshList.value;
         _checkSellers();
       }
@@ -89,28 +94,38 @@ class BagManager {
 
   void _updateCountValue() {
     itemsCount.value =
-        items.fold<int>(0, (previus, item) => previus + item.quantity);
+        _items.fold<int>(0, (previus, item) => previus + item.quantity);
     log(itemsCount.value.toString());
   }
 
   int _indexThatHasId(String id) {
-    return items.indexWhere((item) => item.adItem.id == id);
+    return _items.indexWhere((item) => item.adItem.id == id);
   }
 
-  double total() {
+  double total(String sellerId) {
     double sum = 0.0;
-    for (final item in items) {
+    for (final item in _bagBySeller[sellerId]!) {
       sum += item.unitPrice * item.quantity;
     }
     return sum;
   }
 
   void _checkSellers() {
-    _sellerIds.clear();
-    for (final item in items) {
-      if (!_sellerIds.contains(item.adItem.ownerId!)) {
-        _sellerIds.add(item.adItem.ownerId!);
-      }
+    _bagBySeller.clear();
+    for (final item in _items) {
+      final seller = item.adItem.ownerId!;
+
+      _bagBySeller.putIfAbsent(seller, () => <BagItemModel>{}).add(item);
+    }
+  }
+
+  String? sellerName(String sellerId) {
+    try {
+      final item = _items.firstWhere((i) => i.adItem.ownerId == sellerId);
+      return item.adItem.ownerName;
+    } catch (err) {
+      log('sellerName return error: $err');
+      return null;
     }
   }
 }
