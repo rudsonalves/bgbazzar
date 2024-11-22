@@ -25,7 +25,7 @@ class BagController {
   final BagStore store;
   final bagManager = getIt<BagManager>();
 
-  List<BagItemModel> get items => bagManager.items;
+  Set<BagItemModel> items(String sellerId) => bagManager.bagBySeller[sellerId]!;
 
   BagController(this.store) {
     initialize();

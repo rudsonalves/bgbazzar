@@ -78,6 +78,46 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/22 - version: 0.7.17+88
+
+This commit introduces significant refinements to the bag management system, including seller-based grouping, improvements to item operations, and UI enhancements for the Bag screen. The data model has also been updated to better represent advertisement details and improve flexibility.
+
+### Changes made:
+
+1. **lib/core/models/bag_item.dart**:
+   - Added a private `_adId` field to store the advertisement ID explicitly, decoupling it from `adItem.id`.
+   - Updated the constructor to initialize `_adId` using `adId` (if provided) or fallback to `adItem.id`.
+   - Adjusted the `toMap` method to include `_adId` for serialization.
+   - Modified `fromMap` to correctly initialize `_adId` from the serialized data.
+
+2. **lib/data_managers/bag_manager.dart**:
+   - Refactored `_items` into a private list for stricter encapsulation of Bag items.
+   - Introduced `_bagBySeller`, a map grouping items by their seller ID (`ownerId`).
+   - Enhanced `addItem` and `_checkSellers` to dynamically update `_bagBySeller` when items are added or removed.
+   - Added `sellerName` to retrieve the name of a seller based on their ID.
+   - Updated the `total` method to calculate the total price for items under a specific seller.
+
+3. **lib/features/bag/bag_controller.dart**:
+   - Modified `items` to return a filtered set of `BagItemModel` instances associated with a given seller ID.
+
+4. **lib/features/bag/bag_screen.dart**:
+   - Integrated seller-specific logic into the Bag screen, grouping items under their respective sellers using the `SallerBag` widget.
+   - Adjusted the layout to dynamically display seller groups.
+
+5. **lib/features/bag/widgets/bag_sub_total.dart**:
+   - Updated to accept `length` (number of items) and `total` (total price) directly instead of relying on `ValueNotifier`.
+   - Simplified rendering logic for better readability and performance.
+
+6. **lib/features/bag/widgets/saller_bag.dart**:
+   - Enhanced the `SallerBag` widget to accept `sallerId` and `sallerName` for displaying seller-specific details.
+   - Improved layout with card-style design, dynamically listing items associated with the seller.
+   - Incorporated `BagSubTotal` to show a subtotal for each seller’s group.
+
+### Conclusion:
+
+These updates significantly improve the flexibility and maintainability of the Bag module. By introducing `_adId`, the advertisement ID is now decoupled from `adItem`, providing a clearer separation of data concerns. The seller-based grouping enhances the user experience, and the refined widgets improve the Bag screen’s overall usability.
+
+
 ## 2024/11/21 - version: 0.7.17+86
 
 This commit enhances the `AdModel` by integrating additional owner details, optimizes the bag management process, and introduces seller grouping functionality in the Bag module. Key changes also include refining Parse server integration and improving the `AdsSale` validation logic.

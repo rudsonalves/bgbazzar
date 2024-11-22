@@ -27,99 +27,121 @@ import 'quantity_buttons.dart';
 
 class SallerBag extends StatelessWidget {
   final BagController ctrl;
-  final String saller;
+  final String sallerId;
+  final String sallerName;
 
   SallerBag({
     super.key,
     required this.ctrl,
-    required this.saller,
+    required this.sallerId,
+    required this.sallerName,
   });
 
   final bagManager = getIt<BagManager>();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Item', style: AppTextStyle.font14Bold),
-              Text('Preço', style: AppTextStyle.font14Bold),
-            ],
-          ),
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: ctrl.items.length,
-          itemBuilder: (_, index) {
-            final item = ctrl.items[index];
+    final colorScheme = Theme.of(context).colorScheme;
 
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+    final items = ctrl.items(sallerId).toList();
+
+    return Card(
+      color: colorScheme.surfaceContainerHigh,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Vendido por $sallerName',
+              style:
+                  AppTextStyle.font16Bold.copyWith(color: colorScheme.primary),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Image.network(item.adItem.images.first),
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.title,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyle.font16Bold,
-                        ),
-                        Text(
-                          item.description,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyle.font12,
-                        ),
-                        QuantityButtons(
-                          item: item,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
+                  Text('Item', style: AppTextStyle.font14Bold),
+                  Text('Preço', style: AppTextStyle.font14Bold),
+                ],
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: items.length,
+              itemBuilder: (_, index) {
+                final item = items[index];
+                final double size = 60;
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
                     children: [
-                      Text(
-                        '\$${item.unitPrice.toStringAsFixed(2)}',
-                        style: AppTextStyle.font16Bold,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: Container(
+                          width: size,
+                          height: size,
+                          clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Image.network(item.adItem.images.first),
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.title,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyle.font16Bold,
+                            ),
+                            Text(
+                              item.description,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyle.font12,
+                            ),
+                            QuantityButtons(
+                              item: item,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '\$${item.unitPrice.toStringAsFixed(2)}',
+                            style: AppTextStyle.font16Bold,
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            );
-          },
+                );
+              },
+            ),
+            Divider(),
+            ListenableBuilder(
+                listenable: bagManager.itemsCount,
+                builder: (context, _) {
+                  return BagSubTotal(
+                    length: items.length,
+                    total: bagManager.total(sallerId),
+                  );
+                }),
+            FilledButton.icon(
+              onPressed: () {},
+              label: Text('Efetuar o Pagamento'),
+              icon: Icon(Symbols.encrypted_sharp),
+            ),
+          ],
         ),
-        Divider(),
-        BagSubTotal(
-          itemsCount: bagManager.itemsCount,
-          total: bagManager.total,
-        ),
-        FilledButton.icon(
-          onPressed: () {},
-          label: Text('Proceder para o Pagamento'),
-          icon: Icon(Symbols.encrypted_sharp),
-        ),
-      ],
+      ),
     );
   }
 }

@@ -23,6 +23,7 @@ import 'ad.dart';
 class BagItemModel {
   int? id;
   AdModel adItem;
+  String _adId;
   String title;
   String description;
   int _quantity;
@@ -31,14 +32,16 @@ class BagItemModel {
   BagItemModel({
     this.id,
     required this.adItem,
+    String? adId,
     required this.title,
     required this.description,
     int quantity = 1,
     required this.unitPrice,
-  }) : _quantity = quantity;
+  })  : _quantity = quantity,
+        _adId = adId ?? adItem.id!;
 
   int get quantity => _quantity;
-  String get adId => adItem.id!;
+  String get adId => _adId;
 
   void increaseQt() {
     if (_quantity < adItem.quantity) {
@@ -56,6 +59,7 @@ class BagItemModel {
     return <String, dynamic>{
       'id': id,
       'adItem': adItem.id!,
+      'adId': adId,
       'title': title,
       'description': description,
       'quantity': quantity,
@@ -67,6 +71,7 @@ class BagItemModel {
     return BagItemModel(
       id: map['id'] != null ? map['id'] as int : null,
       adItem: map['adItem'] as AdModel, // Vai dar problema aqui!!!
+      adId: map['adId'] as String,
       title: map['title'] as String,
       description: map['description'] as String,
       quantity: map['quantity'] as int,
