@@ -25,25 +25,32 @@ import '../bag_controller.dart';
 import 'bag_sub_total.dart';
 import 'quantity_buttons.dart';
 
-class SallerBag extends StatelessWidget {
+class SallerBag extends StatefulWidget {
   final BagController ctrl;
   final String sallerId;
   final String sallerName;
+  final void Function(String) openAd;
 
-  SallerBag({
+  const SallerBag({
     super.key,
     required this.ctrl,
     required this.sallerId,
     required this.sallerName,
+    required this.openAd,
   });
 
+  @override
+  State<SallerBag> createState() => _SallerBagState();
+}
+
+class _SallerBagState extends State<SallerBag> {
   final bagManager = getIt<BagManager>();
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    final items = ctrl.items(sallerId).toList();
+    final items = widget.ctrl.items(widget.sallerId).toList();
 
     return Card(
       color: colorScheme.surfaceContainerHigh,
@@ -53,7 +60,7 @@ class SallerBag extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Vendido por $sallerName',
+              'Vendido por ${widget.sallerName}',
               style:
                   AppTextStyle.font16Bold.copyWith(color: colorScheme.primary),
             ),
@@ -80,14 +87,17 @@ class SallerBag extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 12),
-                        child: Container(
-                          width: size,
-                          height: size,
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
+                        child: InkWell(
+                          onTap: () => widget.openAd(item.adId),
+                          child: Container(
+                            width: size,
+                            height: size,
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Image.network(item.adItem.images.first),
                           ),
-                          child: Image.network(item.adItem.images.first),
                         ),
                       ),
                       Expanded(
@@ -130,8 +140,8 @@ class SallerBag extends StatelessWidget {
                 listenable: bagManager.itemsCount,
                 builder: (context, _) {
                   return BagSubTotal(
-                    length: items.length,
-                    total: bagManager.total(sallerId),
+                    length: items.fold(0, (sum, item) => sum + item.quantity),
+                    total: bagManager.total(widget.sallerId),
                   );
                 }),
             FilledButton.icon(

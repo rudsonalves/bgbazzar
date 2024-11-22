@@ -18,6 +18,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../shop/product/product_screen.dart';
 import '/components/widgets/state_error_message.dart';
 import '/components/widgets/state_loading_message.dart';
 import '../../data_managers/bag_manager.dart';
@@ -47,6 +48,17 @@ class _BagScreenState extends State<BagScreen> {
     ctrl = BagController(store);
   }
 
+  Future<void> _openAd(String adId) async {
+    final result = await ctrl.getAdById(adId);
+    if (result.isSuccess && result.data != null) {
+      final ad = result.data!;
+      if (mounted) {
+        await Navigator.pushNamed(context, ProductScreen.routeName,
+            arguments: ad);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +83,7 @@ class _BagScreenState extends State<BagScreen> {
                     ctrl: ctrl,
                     sallerId: sellerId,
                     sallerName: bagManager.sellerName(sellerId)!,
+                    openAd: _openAd,
                   ),
                 );
               }

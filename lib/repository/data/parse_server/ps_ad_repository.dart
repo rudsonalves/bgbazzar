@@ -244,6 +244,44 @@ class PSAdRepository implements IAdRepository {
   }
 
   @override
+  Future<DataResult<AdModel>> getById(String id, [bool full = true]) async {
+    try {
+      // Create query for ads from the Parse server
+      late QueryBuilder<ParseObject> query;
+
+      if (full) {
+        query = QueryBuilder<ParseObject>(ParseObject(keyAdTable))
+          ..includeObject([keyAdOwner, keyAdAddress])
+          ..whereEqualTo(keyAdId, id);
+      } else {
+        query = QueryBuilder<ParseObject>(ParseObject(keyAdTable))
+          ..whereEqualTo(keyAdId, id);
+      }
+
+      // Execute the query
+      final response = await query.query();
+
+      // Handle the response
+      if (!response.success) {
+        throw AdRepositoryException(
+            response.error?.message ?? 'Failed to fetch ads.');
+      }
+
+      // Convert the results into a AdModel objects
+      final AdModel? ad = ParseToModel.ad(
+        response.results!.first as ParseObject,
+      );
+      if (ad == null) {
+        throw Exception('Convert parse to AdModel error');
+      }
+
+      return DataResult.success(ad);
+    } catch (err) {
+      return _handleError('get', err);
+    }
+  }
+
+  @override
   Future<DataResult<AdModel?>> save(AdModel ad) async {
     try {
       final parseUser = await PsFunctions.parseCurrentUser();

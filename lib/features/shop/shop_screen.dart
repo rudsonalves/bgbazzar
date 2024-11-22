@@ -19,7 +19,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
+import '../../data_managers/bag_manager.dart';
 import '../account/account_screen.dart';
 import '../../core/singletons/current_user.dart';
 import '../../components/drawers/custom_drawer.dart';
@@ -27,6 +29,7 @@ import '../../components/collection_views/shop_grid_view/shop_grid_view.dart';
 import '../../components/widgets/state_error_message.dart';
 import '../../components/widgets/state_loading_message.dart';
 import '../../get_it.dart';
+import '../bag/bag_screen.dart';
 import '../edit_ad/edit_ad_screen.dart';
 import '../signin/signin_screen.dart';
 import 'shop_controller.dart';
@@ -47,6 +50,7 @@ class _ShopScreenState extends State<ShopScreen>
     with SingleTickerProviderStateMixin {
   final ctrl = ShopController();
   final store = ShopStore();
+  final bagManager = getIt<BagManager>();
 
   late AnimationController _animationController;
   late Animation<Offset> _fabOffsetAnimation;
@@ -152,6 +156,10 @@ class _ShopScreenState extends State<ShopScreen>
     }
   }
 
+  void _toBagPage() {
+    Navigator.pushNamed(context, BagScreen.routeName);
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -167,6 +175,18 @@ class _ShopScreenState extends State<ShopScreen>
         centerTitle: true,
         // elevation: 5,
         actions: [
+          ValueListenableBuilder(
+            valueListenable: bagManager.itemsCount,
+            builder: (context, count, _) {
+              return IconButton(
+                onPressed: _toBagPage,
+                icon: Badge(
+                  label: Text(count.toString()),
+                  child: Icon(Symbols.shopping_bag_rounded),
+                ),
+              );
+            },
+          ),
           InkWell(
             borderRadius: BorderRadius.circular(50),
             onTap: _openSearchDialog,

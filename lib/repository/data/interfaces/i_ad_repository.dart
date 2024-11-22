@@ -222,4 +222,6 @@ abstract class IAdRepository {
   ///   received from the Parse Server.
   ///
   Future<DataResult<void>> delete(String ad);
+
+  Future<DataResult<AdModel>> getById(String id, [bool full = true]);
 }

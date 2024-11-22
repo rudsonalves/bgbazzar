@@ -78,6 +78,52 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/22 - version: 0.7.17+89
+
+This commit introduces a new `AdManager` class to centralize advertisement management, enhances the Bag module to integrate ad details dynamically, and refactors the `ShopController` to utilize `AdManager` for fetching ads. These changes improve data organization and streamline ad-related operations across the app.
+
+### Changes made:
+
+1. **lib/data_managers/ad_manager.dart** (New file):
+   - Added a new `AdManager` class to centralize ad-related operations.
+   - Implemented methods to fetch ads (`getAds` and `getMoreAds`) and retrieve ad details by ID (`getAdById`).
+   - Maintains an internal list of `AdModel` instances for efficient reuse.
+
+2. **lib/features/bag/bag_controller.dart**:
+   - Integrated `AdManager` for retrieving ad details dynamically.
+   - Added `getAdById` method to fetch and manage ad details via `AdManager`.
+
+3. **lib/features/bag/bag_screen.dart**:
+   - Added `_openAd` method to navigate to the `ProductScreen` using ad details fetched by `AdManager`.
+   - Updated `SallerBag` widget to handle the new ad opening logic.
+
+4. **lib/features/bag/widgets/saller_bag.dart**:
+   - Refactored `SallerBag` to a stateful widget.
+   - Added an `InkWell` around ad images to trigger the `_openAd` callback for navigating to the ad details screen.
+
+5. **lib/features/shop/shop_controller.dart**:
+   - Replaced direct ad fetching logic with `AdManager` methods.
+   - Removed redundant methods (`_getAds` and `_getMoreAds`) for cleaner code.
+
+6. **lib/features/shop/shop_screen.dart**:
+   - Added a bag icon with a badge displaying the count of items, linking to the Bag screen.
+   - Refactored the app bar for improved user interaction.
+
+7. **lib/get_it.dart**:
+   - Registered `AdManager` as a singleton in the service locator.
+
+8. **lib/repository/data/interfaces/i_ad_repository.dart**:
+   - Added `getById` method to the `IAdRepository` interface for fetching ad details by ID.
+
+9. **lib/repository/data/parse_server/ps_ad_repository.dart**:
+   - Implemented the `getById` method to query ad details from the Parse server.
+   - Enhanced error handling and response validation.
+
+### Conclusion:
+
+These updates establish a more cohesive and maintainable structure for managing advertisements. The new `AdManager` simplifies ad-related operations and eliminates redundant code. The integration of `AdManager` with Bag and Shop modules improves efficiency and consistency across the app.
+
+
 ## 2024/11/22 - version: 0.7.17+88
 
 This commit introduces significant refinements to the bag management system, including seller-based grouping, improvements to item operations, and UI enhancements for the Bag screen. The data model has also been updated to better represent advertisement details and improve flexibility.

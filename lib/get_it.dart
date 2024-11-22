@@ -19,6 +19,7 @@ import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 
+import 'data_managers/ad_manager.dart';
 import 'data_managers/bag_manager.dart';
 import 'repository/app_data/share_preferences/app_share_preferences_repository.dart';
 import 'repository/app_data/interfaces/i_app_preferences_repository.dart';
@@ -68,8 +69,10 @@ void setupDependencies() {
     getIt.registerLazySingleton<AddressesManager>(() => AddressesManager());
     getIt.registerLazySingleton<SearchFilter>(() => SearchFilter());
     getIt.registerLazySingleton<SearchHistory>(() => SearchHistory());
+
     getIt.registerLazySingleton<DatabaseManager>(() => DatabaseManager());
     getIt.registerLazySingleton<BoardgamesManager>(() => BoardgamesManager());
+    getIt.registerLazySingleton<AdManager>(() => AdManager());
 
     // Parse Server Repositories
     getIt.registerFactory<IUserRepository>(() => PSUserRepository());
