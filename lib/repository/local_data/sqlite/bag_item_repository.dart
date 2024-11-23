@@ -15,50 +15,51 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import '../../../store/stores/bag_item_store.dart';
+import '/core/models/bag_item.dart';
 import '../common/local_functions.dart';
 import '/core/abstracts/data_result.dart';
-import '/get_it.dart';
-import '/core/models/bg_name.dart';
-import '/store/stores/interfaces/i_bg_names_store.dart';
-import '../interfaces/i_bg_names_repository.dart';
+import '/store/stores/interfaces/i_bag_item_store.dart';
+import '../interfaces/i_local_bag_item_repository.dart';
 
-class SqliteBGNamesRepository implements IBgNamesRepository {
-  late final IBgNamesStore _store;
+class SqliteBagItemRepository implements ILocalBagItemRepository {
+  late final IBagItemStore _store;
 
   @override
   Future<void> initialize() async {
-    _store = await getIt.getAsync<IBgNamesStore>();
+    _store = BagItemStore();
+    await _store.initialize();
   }
 
   @override
-  Future<DataResult<List<BGNameModel>>> getAll() async {
+  Future<DataResult<List<BagItemModel>>> getAll() async {
     try {
       final maps = await _store.getAll();
       if (maps.isEmpty) {
         return DataResult.success([]);
       }
 
-      final bgs = maps.map((item) => BGNameModel.fromMap(item)).toList();
-      return DataResult.success(bgs);
+      final bagItems = maps.map((map) => BagItemModel.fromMap(map)).toList();
+      return DataResult.success(bagItems);
     } catch (err) {
       return _handleError('getAll', err);
     }
   }
 
   @override
-  Future<DataResult<BGNameModel>> add(BGNameModel bg) async {
+  Future<DataResult<BagItemModel>> add(BagItemModel bagItem) async {
     try {
-      final id = await _store.add(bg.toMap());
-      if (id < 0) throw Exception('retrun id $id');
+      final id = await _store.add(bagItem.toMap());
+      if (id < 0) throw Exception('resturn id $id');
 
-      return DataResult.success(bg);
+      return DataResult.success(bagItem.copyWith(id: id));
     } catch (err) {
       return _handleError('add', err);
     }
   }
 
   @override
-  Future<DataResult<void>> delete(String id) async {
+  Future<DataResult<void>> delete(int id) async {
     try {
       final result = await _store.delete(id);
       if (result < 1) {
@@ -71,9 +72,9 @@ class SqliteBGNamesRepository implements IBgNamesRepository {
   }
 
   @override
-  Future<DataResult<int>> update(BGNameModel bg) async {
+  Future<DataResult<int>> update(BagItemModel bagItem) async {
     try {
-      final result = await _store.update(bg.toMap());
+      final result = await _store.update(bagItem.toMap());
       return DataResult.success(result);
     } catch (err) {
       return _handleError('update', err);
@@ -90,7 +91,17 @@ class SqliteBGNamesRepository implements IBgNamesRepository {
     }
   }
 
+  @override
+  Future<DataResult<void>> cleanDatabase() async {
+    try {
+      await _store.cleanDatabase();
+      return DataResult.success(null);
+    } catch (err) {
+      return _handleError('cleanDatabase', err);
+    }
+  }
+
   static DataResult<T> _handleError<T>(String module, Object error) {
-    return LocalFunctions.handleError('SqliteBGNamesRepository', module, error);
+    return LocalFunctions.handleError('SqliteBagItemRepository', module, error);
   }
 }

@@ -26,6 +26,16 @@ const mechId = 'id';
 const mechName = 'name';
 const mechDescription = 'description';
 
+const bagItemsTable = 'bagItemsTable';
+const bagItemsId = 'id';
+const bagItemsAdId = 'adId';
+const bagItemsOwnerId = 'ownerId';
+const bagItemsOwnerName = 'ownerName';
+const bagItemsTitle = 'title';
+const bagItemsDescription = 'description';
+const bagItemsQuantity = 'quantity';
+const bagItemsUnitPrice = 'unitPrice';
+
 const dbVersionTable = 'dbVersion';
 const dbVersionId = 'id';
 const dbAppVersion = 'version';

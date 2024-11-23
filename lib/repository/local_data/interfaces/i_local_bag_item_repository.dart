@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -16,33 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '/core/models/ad.dart';
 import '/core/models/bag_item.dart';
-import '/data_managers/bag_manager.dart';
-import '/get_it.dart';
-import 'procuct_store.dart';
+import '/core/abstracts/data_result.dart';
 
-class ProductController {
-  final ProcuctStore store;
-  final AdModel ad;
-
-  final bagManager = getIt<BagManager>();
-
-  ProductController(this.store, this.ad);
-
-  Future<void> addBag() async {
-    try {
-      store.setStateLoading();
-      final item = BagItemModel(
-        ad: ad,
-        title: ad.title,
-        description: ad.description,
-        unitPrice: ad.price,
-      );
-      await bagManager.addItem(item);
-      store.setStateSuccess();
-    } catch (err) {
-      store.setError("Ocorreu um erro. Tente mais tarde.");
-    }
-  }
+abstract class ILocalBagItemRepository {
+  Future<void> initialize();
+  Future<DataResult<List<BagItemModel>>> getAll();
+  Future<DataResult<BagItemModel>> add(BagItemModel bag);
+  Future<DataResult<int>> update(BagItemModel bag);
+  Future<DataResult<void>> delete(int bagId);
+  Future<DataResult<void>> resetDatabase();
+  Future<DataResult<void>> cleanDatabase();
 }

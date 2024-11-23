@@ -80,27 +80,6 @@ class AdModel {
         .join(', ');
   }
 
-  // static List<String> mechNamesToPSIds(String names) {
-  //   final mechManager = getIt<MechanicsManager>();
-
-  //   try {
-  //     final listNames = names.split(', ');
-  //     final List<String> mechIds = [];
-  //     for (final mechName in listNames) {
-  //       mechIds.add(mechManager.mechanics
-  //           .firstWhere(
-  //             (mec) => mec.name == mechName,
-  //           )
-  //           .name);
-  //     }
-
-  //     return mechIds;
-  //   } catch (err) {
-  //     log(err.toString());
-  //     return [];
-  //   }
-  // }
-
   @override
   String toString() {
     return 'AdModel(id: $id,\n'
@@ -121,6 +100,11 @@ class AdModel {
   AdModel copyWith({
     String? id,
     UserModel? owner,
+    String? ownerId,
+    String? ownerName,
+    double? ownerRate,
+    String? ownerCity,
+    DateTime? ownerCreateAt,
     String? title,
     String? description,
     double? price,
@@ -136,6 +120,10 @@ class AdModel {
     return AdModel(
       id: id ?? this.id,
       owner: owner ?? this.owner,
+      ownerId: ownerId ?? this.ownerId,
+      ownerName: ownerName ?? this.ownerName,
+      ownerRate: ownerRate ?? this.ownerRate,
+      ownerCity: ownerCity ?? this.ownerCity,
       title: title ?? this.title,
       description: description ?? this.description,
       price: price ?? this.price,
@@ -154,6 +142,11 @@ class AdModel {
     return <String, dynamic>{
       'id': id,
       'owner': owner?.id,
+      'ownerId': ownerId,
+      'ownerName': ownerName,
+      'ownerRate': ownerRate,
+      'ownerCity': ownerCity,
+      'ownerCreateAt': ownerCreateAt,
       'title': title,
       'description': description,
       'price': price,
@@ -173,6 +166,11 @@ class AdModel {
     return AdModel(
       id: map['id'] != null ? map['id'] as String : null,
       owner: null,
+      ownerId: map['ownerId'],
+      ownerName: map['ownerName'],
+      ownerRate: map['ownerRate'],
+      ownerCity: map['ownerCity'],
+      ownerCreateAt: map['ownerCreateAt'],
       title: map['title'] as String,
       description: map['description'] as String,
       price: map['price'] as double,

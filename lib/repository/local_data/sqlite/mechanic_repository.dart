@@ -15,8 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:developer';
-
+import '../common/local_functions.dart';
 import '/store/stores/interfaces/i_mechanics_store.dart';
 import '/core/abstracts/data_result.dart';
 import '/core/models/mechanic.dart';
@@ -41,9 +40,7 @@ class SqliteMechanicRepository implements ILocalMechanicRepository {
           result.map((item) => MechanicModel.fromMap(item)).toList();
       return DataResult.success(mechanics);
     } catch (err) {
-      final message = 'MechanicRepository.get: $err';
-      log(message);
-      return DataResult.failure(GenericFailure(message: message));
+      return _handleError('getAll', err);
     }
   }
 
@@ -55,9 +52,7 @@ class SqliteMechanicRepository implements ILocalMechanicRepository {
 
       return DataResult.success(mech);
     } catch (err) {
-      final message = 'MechanicRepository.add: $err';
-      log(message);
-      return DataResult.failure(GenericFailure(message: message));
+      return _handleError('add', err);
     }
   }
 
@@ -67,9 +62,7 @@ class SqliteMechanicRepository implements ILocalMechanicRepository {
       await _store.update(mech.toMap());
       return DataResult.success(null);
     } catch (err) {
-      final message = 'MechanicRepository.update: $err';
-      log(message);
-      return DataResult.failure(GenericFailure(message: message));
+      return _handleError('update', err);
     }
   }
 
@@ -82,9 +75,7 @@ class SqliteMechanicRepository implements ILocalMechanicRepository {
       }
       return DataResult.success(null);
     } catch (err) {
-      final message = 'MechanicRepository.delete: $err';
-      log(message);
-      return DataResult.failure(GenericFailure(message: message));
+      return _handleError('delete', err);
     }
   }
 
@@ -94,9 +85,12 @@ class SqliteMechanicRepository implements ILocalMechanicRepository {
       await _store.resetDatabase();
       return DataResult.success(null);
     } catch (err) {
-      final message = 'MechanicRepository.resetDatabase: $err';
-      log(message);
-      return DataResult.failure(GenericFailure(message: message));
+      return _handleError('resetDatabase', err);
     }
+  }
+
+  static DataResult<T> _handleError<T>(String module, Object error) {
+    return LocalFunctions.handleError(
+        'SqliteMechanicRepository', module, error);
   }
 }
