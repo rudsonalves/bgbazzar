@@ -21,16 +21,17 @@ import 'dart:developer';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import '../../core/abstracts/data_result.dart';
-import '../../core/models/payment.dart';
+import '../../core/models/bag_item.dart';
 
 class PaymentService {
   PaymentService._();
 
-  static Future<DataResult<String>> getPreferenceId(
-      List<PaymentModel> products) async {
-    final function = ParseCloudFunction('createPreference');
+  static Future<DataResult<String>> generatePreferenceId(
+      List<BagItemModel> items) async {
+    final function = ParseCloudFunction('createPaymentPreference');
+
     final parameters = {
-      'items': products.map((product) => product.toMap()).toList()
+      'items': items.map((item) => item.toMPParameter()).toList()
     };
 
     try {

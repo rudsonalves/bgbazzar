@@ -34,7 +34,7 @@ import 'features/account/account_screen.dart';
 import 'features/addresses/addresses_screen.dart';
 import 'features/account/my_ads/my_ads_screen.dart';
 import 'features/account/my_data/my_data_screen.dart';
-import 'features/payment/payment_page.dart';
+import 'features/payment/payment_screen.dart';
 import 'features/shop/product/product_screen.dart';
 import 'features/filters/filters_screen.dart';
 import 'features/account/mechanics/mechanics_screen.dart';
@@ -95,10 +95,15 @@ class _AppState extends State<App> {
             },
             onGenerateRoute: (settings) {
               switch (settings.name) {
-                case PaymentPage.routeName:
+                case PaymentScreen.routeName:
                   return MaterialPageRoute(builder: (context) {
-                    final String preferenceId = settings.arguments as String;
-                    return PaymentPage(preferenceId: preferenceId);
+                    final map = settings.arguments as Map<String, dynamic>;
+                    final preferenceId = map['preferenceId'] as String;
+                    final amount = map['amount'] as double;
+                    return PaymentScreen(
+                      preferenceId: preferenceId,
+                      amount: amount,
+                    );
                   });
                 case EditBoardgamesScreen.routeName:
                   return MaterialPageRoute(builder: (context) {
