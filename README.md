@@ -78,6 +78,44 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/25 - version: 0.7.18+91
+
+This commit enhances the handling of item quantities in the shopping bag, focusing on improving the `BagItemModel`, updating the bag management logic, and integrating new database methods for item quantity updates. Key changes include a new `updateQuantity` method, refactored quantity management, and alignment across the data layer.
+
+### Changes made:
+
+1. **lib/core/models/bag_item.dart**:
+   - Refactored `quantity` to a public field for improved access.
+   - Modified `increaseQt` and `decreaseQt` methods to return a boolean indicating success or failure.
+   - Updated `toString` and other methods to reflect the changes in `quantity`.
+
+2. **lib/data_managers/ad_manager.dart**:
+   - Added documentation for the `getAdById` method to clarify its purpose.
+
+3. **lib/data_managers/bag_manager.dart**:
+   - Introduced `_loadItems` to initialize bag items and synchronize them with the latest ad statuses and quantities.
+   - Refined `addItem`, `increaseQt`, and `decreaseQt` to handle item quantity updates more effectively.
+   - Enhanced `_updateCountValue` to dynamically adjust the overall item count.
+   - Added comprehensive documentation for key methods.
+
+4. **lib/repository/local_data/interfaces/i_local_bag_item_repository.dart**:
+   - Added the `updateQuantity` method to the repository interface for direct quantity updates.
+
+5. **lib/repository/local_data/sqlite/bag_item_repository.dart**:
+   - Implemented the `updateQuantity` method to handle quantity updates in the SQLite database.
+
+6. **lib/store/stores/bag_item_store.dart**:
+   - Added `updateQuantity` for efficient updates of item quantities in the local database.
+   - Enhanced `add` and `update` methods with explicit `where` clauses to improve safety and clarity.
+
+7. **lib/store/stores/interfaces/i_bag_item_store.dart**:
+   - Introduced the `updateQuantity` method in the store interface for consistent implementation.
+
+### Conclusion:
+
+These updates streamline the management of item quantities within the shopping bag. The new `updateQuantity` method ensures efficient and reliable synchronization between the app's state and the local database. Refined methods and enhanced documentation improve maintainability, setting the stage for future enhancements.
+
+
 ## 2024/11/23 - version: 0.7.17+90
 
 This commit introduces a comprehensive set of updates to enhance the handling of `BagItemModel` in the application. Key changes include adding a local repository for bag items, improving error handling, and integrating database functionality with SQFLite. These updates also refine existing models, repositories, and controllers to align with the new structure.

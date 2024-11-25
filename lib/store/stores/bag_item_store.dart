@@ -50,12 +50,12 @@ class BagItemStore implements IBagItemStore {
   @override
   Future<int> add(Map<String, dynamic> map) async {
     try {
-      final result = await _db.insert(
+      final id = await _db.insert(
         bagItemsTable,
         map,
       );
 
-      return result;
+      return id;
     } catch (err) {
       log('BagItemStore.add: $err');
       return -1;
@@ -65,14 +65,34 @@ class BagItemStore implements IBagItemStore {
   @override
   Future<int> update(Map<String, dynamic> map) async {
     try {
+      final id = map[bagItemsId]!;
       final result = await _db.update(
         bagItemsTable,
         map,
+        where: '$bagItemsId = ?',
+        whereArgs: [id],
       );
 
       return result;
     } catch (err) {
       log('BagItemStore.update: $err');
+      return -1;
+    }
+  }
+
+  @override
+  Future<int> updateQuantity(int id, int quantity) async {
+    try {
+      final result = await _db.update(
+        bagItemsTable,
+        {bagItemsQuantity: quantity},
+        where: '$bagItemsId = ?',
+        whereArgs: [id],
+      );
+
+      return result;
+    } catch (err) {
+      log('BagItemStore.updateQuantity: $err');
       return -1;
     }
   }

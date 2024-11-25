@@ -82,6 +82,16 @@ class SqliteBagItemRepository implements ILocalBagItemRepository {
   }
 
   @override
+  Future<DataResult<int>> updateQuantity(BagItemModel bagItem) async {
+    try {
+      final result = await _store.updateQuantity(bagItem.id!, bagItem.quantity);
+      return DataResult.success(result);
+    } catch (err) {
+      return _handleError('update', err);
+    }
+  }
+
+  @override
   Future<DataResult<void>> resetDatabase() async {
     try {
       await _store.resetDatabase();

@@ -79,6 +79,8 @@ class AdManager {
     return getMorePages;
   }
 
+  /// This method gets the ad with id `adId` from the manager's `_ads` list,
+  /// or from the server's database if the ad has not been dowloaded.
   Future<DataResult<AdModel>> getAdById(String adId) async {
     try {
       final ad = _ads.firstWhere((ad) => ad.id == adId);

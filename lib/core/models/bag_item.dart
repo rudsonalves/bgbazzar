@@ -26,7 +26,7 @@ class BagItemModel {
   String _ownerName;
   String title;
   String description;
-  int _quantity;
+  int quantity;
   double _unitPrice;
 
   BagItemModel({
@@ -37,10 +37,9 @@ class BagItemModel {
     String? ownerName,
     required this.title,
     required this.description,
-    int? quantity = 1,
+    this.quantity = 1,
     double? unitPrice,
   })  : _ad = ad,
-        _quantity = quantity ?? ad!.quantity,
         _adId = adId ?? ad!.id!,
         _ownerId = ownerId ?? ad!.ownerId!,
         _ownerName = ownerName ?? ad!.ownerName!,
@@ -50,7 +49,6 @@ class BagItemModel {
   String get adId => _adId;
   String get ownerId => _ownerId;
   String get ownerName => _ownerName;
-  int get quantity => _quantity;
   double get unitPrice => _unitPrice;
 
   void setAd(AdModel newAd) {
@@ -61,16 +59,20 @@ class BagItemModel {
     _unitPrice = newAd.price;
   }
 
-  void increaseQt() {
-    if (_quantity < _ad!.quantity) {
-      _quantity++;
+  bool increaseQt() {
+    if (quantity < _ad!.quantity) {
+      quantity++;
+      return true;
     }
+    return false;
   }
 
-  void decreaseQt() {
-    if (_quantity > 0) {
-      _quantity--;
+  bool decreaseQt() {
+    if (quantity > 0) {
+      quantity--;
+      return true;
     }
+    return false;
   }
 
   Map<String, dynamic> toMap() {
@@ -133,7 +135,7 @@ class BagItemModel {
         ' ownerName: $_ownerName,'
         ' title: $title,'
         ' description: $description,'
-        ' quantity: $_quantity,'
+        ' quantity: $quantity,'
         ' unitPrice: $unitPrice)';
   }
 }
