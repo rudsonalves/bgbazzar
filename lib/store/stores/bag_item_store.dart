@@ -19,12 +19,12 @@ import 'dart:developer';
 
 import 'package:sqflite/sqflite.dart';
 
-import '/store/stores/interfaces/i_mechanics_store.dart';
-import '../../get_it.dart';
+import '/get_it.dart';
 import '../constants/constants.dart';
 import '../database/database_manager.dart';
+import 'interfaces/i_bag_item_store.dart';
 
-class MechanicsStore implements IMechanicsStore {
+class BagItemStore implements IBagItemStore {
   final _databaseManager = getIt<DatabaseManager>();
   late final Database _db;
 
@@ -36,15 +36,13 @@ class MechanicsStore implements IMechanicsStore {
   @override
   Future<List<Map<String, dynamic>>> getAll() async {
     try {
-      List<Map<String, dynamic>> result = await _db.query(
-        mechTable,
-        columns: [mechId, mechName, mechDescription],
-        orderBy: mechName,
+      final result = await _db.query(
+        bagItemsTable,
       );
 
       return result;
     } catch (err) {
-      log('MechanicsStore.getAll: $err');
+      log('BagItemStore.getAll: $err');
       return [];
     }
   }
@@ -52,14 +50,14 @@ class MechanicsStore implements IMechanicsStore {
   @override
   Future<int> add(Map<String, dynamic> map) async {
     try {
-      final result = await _db.insert(
-        mechTable,
+      final id = await _db.insert(
+        bagItemsTable,
         map,
       );
 
-      return result;
+      return id;
     } catch (err) {
-      log('MechanicsStore.add: $err');
+      log('BagItemStore.add: $err');
       return -1;
     }
   }
@@ -67,36 +65,61 @@ class MechanicsStore implements IMechanicsStore {
   @override
   Future<int> update(Map<String, dynamic> map) async {
     try {
+      final id = map[bagItemsId]!;
       final result = await _db.update(
-        mechTable,
+        bagItemsTable,
         map,
-      );
-
-      return result;
-    } catch (err) {
-      log('MechanicsStore.update: $err');
-      return -1;
-    }
-  }
-
-  @override
-  Future<int> delete(String id) async {
-    try {
-      final result = await _db.delete(
-        mechTable,
-        where: '$mechId = ?',
+        where: '$bagItemsId = ?',
         whereArgs: [id],
       );
 
       return result;
     } catch (err) {
-      log('MechanicsStore.delete: $err');
+      log('BagItemStore.update: $err');
+      return -1;
+    }
+  }
+
+  @override
+  Future<int> updateQuantity(int id, int quantity) async {
+    try {
+      final result = await _db.update(
+        bagItemsTable,
+        {bagItemsQuantity: quantity},
+        where: '$bagItemsId = ?',
+        whereArgs: [id],
+      );
+
+      return result;
+    } catch (err) {
+      log('BagItemStore.updateQuantity: $err');
+      return -1;
+    }
+  }
+
+  @override
+  Future<int> delete(int id) async {
+    try {
+      final result = await _db.delete(
+        bagItemsTable,
+        where: '$bagItemsId = ?',
+        whereArgs: [id],
+      );
+
+      return result;
+    } catch (err) {
+      log('BagItemStore.delete: $err');
       return -1;
     }
   }
 
   @override
   Future<void> resetDatabase() async {
-    await _databaseManager.resetMechanics(_db);
+    await _databaseManager.resetBagItems(_db);
+  }
+
+  @override
+  Future<void> cleanDatabase() async {
+    await _databaseManager.cleanBagItems(_db);
   }
 }

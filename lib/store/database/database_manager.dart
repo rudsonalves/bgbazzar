@@ -85,9 +85,10 @@ class DatabaseManager {
   Future<void> _onCreate(Database db, int version) async {
     try {
       Batch batch = db.batch();
-      SqlTable.createDbVersion(batch);
+      SqlTable.createDbVersionTable(batch);
       SqlTable.createBgNamesTable(batch);
-      SqlTable.createMechanics(batch);
+      SqlTable.createMechanicsTable(batch);
+      SqlTable.createBagItemsTable(batch);
 
       await batch.commit();
     } catch (err) {
@@ -115,8 +116,8 @@ class DatabaseManager {
   Future<void> resetMechanics(Database db) async {
     try {
       Batch batch = db.batch();
-      SqlTable.dropMechanics(batch);
-      SqlTable.createMechanics(batch);
+      SqlTable.dropMechanicsTable(batch);
+      SqlTable.createMechanicsTable(batch);
 
       await batch.commit();
     } catch (err) {
@@ -129,6 +130,29 @@ class DatabaseManager {
       Batch batch = db.batch();
       SqlTable.dropBgNamesTable(batch);
       SqlTable.createBgNamesTable(batch);
+
+      await batch.commit();
+    } catch (err) {
+      log(err.toString());
+    }
+  }
+
+  Future<void> resetBagItems(Database db) async {
+    try {
+      Batch batch = db.batch();
+      SqlTable.dropBagItemsTable(batch);
+      SqlTable.createBagItemsTable(batch);
+
+      await batch.commit();
+    } catch (err) {
+      log(err.toString());
+    }
+  }
+
+  Future<void> cleanBagItems(Database db) async {
+    try {
+      Batch batch = db.batch();
+      SqlTable.cleanBagItemsTable(batch);
 
       await batch.commit();
     } catch (err) {

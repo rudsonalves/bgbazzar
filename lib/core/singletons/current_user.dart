@@ -18,6 +18,7 @@
 
 import 'package:flutter/foundation.dart';
 
+import '../../data_managers/bag_manager.dart';
 import '../../repository/data/interfaces/i_user_repository.dart';
 import '/get_it.dart';
 import '../../data_managers/addresses_manager.dart';
@@ -34,6 +35,7 @@ class CurrentUser {
   final addressManager = getIt<AddressesManager>();
   final favoritesManager = getIt<FavoritesManager>();
   final userRepository = getIt<IUserRepository>();
+  final bagManager = getIt<BagManager>();
 
   List<AddressModel> get addresses => addressManager.addresses;
   Iterable<String> get addressNames => addressManager.addressNames;
@@ -65,6 +67,7 @@ class CurrentUser {
     _isLoged.value = true;
     await addressManager.login();
     await favoritesManager.login();
+    await bagManager.initialize(_isLoged.value);
   }
 
   AddressModel? addressByName(String name) =>

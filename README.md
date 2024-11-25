@@ -78,6 +78,116 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/25 - version: 0.7.18+91
+
+This commit enhances the handling of item quantities in the shopping bag, focusing on improving the `BagItemModel`, updating the bag management logic, and integrating new database methods for item quantity updates. Key changes include a new `updateQuantity` method, refactored quantity management, and alignment across the data layer.
+
+### Changes made:
+
+1. **lib/core/models/bag_item.dart**:
+   - Refactored `quantity` to a public field for improved access.
+   - Modified `increaseQt` and `decreaseQt` methods to return a boolean indicating success or failure.
+   - Updated `toString` and other methods to reflect the changes in `quantity`.
+
+2. **lib/data_managers/ad_manager.dart**:
+   - Added documentation for the `getAdById` method to clarify its purpose.
+
+3. **lib/data_managers/bag_manager.dart**:
+   - Introduced `_loadItems` to initialize bag items and synchronize them with the latest ad statuses and quantities.
+   - Refined `addItem`, `increaseQt`, and `decreaseQt` to handle item quantity updates more effectively.
+   - Enhanced `_updateCountValue` to dynamically adjust the overall item count.
+   - Added comprehensive documentation for key methods.
+
+4. **lib/repository/local_data/interfaces/i_local_bag_item_repository.dart**:
+   - Added the `updateQuantity` method to the repository interface for direct quantity updates.
+
+5. **lib/repository/local_data/sqlite/bag_item_repository.dart**:
+   - Implemented the `updateQuantity` method to handle quantity updates in the SQLite database.
+
+6. **lib/store/stores/bag_item_store.dart**:
+   - Added `updateQuantity` for efficient updates of item quantities in the local database.
+   - Enhanced `add` and `update` methods with explicit `where` clauses to improve safety and clarity.
+
+7. **lib/store/stores/interfaces/i_bag_item_store.dart**:
+   - Introduced the `updateQuantity` method in the store interface for consistent implementation.
+
+### Conclusion:
+
+These updates streamline the management of item quantities within the shopping bag. The new `updateQuantity` method ensures efficient and reliable synchronization between the app's state and the local database. Refined methods and enhanced documentation improve maintainability, setting the stage for future enhancements.
+
+
+## 2024/11/23 - version: 0.7.17+90
+
+This commit introduces a comprehensive set of updates to enhance the handling of `BagItemModel` in the application. Key changes include adding a local repository for bag items, improving error handling, and integrating database functionality with SQFLite. These updates also refine existing models, repositories, and controllers to align with the new structure.
+
+### Changes made:
+
+1. **lib/components/collection_views/ad_list_view/widgets/ad_card_view.dart**:
+   - Updated null-safe handling of `city` and `state` in `AdTextInfo`.
+
+2. **lib/core/models/ad.dart**:
+   - Removed unused static methods for converting mechanics names to IDs.
+   - Added new properties (`ownerId`, `ownerName`, etc.) to the `AdModel`.
+   - Updated `copyWith` and `toMap` methods to support the new properties.
+   - Modified the `fromMap` method to map new fields.
+
+3. **lib/core/models/bag_item.dart**:
+   - Refactored `BagItemModel` to include private fields (`_ad`, `_ownerId`, etc.) with getters and setters.
+   - Added methods to manage item relationships with ads.
+   - Updated `toMap`, `fromMap`, and `copyWith` to include new fields and logic.
+
+4. **lib/core/singletons/current_user.dart**:
+   - Introduced `BagManager` integration for managing user-specific bag items.
+
+5. **lib/data_managers/bag_manager.dart**:
+   - Added full integration with a local SQLite repository.
+   - Implemented initialization logic and database synchronization.
+   - Enhanced methods for adding, increasing, and decreasing item quantities with database updates.
+
+6. **lib/features/bag/widgets/saller_bag.dart**:
+   - Updated references to use the refactored `BagItemModel`.
+
+7. **lib/features/shop/product/product_controller.dart**:
+   - Refactored to initialize `BagItemModel` using the new `ad` parameter.
+
+8. **lib/get_it.dart**:
+   - Registered `ILocalBagItemRepository` and its implementation, `SqliteBagItemRepository`.
+
+9. **lib/repository/local_data/common/local_functions.dart**:
+   - Added utility methods for consistent local error handling.
+
+10. **lib/repository/local_data/interfaces/i_local_bag_item_repository.dart**:
+    - Defined an interface for local bag item repository operations.
+
+11. **lib/repository/local_data/sqlite/bag_item_repository.dart**:
+    - Implemented SQLite-based repository for bag item management.
+
+12. **lib/store/constants/constants.dart**:
+    - Defined constants for the `bagItemsTable` and its fields.
+
+13. **lib/store/constants/migration_sql_scripts.dart**:
+    - Added a migration script for creating the `bagItemsTable`.
+
+14. **lib/store/constants/sql_create_table.dart**:
+    - Introduced methods for creating, dropping, and cleaning the `bagItemsTable`.
+
+15. **lib/store/database/database_manager.dart**:
+    - Integrated `bagItemsTable` creation and reset functionality.
+
+16. **lib/store/stores/bag_item_store.dart**:
+    - Implemented the SQLite storage layer for bag items.
+
+17. **lib/store/stores/interfaces/i_bag_item_store.dart**:
+    - Added an interface for the `BagItemStore`.
+
+18. **lib/store/stores/mechanics_store.dart**:
+    - Corrected a method log message for consistency.
+
+### Conclusion:
+
+These changes establish a robust system for managing bag items locally with SQLite, enhancing performance and scalability. They also align models, controllers, and database components with the new structure, ensuring consistency and maintainability. This update sets the foundation for future improvements in bag management features.
+
+
 ## 2024/11/22 - version: 0.7.17+89
 
 This commit introduces a new `AdManager` class to centralize advertisement management, enhances the Bag module to integrate ad details dynamically, and refactors the `ShopController` to utilize `AdManager` for fetching ads. These changes improve data organization and streamline ad-related operations across the app.

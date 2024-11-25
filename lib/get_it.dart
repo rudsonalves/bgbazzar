@@ -43,6 +43,8 @@ import 'repository/data/parse_server/ps_ad_repository.dart';
 import 'repository/data/parse_server/ps_favorite_repository.dart';
 import 'repository/data/parse_server/ps_mechanics_repository.dart';
 import 'repository/data/parse_server/ps_user_repository.dart';
+import 'repository/local_data/interfaces/i_local_bag_item_repository.dart';
+import 'repository/local_data/sqlite/bag_item_repository.dart';
 import 'repository/local_data/sqlite/bg_names_repository.dart';
 import 'repository/local_data/interfaces/i_bg_names_repository.dart';
 import 'repository/local_data/interfaces/i_local_mechanic_repository.dart';
@@ -81,6 +83,8 @@ void setupDependencies() {
     getIt.registerFactory<IBoardgameRepository>(() => PSBoardgameRepository());
     getIt.registerFactory<IAddressRepository>(() => PSAddressRepository());
     getIt.registerFactory<IFavoriteRepository>(() => PSFavoriteRepository());
+    getIt.registerFactory<ILocalBagItemRepository>(
+        () => SqliteBagItemRepository());
 
     // SQFLite Store
     getIt.registerFactoryAsync<IBgNamesStore>(() async {

@@ -58,8 +58,8 @@ class AdCardView extends StatelessWidget {
                     AdTextPrice(ads.price),
                     AdTextInfo(
                       date: ads.createdAt,
-                      city: ads.address!.city,
-                      state: ads.address!.state,
+                      city: ads.address?.city ?? '**',
+                      state: ads.address?.state ?? '**',
                     ),
                   ],
                 ),

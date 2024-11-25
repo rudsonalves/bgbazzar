@@ -96,7 +96,7 @@ class _SallerBagState extends State<SallerBag> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: Image.network(item.adItem.images.first),
+                            child: Image.network(item.ad!.images.first),
                           ),
                         ),
                       ),

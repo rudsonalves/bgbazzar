@@ -16,50 +16,71 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:convert';
-
 import 'ad.dart';
 
 class BagItemModel {
   int? id;
-  AdModel adItem;
+  AdModel? _ad;
   String _adId;
+  String _ownerId;
+  String _ownerName;
   String title;
   String description;
-  int _quantity;
-  double unitPrice;
+  int quantity;
+  double _unitPrice;
 
   BagItemModel({
     this.id,
-    required this.adItem,
+    AdModel? ad,
     String? adId,
+    String? ownerId,
+    String? ownerName,
     required this.title,
     required this.description,
-    int quantity = 1,
-    required this.unitPrice,
-  })  : _quantity = quantity,
-        _adId = adId ?? adItem.id!;
+    this.quantity = 1,
+    double? unitPrice,
+  })  : _ad = ad,
+        _adId = adId ?? ad!.id!,
+        _ownerId = ownerId ?? ad!.ownerId!,
+        _ownerName = ownerName ?? ad!.ownerName!,
+        _unitPrice = unitPrice ?? ad!.price;
 
-  int get quantity => _quantity;
+  AdModel? get ad => _ad;
   String get adId => _adId;
+  String get ownerId => _ownerId;
+  String get ownerName => _ownerName;
+  double get unitPrice => _unitPrice;
 
-  void increaseQt() {
-    if (_quantity < adItem.quantity) {
-      _quantity++;
-    }
+  void setAd(AdModel newAd) {
+    _ad = newAd;
+    _adId = newAd.id!;
+    _ownerId = newAd.ownerId!;
+    _ownerName = newAd.ownerName!;
+    _unitPrice = newAd.price;
   }
 
-  void decreaseQt() {
-    if (_quantity > 0) {
-      _quantity--;
+  bool increaseQt() {
+    if (quantity < _ad!.quantity) {
+      quantity++;
+      return true;
     }
+    return false;
+  }
+
+  bool decreaseQt() {
+    if (quantity > 0) {
+      quantity--;
+      return true;
+    }
+    return false;
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'adItem': adItem.id!,
       'adId': adId,
+      'ownerId': ownerId,
+      'ownerName': ownerName,
       'title': title,
       'description': description,
       'quantity': quantity,
@@ -69,9 +90,11 @@ class BagItemModel {
 
   factory BagItemModel.fromMap(Map<String, dynamic> map) {
     return BagItemModel(
-      id: map['id'] != null ? map['id'] as int : null,
-      adItem: map['adItem'] as AdModel, // Vai dar problema aqui!!!
+      id: map['id'] as int?,
+      // ad: map['adItem'] as AdModel,
       adId: map['adId'] as String,
+      ownerId: map['ownerId'] as String,
+      ownerName: map['ownerName'] as String,
       title: map['title'] as String,
       description: map['description'] as String,
       quantity: map['quantity'] as int,
@@ -79,14 +102,12 @@ class BagItemModel {
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory BagItemModel.fromJson(String source) =>
-      BagItemModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
   BagItemModel copyWith({
     int? id,
-    AdModel? adItem,
+    AdModel? ad,
+    String? adId,
+    String? ownerId,
+    String? ownerName,
     String? title,
     String? description,
     int? quantity,
@@ -94,7 +115,10 @@ class BagItemModel {
   }) {
     return BagItemModel(
       id: id ?? this.id,
-      adItem: adItem ?? this.adItem,
+      ad: ad ?? this.ad,
+      adId: adId ?? this.adId,
+      ownerId: ownerId ?? this.ownerId,
+      ownerName: ownerName ?? this.ownerName,
       title: title ?? this.title,
       description: description ?? this.description,
       quantity: quantity ?? this.quantity,
@@ -104,8 +128,11 @@ class BagItemModel {
 
   @override
   String toString() {
-    return 'SaleItemModel(id: $id,'
-        ' adItem: ${adItem.id},'
+    return 'BagItemModel(id: $id,'
+        ' ad: $ad,'
+        ' adId: $_adId,'
+        ' ownerId: $_ownerId,'
+        ' ownerName: $_ownerName,'
         ' title: $title,'
         ' description: $description,'
         ' quantity: $quantity,'
