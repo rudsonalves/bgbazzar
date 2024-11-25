@@ -18,6 +18,8 @@
 
 import 'package:flutter/material.dart';
 
+import '../../core/models/bag_item.dart';
+import '../payment/payment_screen.dart';
 import '../shop/product/product_screen.dart';
 import '/components/widgets/state_error_message.dart';
 import '/components/widgets/state_loading_message.dart';
@@ -59,6 +61,22 @@ class _BagScreenState extends State<BagScreen> {
     }
   }
 
+  Future<void> _makePayment(List<BagItemModel> items) async {
+    final preferenceId = await ctrl.getPreferenceId(items);
+    if (preferenceId == null) return;
+
+    if (mounted) {
+      Navigator.pushNamed(
+        context,
+        PaymentScreen.routeName,
+        arguments: {
+          'preferenceId': preferenceId,
+          'amount': ctrl.calculateAmount(items),
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +102,7 @@ class _BagScreenState extends State<BagScreen> {
                     sallerId: sellerId,
                     sallerName: bagManager.sellerName(sellerId)!,
                     openAd: _openAd,
+                    makePayment: _makePayment,
                   ),
                 );
               }

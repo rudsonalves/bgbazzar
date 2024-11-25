@@ -78,6 +78,55 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/25 - version: 0.7.19+92
+
+This commit introduces a robust payment integration flow by transitioning from `PaymentPage` to `PaymentScreen`, updating related logic and services, and enhancing the payment brick functionality. Key improvements include refined method signatures, enhanced error handling, and streamlined parameter passing.
+
+### Changes made:
+
+1. **lib/app.dart**:
+   - Renamed `PaymentPage` to `PaymentScreen` for better consistency.
+   - Updated route logic to include `amount` as an additional parameter for `PaymentScreen`.
+
+2. **lib/core/models/bag_item.dart**:
+   - Added the `toMPParameter` method to transform `BagItemModel` into the format expected by the payment service.
+
+3. **lib/features/bag/bag_controller.dart**:
+   - Added `getPreferenceId` method for obtaining the payment preference ID via `PaymentService`.
+   - Added `calculateAmount` method to compute the total amount for a list of items.
+
+4. **lib/features/bag/bag_screen.dart**:
+   - Integrated the `_makePayment` method to handle the payment process and navigate to `PaymentScreen`.
+   - Updated UI logic to pass `preferenceId` and `amount` as arguments for payment navigation.
+
+5. **lib/features/bag/widgets/saller_bag.dart**:
+   - Added `makePayment` parameter to trigger payment flow from the UI.
+   - Updated `FilledButton` to invoke the `makePayment` method.
+
+6. **lib/features/payment/payment_controller.dart**:
+   - Updated `init` method to include `amount` alongside `preferenceId`.
+   - Enhanced `_initializeController` with better error logging and URL construction to include `amount`.
+
+7. **lib/features/payment/payment_screen.dart**:
+   - Renamed from `PaymentPage` to `PaymentScreen`.
+   - Updated initialization to include `amount` and improved state error messaging.
+
+8. **lib/services/payment/payment_service.dart**:
+   - Renamed `getPreferenceId` to `generatePreferenceId`.
+   - Updated parameter type from `PaymentModel` to `BagItemModel` and aligned with the `toMPParameter` format.
+
+9. **parse_server/cloud/main.js**:
+   - Improved error handling and logging in the `createPaymentPreference` cloud function.
+   - Dynamically retrieved the Mercado Pago access token from environment variables.
+
+10. **parse_server/public/payment_page.html**:
+    - Updated JavaScript to include `amount` in the initialization and rendered payment brick settings.
+    - Enhanced error logging for payment brick rendering.
+
+### Conclusion:
+These updates significantly improve the payment integration process, ensuring a seamless user experience with robust error handling and better parameter management. The transition to `PaymentScreen` enhances modularity and maintainability across the payment flow.
+
+
 ## 2024/11/25 - version: 0.7.18+91
 
 This commit enhances the handling of item quantities in the shopping bag, focusing on improving the `BagItemModel`, updating the bag management logic, and integrating new database methods for item quantity updates. Key changes include a new `updateQuantity` method, refactored quantity management, and alignment across the data layer.

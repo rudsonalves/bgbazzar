@@ -44,8 +44,7 @@ Parse.Cloud.define("createPaymentPreference", async (request) => {
   const { items, userEmail } = request.params;
 
   try {
-    // Constrói a lista de itens para a preferência de pagamento no formato esperado pela API do 
-    // Mercado Pago
+    // Constrói a lista de itens para a preferência de pagamento no formato esperado pela API do Mercado Pago
     const formattedItems = items.map(item => ({
       title: item.title,
       quantity: item.quantity,
@@ -53,25 +52,38 @@ Parse.Cloud.define("createPaymentPreference", async (request) => {
       unit_price: item.unit_price
     }));
 
+    // Obtém o Access Token da variável de ambiente
+    const accessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+    if (!accessToken) {
+      throw new Error("Access token not configured for Mercado Pago.");
+    }
+
     // Faz a requisição POST para a API do Mercado Pago para criar a preferência de pagamento
-    const response = await axios.post('https://api.mercadopago.com/checkout/preferences', {
-      items: formattedItems,
-      payer: {
-        email: userEmail     // Email do comprador
+    const response = await axios.post(
+      'https://api.mercadopago.com/checkout/preferences',
+      {
+        items: formattedItems,
+        payer: {
+          email: userEmail // Email do comprador
+        }
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}` // Inclui o Bearer
+        }
       }
-    }, {
-      headers: {
-        // Access Token do Mercado Pago
-        'Authorization': `Bearer TEST-2732429871074196-102815-24b893b2dbcdb625aacf852992f34868-2050295551`
-      }
-    });
+    );
 
     // Retorna o ID da preferência gerada para ser usado no Payment Brick
     return { preferenceId: response.data.id };
 
   } catch (error) {
     // Tratamento de erro caso a requisição falhe
-    console.error('Erro ao criar a preferência:', error.response ? error.response.data : error.message);
+    console.error('Erro ao criar a preferência:', {
+      message: error.message,
+      response: error.response ? error.response.data : null,
+      stack: error.stack
+    });
     throw new Error('Erro ao criar a preferência de pagamento.');
   }
 });

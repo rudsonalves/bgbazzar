@@ -33,12 +33,14 @@
   <div id="paymentBrick_container" style="display: none;"></div>
 
   <script>
-    const mp = new MercadoPago('YOUR_PUBLIC_KEY');
+    const mp = new MercadoPago('TEST-1c1826bf-d519-438c-87f1-c6618c40e50e');
 
     const renderPaymentBrick = async (bricksBuilder, preferenceId) => {
+      console.log('Iniciando renderização do Payment Brick com:', preferenceId);
       const settings = {
         initialization: {
-          preferenceId: preferenceId
+          preferenceId: preferenceId,
+          amount: parseFloat(amount)
         },
         customization: {
           paymentMethods: {
@@ -84,16 +86,21 @@
         },
       };
 
-      window.paymentBrickController = await bricksBuilder.create(
-        "payment",
-        "paymentBrick_container",
-        settings
-      );
+      try {
+        window.paymentBrickController = await bricksBuilder.create(
+          "payment",
+          "paymentBrick_container",
+          settings
+        );
+      } catch (error) {
+        console.error('Erro ao renderizar o Payment Brick:', error);
+      }
     };
 
     const bricksBuilder = mp.bricks();
     const queryParams = new URLSearchParams(window.location.search);
     const preferenceId = queryParams.get('preferenceId');
+    const amount = queryParams.get('amount');
 
     if (preferenceId) {
       renderPaymentBrick(bricksBuilder, preferenceId);

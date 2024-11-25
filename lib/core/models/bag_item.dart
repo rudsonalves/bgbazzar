@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright (C) 2024 Rudson Alves
 //
 // This file is part of bgbazzar.
@@ -85,6 +84,14 @@ class BagItemModel {
       'description': description,
       'quantity': quantity,
       'unitPrice': unitPrice,
+    };
+  }
+
+  Map<String, dynamic> toMPParameter() {
+    return <String, dynamic>{
+      'title': title,
+      'unit_price': unitPrice,
+      'quantity': quantity,
     };
   }
 

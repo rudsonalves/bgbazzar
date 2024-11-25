@@ -15,27 +15,30 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:bgbazzar/components/widgets/state_error_message.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'payment_controller.dart';
 import 'payment_store.dart';
 
-class PaymentPage extends StatefulWidget {
+class PaymentScreen extends StatefulWidget {
   final String preferenceId;
+  final double amount;
 
-  const PaymentPage({
+  const PaymentScreen({
     super.key,
     required this.preferenceId,
+    required this.amount,
   });
 
   static const routeName = '/payment';
 
   @override
-  State<PaymentPage> createState() => _PaymentPageState();
+  State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class _PaymentScreenState extends State<PaymentScreen> {
   final ctrl = PaymentController();
   final store = PaymentStore();
 
@@ -43,7 +46,11 @@ class _PaymentPageState extends State<PaymentPage> {
   void initState() {
     super.initState();
 
-    ctrl.init(widget.preferenceId, store);
+    ctrl.init(
+      store: store,
+      preferenceId: widget.preferenceId,
+      amount: widget.amount,
+    );
   }
 
   @override
@@ -63,17 +70,22 @@ class _PaymentPageState extends State<PaymentPage> {
         valueListenable: store.state,
         builder: (context, value, _) {
           if (store.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
             );
           }
           if (store.isSuccess) {
             return WebViewWidget(controller: ctrl.webview);
           }
           if (store.isError) {
-            return Center(
-              child: Text(
-                  'Desculpe, ocorreu um erro. Por favor, tende mais tarde.'),
+            StateErrorMessage(
+              message: store.errorMessage,
+              closeDialog: store.setStateSuccess,
             );
           }
           return Container();

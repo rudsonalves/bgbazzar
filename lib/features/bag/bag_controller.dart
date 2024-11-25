@@ -16,13 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:bgbazzar/core/abstracts/data_result.dart';
-import 'package:bgbazzar/core/models/ad.dart';
-
-import '../../core/models/bag_item.dart';
-import '../../data_managers/ad_manager.dart';
-import '../../data_managers/bag_manager.dart';
-import '../../get_it.dart';
+import '/core/abstracts/data_result.dart';
+import '/core/models/ad.dart';
+import '/core/models/bag_item.dart';
+import '/data_managers/ad_manager.dart';
+import '/data_managers/bag_manager.dart';
+import '/get_it.dart';
+import '/services/payment/payment_service.dart';
 import 'bag_store.dart';
 
 class BagController {
@@ -47,5 +47,25 @@ class BagController {
     final result = await adManager.getAdById(adId);
     store.setStateSuccess();
     return result;
+  }
+
+  Future<String?> getPreferenceId(List<BagItemModel> items) async {
+    try {
+      store.setStateLoading();
+      final result = await PaymentService.generatePreferenceId(items);
+      if (result.isFailure) {
+        throw Exception(
+            'makePayment erro: ${result.error?.toString() ?? 'unknow error!'}');
+      }
+      store.setStateSuccess();
+      return result.data!;
+    } catch (err) {
+      store.setError('Ocorreu um erro. Tente mais tarde.');
+      return null;
+    }
+  }
+
+  double calculateAmount(List<BagItemModel> items) {
+    return items.fold(0, (sum, item) => sum + item.quantity * item.unitPrice);
   }
 }

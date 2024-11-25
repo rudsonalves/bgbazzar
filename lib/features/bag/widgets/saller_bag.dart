@@ -18,6 +18,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../core/models/bag_item.dart';
 import '../../../core/theme/app_text_style.dart';
 import '../../../data_managers/bag_manager.dart';
 import '../../../get_it.dart';
@@ -30,6 +31,7 @@ class SallerBag extends StatefulWidget {
   final String sallerId;
   final String sallerName;
   final void Function(String) openAd;
+  final void Function(List<BagItemModel>) makePayment;
 
   const SallerBag({
     super.key,
@@ -37,6 +39,7 @@ class SallerBag extends StatefulWidget {
     required this.sallerId,
     required this.sallerName,
     required this.openAd,
+    required this.makePayment,
   });
 
   @override
@@ -145,7 +148,7 @@ class _SallerBagState extends State<SallerBag> {
                   );
                 }),
             FilledButton.icon(
-              onPressed: () {},
+              onPressed: () => widget.makePayment(items),
               label: Text('Efetuar o Pagamento'),
               icon: Icon(Symbols.encrypted_sharp),
             ),
