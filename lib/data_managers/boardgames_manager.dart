@@ -137,6 +137,7 @@ class BoardgamesManager {
         image: bg.image,
         name: bg.name,
         year: bg.publishYear,
+        forceJpg: false,
       );
       bg.image = convertResult.convertedImagePath;
 
@@ -201,7 +202,7 @@ class BoardgamesManager {
     try {
       // Step 1: Process image, converting if necessary, and update `bg.image`
       // path
-      await _processImageForUpdate(bg);
+      await _processImageForUpdate(bg, false);
 
       // Step 2: Update the board game in the Parse server
       final newBg = await _updateBoardgameInServer(bg);
@@ -252,16 +253,20 @@ class BoardgamesManager {
   /// - Any error occurring during the image conversion or file deletion will be
   ///   propagated to the calling method, which is responsible for handling
   ///   errors.
-  Future<void> _processImageForUpdate(BoardgameModel bg) async {
+  Future<void> _processImageForUpdate(
+    BoardgameModel bg, [
+    bool forceJpg = true,
+  ]) async {
     final convertResult = await _getAndConvertImage(
       image: bg.image,
       name: bg.name,
       year: bg.publishYear,
+      forceJpg: forceJpg,
     );
     bg.image = convertResult.convertedImagePath;
 
     // Remove temporary files after conversion
-    await _removeFiles(convertResult.attributes);
+    // await _removeFiles([convertResult.localPath]);
   }
 
   /// Updates the provided [BoardgameModel] instance in the remote Parse server
@@ -418,6 +423,7 @@ class BoardgamesManager {
     required String image,
     required String name,
     required int year,
+    bool forceJpg = true,
   }) async {
     // Image is already on the parse server
     if (image.startsWith(parseServer.keyParseServerImageUrl)) {
@@ -429,12 +435,16 @@ class BoardgamesManager {
         image.startsWith('http') ? await _downloadImage(image) : image;
 
     // Standardize image names
+    final extension = forceJpg
+        ? 'jpg'
+        : image.split('.').last.toLowerCase() == 'png'
+            ? 'png'
+            : 'jpg';
     final imageName =
-        '${Utils.normalizeFileName(name.replaceAll(' ', '_'))}_$year.jpg';
+        '${Utils.normalizeFileName(name.replaceAll(' ', '_'))}_$year.$extension';
 
-    // Convert image to jpg
-    final convertedImagePath =
-        await _convertImageToJpg(localImagePath, imageName);
+    // Convert image
+    final convertedImagePath = await _convertImage(localImagePath, imageName);
 
     return ImageConversionResult(
       convertedImagePath: convertedImagePath,
@@ -550,7 +560,7 @@ class BoardgamesManager {
   /// Throws:
   /// - [Exception] if the image cannot be decoded, or if any other error occurs
   ///   during processing.
-  Future<String> _convertImageToJpg(String imagePath, String imageName) async {
+  Future<String> _convertImage(String imagePath, String imageName) async {
     try {
       // Attempt to decode the image from the provided file path.
       final image = img.decodeImage(File(imagePath).readAsBytesSync());
@@ -567,9 +577,20 @@ class BoardgamesManager {
       // Generate the new file path where the converted image will be saved.
       final newPath = join(directory.path, imageName);
 
-      // Write the resized image to the new file path in JPEG format with a
-      // quality of 75.
-      File(newPath).writeAsBytesSync(img.encodeJpg(resizedImage, quality: 75));
+      final extension = imageName.split('.').last;
+      if (extension == 'jpg') {
+        // Write the resized image to the new file path in JPEG format with a
+        // quality of 75.
+        File(newPath).writeAsBytesSync(
+          img.encodeJpg(resizedImage, quality: 75),
+        );
+      } else {
+        // Write the resized image to the new file path in PNG format with a
+        // level of 6.
+        File(newPath).writeAsBytesSync(
+          img.encodePng(resizedImage, level: 6),
+        );
+      }
 
       return newPath;
     } catch (err) {

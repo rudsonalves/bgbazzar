@@ -78,6 +78,70 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/25 - version: 0.7.20+93
+
+This commit introduces multiple changes across the project, including enhancements in the ShopGridView component, creation of new Favorites management modules, refinements in image processing for board games, dependency registrations, and adjustments to controllers and screens for improved state management and modularity.
+
+### Changes made:
+
+1. **assets/data/bgBazzar.db**:
+   - Updated the database binary file with changes reflecting updated data or structure.
+
+2. **lib/components/collection_views/shop_grid_view/shop_grid_view.dart**:
+   - Replaced the `ShopController` dependency with `ads` and `getMoreAds` for improved modularity.
+   - Adjusted methods and properties to work with `ads` directly instead of the `ShopController`.
+
+3. **lib/components/widgets/state_loading_message.dart**:
+   - Extracted a reusable method `containerCircularProgressIndicator` for generating a loading container.
+   - Updated the `build` method to use the new helper method for better code readability.
+
+4. **lib/components/widgets/state_message.dart**:
+   - Created a new widget `StateMessage` to handle various states with customizable messages, buttons, and icons.
+
+5. **lib/core/singletons/current_user.dart**:
+   - Added a guard in `init` to prevent re-initialization if the user is already logged in.
+
+6. **lib/data_managers/boardgames_manager.dart**:
+   - Enhanced image processing methods to support PNG format with the `forceJpg` parameter.
+   - Renamed `_convertImageToJpg` to `_convertImage` for broader format support.
+   - Improved image naming standardization logic.
+
+7. **lib/features/favorites/favorites_controller.dart**:
+   - Created a new `FavoritesController` to manage favorite items, encapsulating state and logic.
+
+8. **lib/features/favorites/favorites_screen.dart**:
+   - Integrated the new `FavoritesController` and `FavoritesStore` for managing favorites state and UI.
+   - Improved state handling using `StateMessage` and `ListenableBuilder`.
+
+9. **lib/features/favorites/favorites_store.dart**:
+   - Added a new `FavoritesStore` extending `StateStore` to manage favorites state.
+
+10. **lib/features/payment/payment_controller.dart**:
+    - Updated `init` and `_initializeController` to include `BuildContext` as a parameter for better context handling.
+
+11. **lib/features/payment/payment_screen.dart**:
+    - Passed `BuildContext` to the `PaymentController` during initialization.
+
+12. **lib/features/shop/shop_controller.dart**:
+    - Removed deprecated methods `_getAds` and `_getMoreAds` to streamline the code.
+
+13. **lib/features/shop/shop_screen.dart**:
+    - Adjusted `ShopGridView` initialization to pass `ads` and `getMoreAds` instead of `ctrl`.
+
+14. **lib/get_it.dart**:
+    - Registered `BagItemStore` as an asynchronous dependency in `GetIt`.
+
+15. **lib/repository/data/parse_server/ps_boardgame_repository.dart**:
+    - Reorganized method calls for better logical flow during board game updates.
+
+16. **lib/repository/local_data/sqlite/bag_item_repository.dart**:
+    - Switched to using `GetIt` for resolving `BagItemStore` dependency.
+
+### Conclusion
+
+These updates enhance the modularity, readability, and maintainability of the project. New modules for managing favorites improve separation of concerns, while changes to ShopGridView streamline its use. Additional refinements in image processing and dependency management ensure greater flexibility and adherence to best practices.
+
+
 ## 2024/11/25 - version: 0.7.19+92
 
 This commit introduces a robust payment integration flow by transitioning from `PaymentPage` to `PaymentScreen`, updating related logic and services, and enhancing the payment brick functionality. Key improvements include refined method signatures, enhanced error handling, and streamlined parameter passing.

@@ -17,10 +17,11 @@
 
 import 'package:flutter/material.dart';
 
-import '../../components/collection_views/shop_grid_view/shop_grid_view.dart';
-import '../../components/widgets/state_loading_message.dart';
-import '../shop/shop_controller.dart';
-import '../shop/shop_store.dart';
+import '../../components/widgets/state_message.dart';
+import '/components/collection_views/shop_grid_view/shop_grid_view.dart';
+import '/components/widgets/state_loading_message.dart';
+import 'favorites_controller.dart';
+import 'favorites_store.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -32,15 +33,16 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  final ctrl = ShopController();
-  final store = ShopStore();
+  final store = FavoritesStore();
+  late final FavoritesController ctrl;
+
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
 
-    ctrl.init(store);
+    ctrl = FavoritesController(store);
   }
 
   void _backPage() {
@@ -61,18 +63,39 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
-        child: AnimatedBuilder(
-          animation: store.state,
+        child: ListenableBuilder(
+          listenable: store.state,
           builder: (context, _) {
-            return Stack(
-              children: [
-                ShopGridView(
-                  ctrl: ctrl,
-                  scrollController: _scrollController,
-                ),
-                if (store.isLoading) const StateLoadingMessage()
-              ],
-            );
+            if (store.isLoading) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StateLoadingMessage(),
+                ],
+              );
+            } else if (store.isSuccess) {
+              if (ctrl.ads.isEmpty) {
+                return StateMessage(
+                  message: 'Nenhum jogo favoritado no momento.',
+                  buttonFunc1: _backPage,
+                  buttonText1: 'Voltar',
+                  buttonIcon1: Icons.arrow_back_ios_new_rounded,
+                );
+              } else {
+                return Stack(
+                  children: [
+                    ShopGridView(
+                      ads: ctrl.ads,
+                      getMoreAds: ctrl.getMoreAds,
+                      scrollController: _scrollController,
+                    ),
+                    if (store.isLoading) const StateLoadingMessage()
+                  ],
+                );
+              }
+            } else {
+              return StateLoadingMessage();
+            }
           },
         ),
       ),

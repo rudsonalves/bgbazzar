@@ -61,8 +61,8 @@ class PSBoardgameRepository implements IBoardgameRepository {
   Future<DataResult<BoardgameModel?>> update(BoardgameModel bg) async {
     try {
       final parseUser = await PsFunctions.parseCurrentUser();
-      final parseImage = await _saveImage(path: bg.image, parseUser: parseUser);
       final parseAcl = PsFunctions.createDefaultAcl(parseUser);
+      final parseImage = await _saveImage(path: bg.image, parseUser: parseUser);
 
       final parseBg = _prepareBgForSaveOrUpdate(
         bg: bg,

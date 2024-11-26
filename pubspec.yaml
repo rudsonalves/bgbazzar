@@ -1,7 +1,7 @@
 name: bgbazzar
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.7.19+92
+version: 0.7.20+93
 
 environment:
   sdk: '>=3.4.1 <4.0.0'

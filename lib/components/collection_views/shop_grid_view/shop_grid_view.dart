@@ -20,13 +20,13 @@ import 'package:flutter/material.dart';
 
 import '/core/models/ad.dart';
 import '/features/shop/product/product_screen.dart';
-import '/features/shop/shop_controller.dart';
 import 'widgets/ad_shop_view.dart';
 
 enum ButtonBehavior { edit, delete }
 
 class ShopGridView extends StatefulWidget {
-  final ShopController ctrl;
+  final List<AdModel> ads;
+  final Future<void> Function() getMoreAds;
   final ScrollController scrollController;
   final ButtonBehavior? buttonBehavior;
   final Function(AdModel ad)? editAd;
@@ -34,7 +34,8 @@ class ShopGridView extends StatefulWidget {
 
   const ShopGridView({
     super.key,
-    required this.ctrl,
+    required this.ads,
+    required this.getMoreAds,
     required this.scrollController,
     this.buttonBehavior,
     this.editAd,
@@ -47,7 +48,7 @@ class ShopGridView extends StatefulWidget {
 
 class _ShopGridViewState extends State<ShopGridView> {
   late ScrollController _scrollController;
-  late final ShopController ctrl;
+  // late final ShopController ctrl;
   double _scrollPosition = 0;
   bool _isScrolling = false;
 
@@ -55,7 +56,7 @@ class _ShopGridViewState extends State<ShopGridView> {
   initState() {
     super.initState();
 
-    ctrl = widget.ctrl;
+    // ctrl = widget.ctrl;
     _scrollController = widget.scrollController;
     _scrollController.addListener(_scrollListener);
   }
@@ -74,7 +75,7 @@ class _ShopGridViewState extends State<ShopGridView> {
       if (isBottom) {
         _scrollPosition = _scrollController.position.pixels;
         _isScrolling = true;
-        await ctrl.getMoreAds();
+        await widget.getMoreAds();
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // _scrollController.animateTo(
           //   _scrollPosition,
@@ -105,7 +106,7 @@ class _ShopGridViewState extends State<ShopGridView> {
   }
 
   Widget? getItemButton(int index) {
-    final ad = ctrl.ads[index];
+    final ad = widget.ads[index];
 
     switch (widget.buttonBehavior) {
       case null:
@@ -155,7 +156,7 @@ class _ShopGridViewState extends State<ShopGridView> {
         mainAxisSpacing: 8,
       ),
       controller: _scrollController,
-      itemCount: ctrl.ads.length,
+      itemCount: widget.ads.length,
       itemBuilder: (context, index) => SizedBox(
         // height: 150,
         child: InkWell(
@@ -163,11 +164,11 @@ class _ShopGridViewState extends State<ShopGridView> {
             Navigator.pushNamed(
               context,
               ProductScreen.routeName,
-              arguments: ctrl.ads[index],
+              arguments: widget.ads[index],
             );
           },
           child: AdShopView(
-            ad: ctrl.ads[index],
+            ad: widget.ads[index],
           ),
         ),
       ),
