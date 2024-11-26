@@ -78,6 +78,28 @@ A estrutura apresentada permite uma manutenção eficiente do código, tornando 
 
 # ChangeLog
 
+## 2024/11/25 - version: 0.7.20+94
+
+This commit updates the `SearchDialog` widget by replacing the `ShopController` dependency with `SearchFilter`, ensuring a cleaner and more modular implementation for managing search filters. However, the bug related to filter state inconsistencies is not fully resolved. Further testing and review are required to address all edge cases.
+
+### Changes made:
+
+1. **lib/features/shop/widgets/search/search_dialog.dart**:
+   - Removed the `ShopController` dependency and replaced it with `SearchFilter`.
+   - Updated the `_filterSearch` method to use `SearchFilter` for managing filters.
+   - Modified the `_filterClean` method to reset the filters using `SearchFilter`.
+   - Adjusted `ListenableBuilder` and filter comparison logic to work with `SearchFilter`.
+
+### Pending work:
+   - Investigate potential issues with filter state updates not reflecting correctly in the UI.
+   - Test edge cases for the `_filterSearch` and `_filterClean` methods to ensure expected behavior.
+   - Review integration with other components relying on `SearchFilter` to avoid regression.
+
+### Conclusion
+
+These changes streamline the `SearchDialog` implementation by delegating filter management to `SearchFilter`. While the update enhances modularity, the bug is not fully fixed, requiring additional testing and adjustments to ensure stability and correctness.
+
+
 ## 2024/11/25 - version: 0.7.20+93
 
 This commit introduces multiple changes across the project, including enhancements in the ShopGridView component, creation of new Favorites management modules, refinements in image processing for board games, dependency registrations, and adjustments to controllers and screens for improved state management and modularity.

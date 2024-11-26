@@ -19,30 +19,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '/core/singletons/search_filter.dart';
 import '/core/models/filter.dart';
 import '../../../filters/filters_screen.dart';
-import '../../shop_controller.dart';
 import '/core/singletons/app_settings.dart';
 import '/core/singletons/search_history.dart';
 import '/get_it.dart';
 
 class SearchDialog extends SearchDelegate<String> {
   final searchHistory = getIt<SearchHistory>();
-  final ctrl = getIt<ShopController>();
+  final searchFilter = getIt<SearchFilter>();
 
   bool get isDark => getIt<AppSettings>().isDark;
 
   Future<void> _filterSearch(BuildContext context) async {
-    ctrl.filter = await Navigator.pushNamed(
+    final newfilter = await Navigator.pushNamed(
           context,
           FiltersScreen.routeName,
-          arguments: ctrl.filter,
+          arguments: searchFilter.filter,
         ) as FilterModel? ??
         FilterModel();
+
+    searchFilter.updateFilter(newfilter);
   }
 
   Future<void> _filterClean() async {
-    ctrl.filter = FilterModel();
+    searchFilter.updateFilter(FilterModel());
   }
 
   @override
@@ -65,10 +67,10 @@ class SearchDialog extends SearchDelegate<String> {
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: ListenableBuilder(
-            listenable: ctrl.searchFilter.filterNotifier,
+            listenable: searchFilter.filterNotifier,
             builder: (context, _) {
               return Icon(
-                ctrl.filter == FilterModel()
+                searchFilter.filter == FilterModel()
                     ? Icons.filter_alt_outlined
                     : Icons.filter_alt_rounded,
               );
