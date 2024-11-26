@@ -16,6 +16,7 @@
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:developer';
+import 'package:flutter/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'payment_store.dart';
@@ -26,7 +27,8 @@ class PaymentController {
   late final String preferenceId;
   late final double amount;
 
-  void init({
+  void init(
+    BuildContext context, {
     required PaymentStore store,
     required String preferenceId,
     required double amount,
@@ -36,10 +38,10 @@ class PaymentController {
     this.preferenceId = preferenceId;
     this.amount = amount;
 
-    _initializeController();
+    _initializeController(context);
   }
 
-  Future<void> _initializeController() async {
+  Future<void> _initializeController(BuildContext context) async {
     try {
       store.setStateLoading();
       webview = WebViewController()

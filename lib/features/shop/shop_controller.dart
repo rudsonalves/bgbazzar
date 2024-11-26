@@ -118,26 +118,6 @@ class ShopController {
     }
   }
 
-  // Future<void> _getAds() async {
-  //   final result = await adRepository.get(
-  //     filter: filter,
-  //     search: searchFilter.searchString,
-  //   );
-  //   if (result.isFailure) {
-  //     // FIXME: Complete this error handling
-  //     throw Exception('ShopController._getAds error: ${result.error}');
-  //   }
-  //   final newAds = result.data;
-  //   _adsPage = 0;
-  //   ads.clear();
-  //   if (newAds != null && newAds.isNotEmpty) {
-  //     ads.addAll(newAds);
-  //     _getMorePages = maxAdsPerList == newAds.length;
-  //   } else {
-  //     _getMorePages = false;
-  //   }
-  // }
-
   Future<void> getMoreAds() async {
     if (!_getMorePages) return;
     _adsPage++;
@@ -153,25 +133,6 @@ class ShopController {
       store.setError(message);
     }
   }
-
-  // Future<void> _getMoreAds() async {
-  //   final result = await adRepository.get(
-  //     filter: filter,
-  //     search: searchFilter.searchString,
-  //     page: _adsPage,
-  //   );
-  //   if (result.isFailure) {
-  //     // FIXME: Complete this error handling
-  //     throw Exception('ShopController._getMoreAds error: ${result.error}');
-  //   }
-  //   final newAds = result.data;
-  //   if (newAds != null && newAds.isNotEmpty) {
-  //     ads.addAll(newAds);
-  //     _getMorePages = maxAdsPerList == newAds.length;
-  //   } else {
-  //     _getMorePages = false;
-  //   }
-  // }
 
   void closeErroMessage() {
     store.setStateSuccess();

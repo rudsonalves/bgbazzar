@@ -47,6 +47,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     super.initState();
 
     ctrl.init(
+      context,
       store: store,
       preferenceId: widget.preferenceId,
       amount: widget.amount,

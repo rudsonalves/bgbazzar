@@ -253,7 +253,8 @@ class _ShopScreenState extends State<ShopScreen>
                 Padding(
                   padding: const EdgeInsets.all(0),
                   child: ShopGridView(
-                    ctrl: ctrl,
+                    ads: ctrl.ads,
+                    getMoreAds: ctrl.getMoreAds,
                     scrollController: _scrollController,
                   ),
                 ),

@@ -51,7 +51,9 @@ import 'repository/local_data/interfaces/i_local_mechanic_repository.dart';
 import 'repository/local_data/sqlite/mechanic_repository.dart';
 import 'services/parse_server/parse_server_server.dart';
 import 'store/database/database_manager.dart';
+import 'store/stores/bag_item_store.dart';
 import 'store/stores/bg_names_store.dart';
+import 'store/stores/interfaces/i_bag_item_store.dart';
 import 'store/stores/interfaces/i_bg_names_store.dart';
 
 final getIt = GetIt.instance;
@@ -89,6 +91,11 @@ void setupDependencies() {
     // SQFLite Store
     getIt.registerFactoryAsync<IBgNamesStore>(() async {
       final store = BGNamesStore();
+      await store.initialize();
+      return store;
+    });
+    getIt.registerFactoryAsync<IBagItemStore>(() async {
+      final store = BagItemStore();
       await store.initialize();
       return store;
     });

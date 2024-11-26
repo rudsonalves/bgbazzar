@@ -15,24 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
+import '/core/state/state_store.dart';
 
-class StateLoadingMessage extends StatelessWidget {
-  const StateLoadingMessage({super.key});
-
-  Widget containerCircularProgressIndicator(Color color) {
-    return Container(
-      color: color,
-      child: const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.surface.withOpacity(0.7);
-
-    return containerCircularProgressIndicator(color);
-  }
-}
+class FavoritesStore extends StateStore {}

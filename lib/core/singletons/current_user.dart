@@ -52,6 +52,7 @@ class CurrentUser {
   }
 
   Future<void> init([UserModel? user]) async {
+    if (isLogged) return;
     if (user == null) {
       final result = await userRepository.getCurrentUser();
       if (result.isSuccess) {

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with bgbazzar.  If not, see <https://www.gnu.org/licenses/>.
 
-import '../../../store/stores/bag_item_store.dart';
+import '/get_it.dart';
 import '/core/models/bag_item.dart';
 import '../common/local_functions.dart';
 import '/core/abstracts/data_result.dart';
@@ -23,12 +23,11 @@ import '/store/stores/interfaces/i_bag_item_store.dart';
 import '../interfaces/i_local_bag_item_repository.dart';
 
 class SqliteBagItemRepository implements ILocalBagItemRepository {
-  late final IBagItemStore _store;
+  late IBagItemStore _store;
 
   @override
   Future<void> initialize() async {
-    _store = BagItemStore();
-    await _store.initialize();
+    _store = await getIt.getAsync<IBagItemStore>();
   }
 
   @override
